@@ -37,3 +37,8 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 - No new external Android/runtime dependencies or paid services were added. Android uses platform org.json, java.net.URI and SHA-256; Python uses the standard library.
 - Independently pinning metadata does not settle redistribution rights of the underlying PMTiles. Each real release must retain OSM ODbL notices and independently documented source/license approval.
 - Candidate Vietnam OSM extracts: https://download.geofabrik.de/asia/vietnam.html. NOT copied or redistributed in this change.
+
+
+## Phase 4 Road Intelligence approval gate
+- Added only standard Python libraries and Android/JDK SHA-256, SQLite and Kotlin code, no new paid or external dependencies.
+- Geofabrik/OSM data reuse is a separate ODbL licensing and derivative database redistribution decision; source attribution and legal/field verification must be documented before production ingestion. No PBF or third-party sign dataset was downloaded or bundled by this change.

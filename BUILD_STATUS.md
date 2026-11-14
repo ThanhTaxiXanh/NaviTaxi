@@ -89,3 +89,10 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - APK audit artifact `phase4-apk-road-asset-audit` ID 14119833707, ZIP SHA256 2a6d4352bef006261b11a47c6d19c1fc41d0afc334f733ab77fb90d7ed2303bb; inspected nested MANIFEST.json and verified hashes of 13 archived entries.
 - APK asset paths and bytes: `assets/map_styles/offline_empty.json` 238, `assets/map_styles/osm_streets_experimental.json` 416, `assets/map_styles/pmtiles_synthetic.json` 698, `assets/pmtiles/synthetic_manifest.json` 525, `assets/pmtiles/synthetic_test.pmtiles` 462. NO true speed/sign DB, NO real province maps.
 - Debug APK artifact ID 14120452033. Signed release build and actual taxi-driver field trials remain NOT DONE.
+
+
+## PR #15 — independent Road Intelligence approval and candidate inspection
+- Working branch `phase-4/road-intelligence-approval-gate`, PR https://github.com/ThanhTaxiXanh/NaviTaxi/pull/15.
+- Checks required: Phase 0 Python/SQLite candidate data integrity + artifact report; Android assembleDebug/JUnit/lint + APK asset scan; API35 emulator test that unapproved synthetic speed/sign rows produce zero overlays.
+- GitHub PR CI is the build source of truth; no local Android SDK/device road test is claimed.
+- No new real road DB asset or observed physical sign coordinates. The old synthetic PMTiles 462-byte fixture remains the only offline tile content.

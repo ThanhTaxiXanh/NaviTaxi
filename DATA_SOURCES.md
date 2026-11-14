@@ -34,3 +34,11 @@ A data source's URL and license must be recorded before its content can be shipp
 - `maxspeed=*` ways are volunteered map tags, not a verified survey of current legal limits. `traffic_sign=*` may describe a way's affected section rather than a roadside physical coordinate; node tagging and direction evidence are needed. See https://wiki.openstreetmap.org/wiki/Key:maxspeed and https://wiki.openstreetmap.org/wiki/Key:traffic_sign.
 - Real speed_kmh records: 0 verified; real sign WGS84 coordinates: 0 verified. Any proposed import must preserve source snapshot/hash/license, observation date, geometry and field verification separately.
 - `scripts/validate_offline_catalog.py` and Android `OfflineCatalogVerifier` validate *package release metadata*, not traffic laws or physical sign locations. No production catalog pin exists.
+
+
+## Phase 4 Road Intelligence candidate provenance (2026-11-14)
+- Geofabrik https://download.geofabrik.de/asia/vietnam.html lists a Vietnam OSM PBF extract. Source candidate only; no raw bytes/checksum acquired, no geographic data, speed records or roadside sign coordinates imported in PR #15.
+- OSM `maxspeed`, `maxspeed:forward`, `maxspeed:conditional` and `maxspeed:advisory` differ in direction, time and legal applicability. Unverified tags cannot become approved on-road speed warnings: https://wiki.openstreetmap.org/wiki/Speed_limits.
+- OSM `traffic_sign` can be a node (potential real-world position) or a way (a section rather than a physical sign location): https://wiki.openstreetmap.org/wiki/Key:traffic_sign. No road centroid may be misrepresented as a sign coordinate.
+- New candidate inspection command: `python3 scripts/review_road_candidate.py --db /path/to/candidate.sqlite --out build/road-candidate-report.json`. Even a structurally clean candidate keeps `driver_speed_alerts_allowed=false` and `physical_sign_alerts_allowed=false` until separate field/legal review and code-reviewed approval pin.
+- Canonical source-backed table path remains `data/road_intelligence/schema.sql`; runtime DB `<filesDir>/road_intelligence/road_intelligence.db` is NOT PRESENT/APPROVED. Physical sign locations: 0 verified; site-specific legal speed observations: 0 verified.

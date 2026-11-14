@@ -68,3 +68,7 @@ A WorkManager 2.12.0 CoroutineWorker now schedules future approved HTTPS PMTiles
 
 ### Latest accepted Phase 4 code
 PR #13 (https://github.com/ThanhTaxiXanh/NaviTaxi/pull/13) is merged as main `068c297e`. Python/SQLite, Android build/unit/lint and API35 emulator all passed on final code head. Android CI now uploads a verifiable built-APK road asset inventory plus ZIP: there are five synthetic-only map assets, with **zero** verified legal speed records or roadside sign positions. Phase 4 is not fully complete, real downloads remain disabled, and Phase 5 has not started.
+
+
+## Road Intelligence source approval (Phase 4 security prerequisite)
+The map no longer accepts speed limits or physical sign positions merely because a local SQLite file contains source/license strings. `RoadDatabaseApprovalGate` requires independently pinned, code-reviewed SHA-256 bytes and separate approval for each domain. Its production pin list is deliberately EMPTY: **zero legal speed observations and zero surveyed traffic-sign coordinates are present**. Candidate SQLite inspection (not approval) is described in `docs/ROAD_INTELLIGENCE_APPROVAL_GATE.md`. See PR #15 and CI; Phase 4 remains blocked on authentic geodata and field proof.

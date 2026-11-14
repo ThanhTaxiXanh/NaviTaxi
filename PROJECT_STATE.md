@@ -109,3 +109,12 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - APK internal: exactly five non-real assets (3 JSON styles 238/416/698 bytes; synthetic JSON manifest 525 bytes; synthetic PMTiles 462 bytes, SHA256 d9a53b380463498cc31fd59a30d00e07a2f3f32f9f894eefa7b796d20470de9c).
 - PMTiles v3 header: 127 B, 1 addressed tile, root offset 127/25 B, metadata offset 152/245 B, tile bytes at offset 397/65 B; this is a synthetic drawing, NOT a road network.
 - **Zero real speed limits and zero field-verified roadside sign coordinates.** No `road_intelligence.db` / other data DB shipped. Phase 4 remains IN PROGRESS with real map catalog/source approval and field proof BLOCKED; Phase 5 NOT STARTED.
+
+
+## Phase 4 Road Intelligence independent dataset approval gate (PR #15)
+- Branch `phase-4/road-intelligence-approval-gate`; PR https://github.com/ThanhTaxiXanh/NaviTaxi/pull/15.
+- Android `RoadDatabaseApprovalGate.kt` checks the exact runtime `road_intelligence.db` SHA-256 against independently code-reviewed pins; `RoadIntelligenceApprovedPins.entries` is deliberately EMPTY. SQLite `-wal/-shm/-journal` sidecars are rejected.
+- Separate approval booleans for legal speed-limit records and actual surveyed physical sign coordinates; without a matching approval the map repository returns empty GeoJSON and zero counts, even if DB metadata self-attests a license.
+- Added offline `scripts/review_road_candidate.py` for SQLite v1, source evidence, geometry, WGS84, verification timestamps, RTree and SHA-256 audit; report never approves driver alerts.
+- New synthetic-only JUnit/Python/API35 emulator tests; CI acceptance tracked in PR #15.
+- No real source DB, no measured sign position and no legal speed record added. Phase 4 IN PROGRESS/BLOCKED for licensed release sources and phone field tests; Phase 5 NOT STARTED.

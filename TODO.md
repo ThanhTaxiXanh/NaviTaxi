@@ -47,3 +47,10 @@
 - Prioritize Road Intelligence source survey/import plan with true WGS84 roadside sign observations and evidence, rather than using OSM way centroids or inferred speed limits.
 - Run device/OEM process death, ETag-change, disk-full and connectivity loss tests; emulator passing is not field acceptance.
 - Phase 5 remains NOT STARTED/BLOCKED until provenance and baseline catalog are approved.
+
+
+## Road Intelligence acceptance queue after PR #15
+- Verify and merge independent SHA-pinned road DB gate only after all three PR CI workflows pass; do not populate the approval allowlist from unreviewed SQLite.
+- Source-gathering follow-up: legally usable Vietnam OSM snapshot and independent speed-sign ground surveys with WGS84 coordinates, sign_code, direction, applicability and observation date.
+- Review OSM `traffic_sign` node-vs-way semantics; never derive a physical sign coordinate from the center of a road segment or assume an unsurveyed `maxspeed` is enforceable.
+- Reconcile verified DB schema, provenance and checksum at publication. Keep 34-province offline catalog blocked without approved distribution/license chain.
