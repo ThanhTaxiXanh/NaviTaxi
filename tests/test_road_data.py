@@ -95,6 +95,26 @@ class RoadDataTests(unittest.TestCase):
                 self.assertEqual(hashlib.sha256(z.read(entry["path"])).hexdigest(),
                                  entry["sha256"])
 
+    def test_apk_byte_structure_and_checksum_inventory(self):
+        fixture = (ROOT / "app/src/main/assets/pmtiles/synthetic_test.pmtiles").read_bytes()
+        apk = Path(self.work.name) / "binary-fixture.apk"
+        with zipfile.ZipFile(apk, "w") as archive:
+            archive.writestr("assets/pmtiles/synthetic_test.pmtiles", fixture)
+            archive.writestr("assets/road_intelligence/empty.sqlite", self.db.read_bytes())
+            archive.writestr("res/raw/signs.geojson",
+                             '{"type":"FeatureCollection","features":[]}')
+        report = audit(Path(self.work.name), apk)
+        indexed = {entry["apk_internal_path"]: entry for entry in report["apk_assets"]}
+        pm = indexed["assets/pmtiles/synthetic_test.pmtiles"]
+        self.assertEqual(pm["pmtiles_header"]["header_bytes"], 127)
+        self.assertEqual(pm["pmtiles_header"]["addressed_tiles"], 1)
+        self.assertTrue(pm["pmtiles_header"]["valid_section_bounds"])
+        self.assertEqual(pm["sha256"], hashlib.sha256(fixture).hexdigest())
+        database = indexed["assets/road_intelligence/empty.sqlite"]
+        self.assertEqual(database["sqlite_tables"]["road_segments"]["row_count"], 0)
+        self.assertIn("speed_kmh", database["sqlite_tables"]["road_segments"]["columns"])
+        self.assertEqual(indexed["res/raw/signs.geojson"]["json_shape"]["feature_count"], 0)
+
     def test_apk_internal_paths_are_exact(self):
         apk = Path(self.work.name) / "test.apk"
         with zipfile.ZipFile(apk, "w") as z:
