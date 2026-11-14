@@ -45,3 +45,9 @@ Source confidence must be assessed separately from the mere filename, and no APK
 - Extracted debug APK bytes 60,285,140; SHA256 2f3492851a2596b20c64e2dea0910e8c4428bd863d143b8aac12bc132b2cd5ca.
 - APK internal: assets/map_styles/offline_empty.json 238 B; assets/map_styles/osm_streets_experimental.json 416 B; assets/map_styles/pmtiles_synthetic.json 698 B; assets/pmtiles/synthetic_manifest.json 525 B; assets/pmtiles/synthetic_test.pmtiles 462 B (SHA256 d9a53b380463498cc31fd59a30d00e07a2f3f32f9f894eefa7b796d20470de9c).
 - No authentic speed_kmh records, roadside sign coordinates or road intelligence SQLite/Realm file in the APK. Real 34-province navigation and automatic update catalog still BLOCKED; this is an API-level infrastructure acceptance, not field acceptance.
+
+
+## Strict transport consent hardening
+- Important distinction: WorkManager UNMETERED is a scheduling constraint, not a guarantee of Wi-Fi. Some cellular networks can be reported as non-metered.
+- Persist the explicit allow_cellular boolean inside the durable WorkManager Data (false by default). Check actual ConnectivityManager NetworkCapabilities at worker execution: Wi-Fi or Ethernet always allowed, cellular only when the user enabled it. No Internet-capable transport => retry; do not consume mobile data.
+- OfflineConnectionPolicy unit tests cover Wi-Fi, Ethernet, blocked cellular, explicitly allowed cellular and disconnected network. Regression must pass before merge.
