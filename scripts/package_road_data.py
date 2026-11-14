@@ -34,7 +34,8 @@ def package(root: Path, output: Path, apk: Path | None = None) -> dict:
         for path, blob in sorted(entries.items())
     ]
     manifest = {"format": "navitaxi-road-archive/v1",
-                "real_geospatial_asset_count": len(data["assets"]) + len(data["apk_assets"]),
+                "discovered_asset_file_count": len(data["assets"]) + len(data["apk_assets"]),
+                "verified_real_road_speed_or_sign_records": 0,
                 "entries": inventory,
                 "warning": "Empty or provenance-less assets do not demonstrate valid legal speed limits."}
     entries["MANIFEST.json"] = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
