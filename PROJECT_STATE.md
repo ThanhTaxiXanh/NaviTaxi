@@ -155,3 +155,11 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - PR #19 final-head Python SQLite CI 43624034554 SUCCESS, Android compile/test/lint and APK asset deep scan 43624034656 SUCCESS. APK still 5 synthetic assets; no real `road_intelligence.db`, signed legal rules, surveyed physical signs or production alarms.
 - Follow-up source quality audit in `scripts/audit_osm_reference_quality.py`, tests and docs; source reference-only staging remains separate from Android approval.
 - **Phase 4 is STILL IN PROGRESS** (legally approved offline map catalog and field/OEM reliability blocked); Phase 5 NOT STARTED; Phase 11 Road Intelligence law/survey approval blocked.
+
+
+## Verified Phase 4 real Vietnam source and separate QA — final handoff, 2026-11-15
+- PR #19 merged as `8e9ad423100234b022506667b269f25d0a3df556`; actual 333MB source audit 43624034669, Python 43624034554 and Android 43624034656 all SUCCESS. Main postmerge Android build 43624954395 SUCCESS.
+- PR #20 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/20 merged as `68b8f3ba8cea94e982397e9797d8da3b9f348a35`. Final-head code Python provenance/OSM quality/SQLite tests **51/51 PASS** https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43625497790; Android build/JUnit/lint+APK asset deep scan PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43625497719.
+- New `scripts/audit_osm_reference_quality.py` checks manifest vs exact file lengths/SHA256, source receipt, raw tag semantics, uniqueness, WGS84 node coords, NULL sign-way physical coordinate, unverified status and input tampering. Never computes legally approved speeds or field-surveyed signs.
+- Actual OSM reference evidence remains: 44,472 speed-tagged ways, 810 sign-tagged nodes with original OSM point, 1 sign way; 0 independent legal speed validations, 0 physical sign surveys. Snapshot SHA256 `ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed`. Raw PBF is not shipped in APK.
+- Phase 4 IN PROGRESS: approved lawful speed/sign data, on-device field surveys and province map release catalog are still BLOCKED. Phase 5 NOT STARTED. No driver warnings permitted from OSM reference-only data.

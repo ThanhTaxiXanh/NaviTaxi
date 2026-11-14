@@ -97,3 +97,8 @@
 - PR #19 MERGED as 8e9ad423100234b022506667b269f25d0a3df556: bounded, provenance-checked acquisition of 2026-11-12 fixed-date Geofabrik Vietnam OSM PBF (332,558,874 B; SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed).
 - Real CI source run 43624034669 PASS: 44,472 speed-tagged OSM ways and 811 sign-tagged OSM objects (810 nodes + 1 way); none legally or physically field verified. Original source bytes not shipped.
 - Added follow-up independent JSONL/receipt/sign-coordinate/raw-speed QA and regression tests; release restrictions remain false by default. Phase 4 and field verification remain blocked.
+
+
+## 0.4.5-dev accepted source-audit handoff
+- PR #20 merged as `68b8f3ba8cea94e982397e9797d8da3b9f348a35` after final-head 51/51 Python tests PASS 43625497790 and Android build/unit/lint + APK audit PASS 43625497719.
+- The published source evaluation contains original Geofabrik Vietnam 2026-11-12 PBF SHA and measured raw `maxspeed` / `traffic_sign` candidates. Strict quality analysis still permits **ZERO** legally verified speed or physically surveyed sign alerts.

@@ -126,4 +126,5 @@
 - [x] Source reference receipt/manifest SHA256SUMS and exact JSONL row counts independently checked; all alert/veracity flags false.
 - [x] PR #19 merged as 8e9ad423100234b022506667b269f25d0a3df556; Python 43624034554, Android 43624034656 and main build 43624954395 SUCCESS.
 - [x] Real-source inventory is OUTSIDE the APK; 5 synthetic APK assets remain, no `road_intelligence.db`.
-- [ ] PR #20 raw-reference data quality audit CI, field/legal review, physical sign surveys, certified speeds, approved source DB, PMTiles catalog and road driving tests remain incomplete.
+- [x] PR #20 OSM source reference QA gate merged as 68b8f3ba8cea94e982397e9797d8da3b9f348a35; Python 51/51 PASS 43625497790 and Android assemble/unit/lint PASS 43625497719.
+- [ ] Independent legal/field approval, surveyed sign positions, 34-province production map catalog, real speed warnings and on-road tests remain BLOCKED.

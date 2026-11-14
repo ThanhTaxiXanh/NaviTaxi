@@ -103,3 +103,12 @@ and corrupted or duplicate records. It reports raw tag distributions,
 
 Phase 4 remains **IN PROGRESS**, Phase 5 **NOT STARTED**. This audit is an
 evidence inventory, not a driver-safe navigation or traffic-law product.
+
+
+## Final quality gate result — merged PR #20 (2026-11-15)
+
+- Quality auditor: `scripts/audit_osm_reference_quality.py` with 8 source-integrity and forgery regression tests. Checks exact file hash/size, approved-false flags, raw speed values, original OSM IDs, and sign node WGS84 semantics.
+- PR #20 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/20 merged into main as `68b8f3ba8cea94e982397e9797d8da3b9f348a35`.
+- Final PR head Python full suite **51/51 PASS** https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43625497790. Android assembleDebug/JUnit/lint/APK audit PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43625497719.
+- Auditor runs in ordinary CI on synthetic reference input only; independently extracted actual PBF archive was inspected by row counts and three SHA256SUMS entries in this session. Do not mistake the QA unit fixture for the real source.
+- The raw OSM sign-node coordinates and speed tags remain unapproved for driving; the Android source approval pin list is EMPTY. No 34-province production offline package or road safety field test was completed.

@@ -123,3 +123,10 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Actual source audit artifact ID 14124844201, outer ZIP sha256:42352c12807767bfbe7ae4af26a060ad156443e2b05411496f7b0c63d47a5370; nested reference archive SHA256 23bfbef5e6fdc63a2a5e268a04fafeaee837f6c83c1fa5a3b21894bf47094380; all 3 SHA256SUMS entries verified.
 - APK forensic audit artifact ID 14125266676, archive sha256:a7813b05f51d502d003ac64872c75cd819d661eb73af48d687dd6528d76f0833; 5 synthetic assets exactly, and 0 approved real signs/speeds.
 - Supplemental reference-only QA script/tests CI pending; no taxi field test or production legal sign/speed alerts claimed.
+
+
+## PR #20 OSM reference QA acceptance — verified, 2026-11-15
+- PR #20 merged as `68b8f3ba8cea94e982397e9797d8da3b9f348a35`.
+- Final code head `f0a64e5fb8b3de097e8aea5231f0ca05882ff4e4`: Python/SQLite and source-integrity quality tests **51/51 PASS**, https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43625497790.
+- Android assembleDebug/JUnit/lint plus APK road-asset audit PASS, https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43625497719.
+- PR #19: real PBF source workflow 43624034669 SUCCESS, source SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed. Full 333MB source NOT in app. 0 actual signed-off legal speeds/physical sign surveys.
