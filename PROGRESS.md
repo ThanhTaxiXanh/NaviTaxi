@@ -3,8 +3,8 @@
 ## Phase 0 — architecture and asset/data provenance
 - [x] Master Prompt read, three visual refs examined and empty GitHub repository inspected.
 - [x] Road intelligence schema, data-source contract, scanning/archiving tooling and Python tests authored.
-- [ ] GitHub Actions unit-test run is green (record specific run URL when verified).
-- [ ] Phase 0 pull request merged into main.
+- [x] GitHub Actions Python compile, SQLite, provenance, archive tests and artifact upload all succeeded: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43589361023.
+- [ ] Phase 0 PR #1 merged into main (merge after CI checks complete): https://github.com/ThanhTaxiXanh/NaviTaxi/pull/1.
 
 ## Phase 1 — Core Android
 - [ ] Create Kotlin project and Android CI.
