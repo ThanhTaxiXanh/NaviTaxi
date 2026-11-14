@@ -24,16 +24,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.launch
 import java.util.Locale
+import org.maplibre.android.MapLibre
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapLibre.getInstance(applicationContext)
+        MapNetwork.install()
         setContent { NaviTaxiApp() }
     }
 }
 
 private enum class Screen(val label: String) {
-    SEARCH("Tìm kiếm"), OFFLINE("Ngoại tuyến"), SETTINGS("Cài đặt")
+    SEARCH("Tìm kiếm"), MAP("Bản đồ"), OFFLINE("Ngoại tuyến"), SETTINGS("Cài đặt")
 }
 
 @Composable
@@ -42,6 +45,7 @@ private fun NaviTaxiApp() {
     val preferences = remember { UiPreferences(context.getSharedPreferences("navitaxi_ui", Context.MODE_PRIVATE)) }
     var screen by rememberSaveable { mutableStateOf(Screen.SEARCH) }
     var query by rememberSaveable { mutableStateOf("") }
+    var selectedPlace by rememberSaveable { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val notify: (String) -> Unit = { message -> scope.launch { snackbarHostState.showSnackbar(message) } }
@@ -61,6 +65,7 @@ private fun NaviTaxiApp() {
                     Screen.entries.forEach { target ->
                         val icon = when (target) {
                             Screen.SEARCH -> Icons.Default.Search
+                            Screen.MAP -> Icons.Default.Map
                             Screen.OFFLINE -> Icons.Default.OfflinePin
                             Screen.SETTINGS -> Icons.Default.Settings
                         }
@@ -95,10 +100,12 @@ private fun NaviTaxiApp() {
                                 notify("Thiết bị chưa có dịch vụ nhận dạng giọng nói.")
                             }
                         },
-                        onOpenMap = {
-                            notify("MapLibre và bản đồ được triển khai ở Phase 2. Địa điểm đã được chọn.")
+                        onOpenMap = { placeName ->
+                            selectedPlace = placeName
+                            screen = Screen.MAP
                         }
                     )
+                    Screen.MAP -> MapScreen(selectedPlace, onBack = { screen = Screen.SEARCH })
                     Screen.OFFLINE -> OfflineScreen(preferences, notify, onBack = { screen = Screen.SEARCH })
                     Screen.SETTINGS -> SettingsScreen(preferences, onBack = { screen = Screen.SEARCH })
                 }
