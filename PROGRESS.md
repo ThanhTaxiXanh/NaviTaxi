@@ -64,3 +64,10 @@
 - [x] Final branch head Python/SQLite PASS 43606534452, Android assemble/unit/lint PASS 43606534434, Emulator API35 4/4 PASS 43606534445.
 - [x] PR #9 merged to main as e1fc7dc423bc96e02c6b44360e5c3a9729c7cfa1.
 - [ ] Approved province catalog and real verified speed limit/sign locations: BLOCKED on authentic legally sourced input.
+
+
+## Phase 4 strict network policy hardening
+- [x] Identified UNMETERED vs Wi-Fi policy distinction.
+- [x] Persist allow_cellular in worker input and check real active transport via NetworkCapabilities before requesting PMTiles bytes.
+- [x] Added unit test for Wi-Fi/Ethernet/Cellular and default opt-out. CI acceptance pending.
+- [ ] Merge policy hardening PR after Kotlin/JUnit/Lint and emulator pass.

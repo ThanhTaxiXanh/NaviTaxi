@@ -24,7 +24,7 @@ class OfflineWorkScheduler(private val app: Context) {
     private val prefs = app.getSharedPreferences("navitaxi_work_queue", Context.MODE_PRIVATE)
 
     fun buildRequest(spec: OfflinePackageSpec, allowMobile: Boolean): OneTimeWorkRequest {
-        val data = OfflineWorkContract.encode(spec)
+        val data = OfflineWorkContract.encode(spec, allowMobile)
         val network = if (allowMobile) NetworkType.CONNECTED else NetworkType.UNMETERED
         return OneTimeWorkRequestBuilder<OfflineDownloadWorker>()
             .setInputData(data)

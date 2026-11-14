@@ -85,3 +85,8 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - WorkManager code verified on final PR head (Python/SQLite 43606534452, Android build/unit/lint 43606534434, Android Emulator API35 4/4 43606534445). PR #9 merged into main as e1fc7dc423bc96e02c6b44360e5c3a9729c7cfa1. Full Phase 4 remains blocked on real catalog/field proof.
 
 - Real APK audit on Phase 4 WorkManager branch: 60,285,140 bytes, SHA256 2f3492851a2596b20c64e2dea0910e8c4428bd863d143b8aac12bc132b2cd5ca. APK contains exactly five assets (4 JSON + 462-byte synthetic PMTiles) and no .db/.sqlite/.realm records or physical traffic sign dataset.
+
+
+## Phase 4 network consent follow-up
+- Branch phase-4/strict-cellular-consent: worker explicitly checks actual Wi-Fi/Ethernet/Cellular transport even after WorkManager UNMETERED scheduling, so metering status cannot override explicit no-cellular preference.
+- This fix does not create province geodata, legal speed-limit records or roadside sign coordinates. Final CI and merge pending.
