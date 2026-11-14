@@ -41,7 +41,7 @@ def mvt():
 def stable_gzip(data):
     # Python 3.11 and 3.12 differ in gzip OS header byte with mtime=0.
     result = bytearray(gzip.compress(data, mtime=0))
-    result[9] = 3
+    result[9] = 255
     return bytes(result)
 
 def build(output, manifest):
