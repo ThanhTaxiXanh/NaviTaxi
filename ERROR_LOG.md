@@ -57,3 +57,9 @@
 - Identified risk: `OfflinePackageManager.startRemote` accepted a caller-built package spec without requiring an independently approved catalog digest; Phase 4 PR #13 adds a trust-gated entrypoint. No caller in the existing Offline UI uses the production remote path.
 - There is still no separately authenticated speed-limit database, roadside sign observation collection or licensed province release catalog. No production data was silently synthesized.
 - Android validation of new code must be based on final-commit PR CI, not on previous Phase 4 emulator success.
+
+
+## Phase 4 catalog verified CI closure
+- All three checks on the final PR #13 head passed: 43611161271, 43611161247, 43611161298. No current catalog PR build-blocking failure. An intermediate CI run failed when manifest field was renamed before its test assertion was updated; final corrected tests passed.
+- APK audit specifically rules out a packaged SQLite/Realm database of real sign coordinates or `speed_kmh` observations; source Kotlin mentions are schema/reader/test strings, not a hardcoded real-road coordinate dataset.
+- Remaining safety concern for future Road Intelligence importer: mere nonempty license/source strings are insufficient as cryptographic/field verification. Use independent source approval and checksum before enabling any real-world speed alert.

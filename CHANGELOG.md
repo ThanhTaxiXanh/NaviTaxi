@@ -62,3 +62,9 @@
 - Added monotonic release_sequence and rollback/equal-sequence conflict detection; no version polling or production release has been activated.
 - Forbid PMTiles catalog claims of legally verified speed limits and physical traffic sign positions.
 - Added Python/Android test cases and source-provenance documentation. Real 34-province data remains blocked.
+
+
+## 0.4.2-dev — accepted Phase 4 catalog guard / audit
+- Code PR #13 MERGED to main as 068c297e1df55466ba0adc50b05755192814087b after Python, Android and emulator CI passed on final head (43611161271 / 43611161247 / 43611161298).
+- New Actions APK forensic inventory and ZIP with SHA256SUMS, JSON shape and SQLite/PMTiles structural inspection. The synthetic asset inventory was inspected; no real speed/sign dataset found.
+- Catalog integrity, provenance and anti-rollback gates accepted **as infrastructure only**. Licensed 34-province maps and surveyed road signs remain unavailable; no automatic production updates enabled.

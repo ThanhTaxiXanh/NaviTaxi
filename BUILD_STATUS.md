@@ -79,3 +79,13 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Android build/unit/lint: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43610420071 (verify final branch head before acceptance).
 - Android API35 emulator including catalog verification: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43610420074 (verify final branch head before acceptance).
 - No new real data, public release catalog, paid endpoint or speed/sign-coordinate DB in the app.
+
+
+## PR #13 verified final head and APK archive (2026-11-14)
+- Final PR code head `468c49ae565225f7264d492360af665c639f5097`, merged as main `068c297e1df55466ba0adc50b05755192814087b`.
+- Python/SQLite `SUCCESS`: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43611161271.
+- Android :app:assembleDebug/:app:testDebugUnitTest/:app:lintDebug + built APK audit `SUCCESS`: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43611161247.
+- Emulator API35 `SUCCESS`: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43611161298.
+- APK audit artifact `phase4-apk-road-asset-audit` ID 14119833707, ZIP SHA256 2a6d4352bef006261b11a47c6d19c1fc41d0afc334f733ab77fb90d7ed2303bb; inspected nested MANIFEST.json and verified hashes of 13 archived entries.
+- APK asset paths and bytes: `assets/map_styles/offline_empty.json` 238, `assets/map_styles/osm_streets_experimental.json` 416, `assets/map_styles/pmtiles_synthetic.json` 698, `assets/pmtiles/synthetic_manifest.json` 525, `assets/pmtiles/synthetic_test.pmtiles` 462. NO true speed/sign DB, NO real province maps.
+- Debug APK artifact ID 14120452033. Signed release build and actual taxi-driver field trials remain NOT DONE.

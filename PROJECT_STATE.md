@@ -100,3 +100,12 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - PMTiles metadata cannot claim it has verified speed limits or traffic sign coordinates. The real road DB remains ABSENT.
 - Python/SQLite PR CI 43610420031 SUCCESS; Android compile/emulator PR gates tracked separately.
 - Phase 4 remains IN PROGRESS / BLOCKED for approved geodata and field validation; Phase 5 NOT STARTED.
+
+
+## Verified catalog / APK audit handoff — 2026-11-14 (supersedes PR #13 pending status)
+- PR #13 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/13 MERGED to main as `068c297e1df55466ba0adc50b05755192814087b`.
+- Final head `468c49ae565225f7264d492360af665c639f5097`: Python/SQLite CI 43611161271 SUCCESS; Android assemble/JUnit/lint and built-APK road audit 43611161247 SUCCESS; Android API35 emulator 43611161298 SUCCESS.
+- APK audit produced `apk-road-audit.json` and `apk-road-assets.zip` in artifact `phase4-apk-road-asset-audit` (artifact ID 14119833707), includes original asset files, source schema, manifest and SHA256SUMS; inventory hashes checked.
+- APK internal: exactly five non-real assets (3 JSON styles 238/416/698 bytes; synthetic JSON manifest 525 bytes; synthetic PMTiles 462 bytes, SHA256 d9a53b380463498cc31fd59a30d00e07a2f3f32f9f894eefa7b796d20470de9c).
+- PMTiles v3 header: 127 B, 1 addressed tile, root offset 127/25 B, metadata offset 152/245 B, tile bytes at offset 397/65 B; this is a synthetic drawing, NOT a road network.
+- **Zero real speed limits and zero field-verified roadside sign coordinates.** No `road_intelligence.db` / other data DB shipped. Phase 4 remains IN PROGRESS with real map catalog/source approval and field proof BLOCKED; Phase 5 NOT STARTED.

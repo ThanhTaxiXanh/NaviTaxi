@@ -1,6 +1,6 @@
 # Phase 4 — Trusted Offline PMTiles Catalog / Release Contract
 
-Status: **CODE UNDER TEST; NO APPROVED PRODUCTION CATALOG OR GEO DATA**.
+Status: **VERIFIED INFRASTRUCTURE (PR #13, all CI green); NO APPROVED PRODUCTION CATALOG OR GEO DATA**.
 
 ## Purpose / trust boundary
 

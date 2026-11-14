@@ -64,3 +64,7 @@ A WorkManager 2.12.0 CoroutineWorker now schedules future approved HTTPS PMTiles
 
 ## Phase 4 reviewed release catalog (not production-enabled)
 `docs/PHASE_4_CATALOG_CONTRACT.md` defines an exact-byte SHA-256 pinned PMTiles catalog, strict source/license metadata and monotonic update/rollback decisions. Android remote scheduling now requires an approved `TrustedOfflineCatalog`. No approved production pin or catalog is configured, no automatic updates or 34-province downloads are available, and the app still has **zero verified physical traffic signs or road speed limits**.
+
+
+### Latest accepted Phase 4 code
+PR #13 (https://github.com/ThanhTaxiXanh/NaviTaxi/pull/13) is merged as main `068c297e`. Python/SQLite, Android build/unit/lint and API35 emulator all passed on final code head. Android CI now uploads a verifiable built-APK road asset inventory plus ZIP: there are five synthetic-only map assets, with **zero** verified legal speed records or roadside sign positions. Phase 4 is not fully complete, real downloads remain disabled, and Phase 5 has not started.
