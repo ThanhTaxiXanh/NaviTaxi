@@ -49,8 +49,9 @@ fun MapScreen(selectedPlace: String? = null, onBack: () -> Unit) {
     var source by remember { mutableStateOf(MapSource.DEMO_VECTOR) }
     var askToUseOsm by remember { mutableStateOf(false) }
     var map by remember { mutableStateOf<MapLibreMap?>(null) }
-    val dataset by produceState(VerifiedRoadDataset.EMPTY, context) {
-        value = withContext(Dispatchers.IO) {
+    var dataset by remember(context) { mutableStateOf(VerifiedRoadDataset.EMPTY) }
+    LaunchedEffect(context) {
+        dataset = withContext(Dispatchers.IO) {
             RoadIntelligenceRepository(context).read()
         }
     }
