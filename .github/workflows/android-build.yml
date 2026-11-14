@@ -33,6 +33,18 @@ jobs:
           python scripts/validate_pmtiles.py
       - name: Verify Android project and compile
         run: gradle --no-daemon :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+      - name: Scan built APK for embedded road and traffic sign evidence
+        run: |
+          python3 scripts/audit_road_assets.py --root . --apk app/build/outputs/apk/debug/app-debug.apk --out build/apk-road-audit.json
+          python3 scripts/package_road_data.py --root . --apk app/build/outputs/apk/debug/app-debug.apk --output build/apk-road-assets.zip
+      - name: Save verified APK road-asset inventory and ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-apk-road-asset-audit
+          path: |
+            build/apk-road-audit.json
+            build/apk-road-assets.zip
+          if-no-files-found: error
       - name: Android debug artifact
         uses: actions/upload-artifact@v4
         with:

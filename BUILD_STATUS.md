@@ -72,3 +72,10 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Android API35 emulator 4/4 PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43607450907.
 - Actual branch debug APK 60,285,140 bytes SHA256 34fe6d504e1b492f29b39cfc3ea522a0d7053b03f875ff375d7742df9e580f61; exact PMTiles asset remains 462 bytes, sha256 d9a53b380463498cc31fd59a30d00e07a2f3f32f9f894eefa7b796d20470de9c.
 - No real speed/sign DB, approved province PMTiles catalog or production background field validation. Phase 4 catalog/updates remains BLOCKED.
+
+
+## Phase 4 independently pinned catalog — PR #13
+- New Python/SQLite workflow PASSED: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43610420031.
+- Android build/unit/lint: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43610420071 (verify final branch head before acceptance).
+- Android API35 emulator including catalog verification: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43610420074 (verify final branch head before acceptance).
+- No new real data, public release catalog, paid endpoint or speed/sign-coordinate DB in the app.

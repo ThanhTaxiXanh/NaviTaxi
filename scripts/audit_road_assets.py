@@ -10,6 +10,8 @@ import json
 from pathlib import Path
 import re
 import sqlite3
+import struct
+import tempfile
 import zipfile
 
 DATA_SUFFIXES = {".db", ".sqlite", ".sqlite3", ".realm", ".geojson",
@@ -35,9 +37,10 @@ def db_summary(path: Path):
             tables = {}
             for (table,) in connection.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"):
-                cols = [row[1] for row in connection.execute(f'PRAGMA table_info("{table}")')]
+                escaped = table.replace('"', '""')
+                cols = [row[1] for row in connection.execute(f'PRAGMA table_info("{escaped}")')]
                 # Avoid arbitrary large scans: COUNT is for local ordinary DB.
-                count = connection.execute(f'SELECT COUNT(*) FROM "{table}"').fetchone()[0]
+                count = connection.execute(f'SELECT COUNT(*) FROM "{escaped}"').fetchone()[0]
                 tables[table] = {"columns": cols, "row_count": count}
             return tables
         finally:
@@ -57,6 +60,52 @@ def shape_summary(path: Path):
     except (ValueError, UnicodeError, OSError) as exc:
         return {"parse_error": str(exc)}
 
+def apk_blob_shape(path: str, blob: bytes) -> dict:
+    """Describe APK-contained JSON, SQLite and PMTiles without inventing records."""
+    suffix = Path(path).suffix.lower()
+    if suffix in {".json", ".geojson"}:
+        try:
+            parsed = json.loads(blob.decode("utf-8"))
+            if isinstance(parsed, dict):
+                return {"json_shape": {
+                    "type": parsed.get("type", "object"),
+                    "keys": list(parsed)[:25],
+                    "feature_count": len(parsed["features"])
+                    if isinstance(parsed.get("features"), list) else None,
+                }}
+            return {"json_shape": {"type": type(parsed).__name__, "length": len(parsed)}}
+        except (UnicodeError, ValueError) as exc:
+            return {"json_shape": {"parse_error": str(exc)}}
+    if suffix in {".db", ".sqlite", ".sqlite3"}:
+        if len(blob) > 128 * 1024 * 1024:
+            return {"sqlite_tables": {"error": "DB exceeds audit inspection limit"}}
+        with tempfile.TemporaryDirectory(prefix="navitaxi-apk-audit-") as temp:
+            file = Path(temp) / "asset.sqlite"
+            file.write_bytes(blob)
+            return {"sqlite_tables": db_summary(file)}
+    if suffix == ".pmtiles":
+        if len(blob) < 127 or blob[:8] != b"PMTiles\x03":
+            return {"pmtiles_header": {"error": "Not a PMTiles v3 header"}}
+        fields = struct.unpack_from("<11Q", blob, 8)
+        names = ("root_offset", "root_bytes", "metadata_offset", "metadata_bytes",
+                 "leaf_offset", "leaf_bytes", "tile_offset", "tile_bytes",
+                 "addressed_tiles", "tile_entries", "tile_contents")
+        metadata = dict(zip(names, fields))
+        sections = [(fields[0], fields[1]), (fields[2], fields[3]),
+                    (fields[4], fields[5]), (fields[6], fields[7])]
+        metadata["valid_section_bounds"] = all(
+            start + size <= len(blob) and (size == 0 or start >= 127)
+            for start, size in sections)
+        metadata["header_bytes"] = 127
+        metadata["internal_compression"] = blob[97]
+        metadata["tile_compression"] = blob[98]
+        metadata["tile_type"] = blob[99]
+        metadata["minzoom"] = blob[100]
+        metadata["maxzoom"] = blob[101]
+        return {"pmtiles_header": metadata}
+    return {}
+
+
 def audit(root: Path, apk: Path | None = None) -> dict:
     results = {"root": str(root.resolve()), "assets": [], "embedded_code_hits": [],
                "apk": str(apk.resolve()) if apk else None, "apk_assets": []}
@@ -75,6 +124,8 @@ def audit(root: Path, apk: Path | None = None) -> dict:
             shape = shape_summary(file)
             if shape is not None:
                 entry["json_shape"] = shape
+            if file.suffix.lower() == ".pmtiles":
+                entry.update(apk_blob_shape(rel, file.read_bytes()))
             results["assets"].append(entry)
         if file.suffix.lower() in CODE_SUFFIXES:
             try:
@@ -92,11 +143,13 @@ def audit(root: Path, apk: Path | None = None) -> dict:
                     Path(path).suffix.lower() in DATA_SUFFIXES
                 ):
                     blob = archive.read(info)
-                    results["apk_assets"].append({
+                    entry = {
                         "apk_internal_path": path,
                         "size_bytes": info.file_size,
                         "sha256": hashlib.sha256(blob).hexdigest()
-                    })
+                    }
+                    entry.update(apk_blob_shape(path, blob))
+                    results["apk_assets"].append(entry)
             for path in archive.namelist():
                 if path.endswith(".smali") or path.endswith(".java"):
                     for number, line in enumerate(archive.read(path).decode("utf-8", "replace").splitlines(), 1):

@@ -59,3 +59,10 @@ OSM is ODbL: display attribution and ensure compatible redistribution obligation
 - The app never requests GPS permission or downloads any map data to run this fixture. A future Phase 4 package manager must verify all archived packages before atomic installation.
 - For remote lawful PMTiles services MapLibre offers pmtiles://https:// requiring HTTP Range; scripts/pmtiles_range_probe.py tests a server's 206 behavior without bulk downloading.
 - This fixture is an MVT grid, not genuine road segments. No speed limit or traffic sign coordinate is claimed unless a licensed verified Road Intelligence database supplies it.
+
+
+## Phase 4 release/catalog integrity boundary
+- An HTTPS manifest is not trusted simply because it is retrievable. `OfflineCatalogVerifier.verify(raw, trustedSha256)` checks exact bytes against a separately approved digest before producing a `TrustedOfflineCatalog`.
+- Android OfflinePackageManager requires a trusted catalog entry to schedule downloads; the worker separately preserves SHA-256/PMTiles/header/transport checks.
+- Release identities carry a monotonically increasing `release_sequence`; rollback and conflicting same-sequence bytes must be refused. The catalog layer never fabricates verified road speed/sign datasets.
+- An approved production catalog is still absent. Installed release_sequence migration, live download/update discovery and road-data independent provenance verification are future prerequisites.

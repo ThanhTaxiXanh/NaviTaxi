@@ -60,3 +60,7 @@ See docs/PHASE_2_ACCEPTANCE.md and docs/ROAD_INTELLIGENCE_MAP_CONTRACT.md.
 
 ### Phase 4 WorkManager background jobs
 A WorkManager 2.12.0 CoroutineWorker now schedules future approved HTTPS PMTiles package downloads with network constraints, durable job IDs, progress restoration and foreground dataSync notification. The installer continues to require full SHA256, PMTiles v3 header and immutable version activation. No approved real map catalog exists, so the offline page still only installs/deletes a synthetic test grid. No legal speed data or surveyed sign coordinates are bundled.
+
+
+## Phase 4 reviewed release catalog (not production-enabled)
+`docs/PHASE_4_CATALOG_CONTRACT.md` defines an exact-byte SHA-256 pinned PMTiles catalog, strict source/license metadata and monotonic update/rollback decisions. Android remote scheduling now requires an approved `TrustedOfflineCatalog`. No approved production pin or catalog is configured, no automatic updates or 34-province downloads are available, and the app still has **zero verified physical traffic signs or road speed limits**.

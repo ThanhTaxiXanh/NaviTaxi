@@ -101,7 +101,10 @@ class OfflinePackageManager private constructor(private val app: Context) {
      * exists, so the Offline page never exposes this action to drivers yet.
      * WorkManager waits for Wi-Fi/unmetered transport instead of falsely failing.
      */
-    fun startRemote(spec: OfflinePackageSpec, allowMobileData: Boolean) {
+    fun startRemote(catalog: TrustedOfflineCatalog, packageId: String, allowMobileData: Boolean) {
+        // Do not schedule a raw URL or a manifest that merely asserts its own checksum.
+        // A separately pinned catalog is required even for a manual download.
+        val spec = requireNotNull(catalog.get(packageId)) { "Package absent from approved catalog" }.spec
         spec.validate()
         synchronized(guard) {
             if (stateMutable.value.downloading) return

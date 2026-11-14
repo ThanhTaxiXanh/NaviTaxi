@@ -71,3 +71,12 @@
 - [x] Persist allow_cellular in worker input and check real active transport via NetworkCapabilities before requesting PMTiles bytes.
 - [x] Added unit test for Wi-Fi/Ethernet/Cellular and default opt-out. CI acceptance pending.
 - [x] Phase 4 policy PR #11 merged to main 64ec5e6: Python/SQLite PASS 43607450905, Android build/JUnit/Lint PASS 43607450906, emulator 4/4 PASS 43607450907.
+
+
+## Phase 4 catalog and source-provenance gating — PR #13
+- [x] Authored pinned SHA-256 catalog approval contract, strict release/URL/license/size metadata gates in Python and Android.
+- [x] Added monotonic integer release sequence (rollback/equivocation rejection) instead of comparing version strings.
+- [x] Changed OfflinePackageManager remote entrypoint to require a validated TrustedOfflineCatalog, without enabling any live map source.
+- [x] Added Python catalog negative tests (no pin, duplicate/extra fields, unsafe URLs, fake speed/sign verification, rollback); CI 43610420031 PASS.
+- [ ] Android compile, unit, lint and API35 new instrumentation verification on final PR head.
+- [ ] Production approved catalog, original Vietnam PBF approval/processing, actual verified road speed/sign coordinates: BLOCKED on legitimate source and field evidence.

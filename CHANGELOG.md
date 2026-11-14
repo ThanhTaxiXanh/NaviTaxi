@@ -54,3 +54,11 @@
 - WorkManager phase4 follow-up completed with 3 successful final workflows (43606534452, 43606534434, 43606534445), merged as main e1fc7dc. Background field reliability and real licensed map catalogs remain unvalidated/blocked.
 
 - Phase 4 stricter network transport consent: save explicit allow_cellular flag, check actual connectivity transport at worker runtime (unmetered cellular blocked by default). Code PR #11 merged as 64ec5e6 after green 43607450905/906/907 CI.
+
+
+## 0.4.2-dev — Phase 4 pinned catalog integrity (PR #13)
+- Added Python/Android offline PMTiles catalog validators with independent SHA-256 pin and non-secret source metadata.
+- Prevented unpinned callers from scheduling remote downloads through OfflinePackageManager.
+- Added monotonic release_sequence and rollback/equal-sequence conflict detection; no version polling or production release has been activated.
+- Forbid PMTiles catalog claims of legally verified speed limits and physical traffic sign positions.
+- Added Python/Android test cases and source-provenance documentation. Real 34-province data remains blocked.

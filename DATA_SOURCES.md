@@ -27,3 +27,10 @@ A data source's URL and license must be recorded before its content can be shipp
 - MVT vector layer "demo_grid" with 2 artificial cross lines at global z0, NO road names, geographic routes, speed limits or traffic sign coordinates.
 - Native PMTiles remote HTTP range protocol can target lawful, operator-hosted HTTPS URLs in future, but NO external paid provider, endpoint or package has been configured.
 - Real offline 34-province licensed OSM extracts and verified local speed/sign datasets remain BLOCKED/NOT INGESTED.
+
+
+## 2026-11-14 candidate source evaluation (not ingested/approved)
+- Geofabrik lists the Vietnam OpenStreetMap extract `vietnam-latest.osm.pbf`: https://download.geofabrik.de/asia/vietnam.html . It is a potential zero-fee source to process into first-party PMTiles with ODbL obligations; NO file was downloaded, checked, redistributed or approved in this PR.
+- `maxspeed=*` ways are volunteered map tags, not a verified survey of current legal limits. `traffic_sign=*` may describe a way's affected section rather than a roadside physical coordinate; node tagging and direction evidence are needed. See https://wiki.openstreetmap.org/wiki/Key:maxspeed and https://wiki.openstreetmap.org/wiki/Key:traffic_sign.
+- Real speed_kmh records: 0 verified; real sign WGS84 coordinates: 0 verified. Any proposed import must preserve source snapshot/hash/license, observation date, geometry and field verification separately.
+- `scripts/validate_offline_catalog.py` and Android `OfflineCatalogVerifier` validate *package release metadata*, not traffic laws or physical sign locations. No production catalog pin exists.

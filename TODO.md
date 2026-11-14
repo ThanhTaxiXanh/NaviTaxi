@@ -31,3 +31,11 @@
 - Confirm no .db/.sqlite/.realm speed/sign assets or real sign locations are embedded.
 - Add approved signed-off HTTPS PMTiles catalog before activating remote downloads or automatic version checks; no public OSM tile server bulk use.
 - WorkManager can reschedule work on system stop, but user force-stop and Android 15 dataSync time limits require field testing.
+
+
+## Phase 4 catalog continuation / PR #13
+- Add independent catalog pinning before a trusted real PMTiles release is configured; pin must not be published by the same untrusted manifest.
+- PR #13 adds the non-networking manifest validator and Android gate. Review full CI results before merge.
+- Store verified installed release_sequence durably when a real approved catalog exists; define rollback policy for older installs without sequence.
+- Test process death, changed ETag, missing storage and cross-process race under real Android conditions when source exists.
+- Do not enable 34-province downloads or legal speed/sign warnings from OSM tag presence alone.
