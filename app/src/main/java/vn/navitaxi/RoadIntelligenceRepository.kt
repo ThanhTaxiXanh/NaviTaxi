@@ -30,7 +30,7 @@ class RoadIntelligenceRepository(context: Context) {
                         val lon = cursor.getDouble(2)
                         val lat = cursor.getDouble(3)
                         val sourceId = cursor.getString(4)
-                        if (lon !in -180.0..180.0 || lat !in -90.0..90.0 ||
+                        if (!RoadDataValidation.validWgs84(lat, lon) ||
                             sourceId.isNullOrBlank()) continue
                         signs.put(JSONObject()
                             .put("type", "Feature")
@@ -52,11 +52,9 @@ class RoadIntelligenceRepository(context: Context) {
                     while (cursor.moveToNext()) {
                         val speed = cursor.getInt(1)
                         val sourceId = cursor.getString(3)
-                        if (speed !in 1..250 || sourceId.isNullOrBlank()) continue
+                        if (!RoadDataValidation.validSpeed(speed, sourceId)) continue
                         val geometry = JSONObject(cursor.getString(2))
-                        if (geometry.optString("type") != "LineString") continue
-                        val coords = geometry.optJSONArray("coordinates") ?: continue
-                        if (coords.length() < 2) continue
+                        if (!RoadDataValidation.validLineString(geometry)) continue
                         // No unverified/synthetic legal default is ever inserted.
                         roads.put(JSONObject()
                             .put("type", "Feature").put("geometry", geometry)

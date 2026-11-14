@@ -33,6 +33,8 @@ import org.maplibre.android.style.layers.CircleLayer
 import org.maplibre.android.style.layers.LineLayer
 import org.maplibre.android.style.layers.PropertyFactory
 import org.maplibre.android.style.sources.GeoJsonSource
+import org.maplibre.geojson.Point
+import java.util.Locale
 
 private val HANOI = LatLng(21.0285, 105.8542)
 private const val ROADS_SOURCE = "navitaxi-verified-roads"
@@ -49,6 +51,8 @@ fun MapScreen(selectedPlace: String? = null, onBack: () -> Unit) {
     var source by remember { mutableStateOf(MapSource.DEMO_VECTOR) }
     var askToUseOsm by remember { mutableStateOf(false) }
     var map by remember { mutableStateOf<MapLibreMap?>(null) }
+    var details by remember { mutableStateOf<String?>(null) }
+    var clickListenerInstalled by remember { mutableStateOf(false) }
     var dataset by remember(context) { mutableStateOf(VerifiedRoadDataset.EMPTY) }
     LaunchedEffect(context) {
         dataset = withContext(Dispatchers.IO) {
@@ -89,6 +93,26 @@ fun MapScreen(selectedPlace: String? = null, onBack: () -> Unit) {
     LaunchedEffect(mapView, source, dataset) {
         mapView.getMapAsync { liveMap ->
             map = liveMap
+            if (!clickListenerInstalled) {
+                liveMap.addOnMapClickListener { location ->
+                    val hit = liveMap.queryRenderedFeatures(
+                        liveMap.projection.toScreenLocation(location), "verified-sign-points"
+                    ).firstOrNull()
+                    val coordinate = hit?.geometry() as? Point
+                    if (hit != null && coordinate != null) {
+                        val code = hit.getStringProperty("sign_code") ?: "?"
+                        val sourceId = hit.getStringProperty("source_id") ?: "?"
+                        details = "Biển " + code +
+                            " · WGS84 " + String.format(Locale.US, "%.6f", coordinate.latitude()) +
+                            ", " + String.format(Locale.US, "%.6f", coordinate.longitude()) +
+                            " · nguồn: " + sourceId
+                        true
+                    } else {
+                        false
+                    }
+                }
+                clickListenerInstalled = true
+            }
             liveMap.uiSettings.isCompassEnabled = true
             liveMap.uiSettings.isZoomGesturesEnabled = true
             liveMap.uiSettings.isRotateGesturesEnabled = true
@@ -165,6 +189,10 @@ fun MapScreen(selectedPlace: String? = null, onBack: () -> Unit) {
                         if (dataset.signCount == 0) "Chưa có tọa độ xác minh"
                         else dataset.signCount.toString() + " vị trí có nguồn",
                         fontSize = 12.sp)
+                    if (details != null) {
+                        Text(details!!, fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.primary)
+                    }
                     if (selectedPlace != null) {
                         Text("Địa điểm: " + selectedPlace + " (chưa có tọa độ xác minh để ghim)",
                             fontSize = 11.sp, color = MaterialTheme.colorScheme.primary)
