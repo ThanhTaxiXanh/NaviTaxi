@@ -71,7 +71,7 @@ def _sign_tags(tags: dict[str, str]) -> dict[str, str]:
 
 
 def _whitelist(tags: dict[str, str], domain: str) -> dict[str, str]:
-    picked = (_speed_tags(tags) if domain == "speed" else _sign_tags(tags))
+    picked = (_speed_tags(tags) if domain == "speed" else {**_sign_tags(tags), **_speed_tags(tags)})
     for key in SPEED_CONTEXT | {"direction"}:
         if key in tags:
             picked[key] = tags[key]
