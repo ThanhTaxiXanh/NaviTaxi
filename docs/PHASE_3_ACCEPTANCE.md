@@ -24,3 +24,10 @@
 - The synthetic geometry is not a Vietnam map, not an OSM extract and contains NO road names, POIs, driving routes, legal maxspeed observations or traffic sign locations.
 - No 34-province dataset, download/pause/resume manager or routing is claimed.
 - No offline driving suitability or production performance guarantee; Phase 4/5/11 handle real data and Phase 15/17 handle device driving tests.
+
+## Final verified evidence
+- SQLite/Python PMTiles byte-for-byte, corruption and local Range tests: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43603204053 (success).
+- Kotlin Android compile, debug APK, unit test and Lint: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43603204092 (success).
+- MapLibre Android Emulator API 35 2/2 native offline style and lifecycle tests: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43603204072 (success).
+- Phase 3 code PR #5 merged: https://github.com/ThanhTaxiXanh/NaviTaxi/pull/5, commit f401f03.
+- Tested: integrity and native style load, NOT real tile coverage, navigation, province coverage or actual traffic sign data.

@@ -2,7 +2,7 @@
 
 - Repository: `ThanhTaxiXanh/NaviTaxi`
 - Starting main SHA: `40f6c89b7e1027c3f64c552bfc0d2271dffc79d2` (originally README only)
-- Current phase: **3 — NEXT** (PMTiles reader and genuinely offline map data). Phase 0/1/2 merged.
+- Current phase: **4 — NEXT** (offline package download/update manager). Phase 0/1/2/3 merged.
 - Build environment observed: OpenJDK 21, Kotlin CLI present; Android SDK/Gradle/AAPT2/Apksigner not detected in current runtime. GitHub Actions is the intended Android build environment.
 - Data discovery: no APK, `assets/`, `res/raw`, `res/assets` or real source DBs existed in the initial GitHub repo. None can be claimed extracted.
 - Three UI references examined: search, offline maps, settings. Implementation follows Phase 1; screenshot-perfect acceptance requires emulator/device comparison.
@@ -57,5 +57,5 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Android store: app/src/main/java/vn/navitaxi/OfflinePmtilesStore.kt (SHA-256, structural validation, atomic private-copy activation).
 - Map screen: user-selected PMTiles demo with clear synthetic data notice; other OSM/MapLibre sources unchanged.
 - HTTP Range verification: scripts/pmtiles_range_probe.py and loopback test tests/test_pmtiles_range_probe.py. This does NOT create a real public tile service.
-- Emulator MapLibre PMTiles smoke passed 2/2 on early Phase 3 commit: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43602555868; current head must be retested.
-- Phase 3 final verification/merge state: PENDING CI at time of this document. Do not call full 34-province offline coverage complete.
+- Emulator MapLibre PMTiles smoke passed 2/2 on final Phase 3 head: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43603204072.
+- Phase 3 final code PR #5 MERGED into main as f401f03396431f58ddefd23c2ff87a37c039367f. All three final-head workflows passed. Next: Phase 4 download/pause/resume/cancel/update with verified data. Do not call 34-province coverage complete.

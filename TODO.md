@@ -3,8 +3,8 @@
 - Phase 0: DONE, CI passed and PR #1 merged.
 - Phase 1: CORE DONE and PR #2 merged; accurate device pixel matching remains Phase 15.
 - Phase 2: DONE for experimental renderer, consent/attribution and emulator smoke. PR #3 merged. Actual street-data completeness is NOT claimed.
-- Phase 3: IN PROGRESS — verified native PMTiles read of synthetic offline tile, SHA-256 and HTTP Range probe. Latest CI and PR merge pending. Real geography remains Phase 5.
-- Phase 4: Offline package manager with pause/resume/cancel and honest package state.
+- Phase 3: DONE for verifiable synthetic offline PMTiles demonstration (2/2 Android emulator tests) + checksum + HTTP Range probe; merged PR #5. Real geography remains Phase 5.
+- Phase 4: NEXT — real offline package manager with pause/resume/cancel, atomic verification and version/updates. Requires lawful downloadable datasets before claiming full province coverage.
 - Phase 5: 34-province metadata and national coverage with lawful geodata.
 - Phase 6: GPS/compass, privacy and power profile.
 - Phase 7: validated routing/navigation/taximeter.
