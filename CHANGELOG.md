@@ -50,3 +50,5 @@
 - Serialized in-process cancellation/partial cleanup; reject URL query secrets in persisted specs and check free storage.
 - Added WorkManager contract unit tests and invalid-provenance Android instrumentation test.
 - No source speed limit or physical traffic sign coordinates; still no real province catalog.
+
+- WorkManager phase4 follow-up completed with 3 successful final workflows (43606534452, 43606534434, 43606534445), merged as main e1fc7dc. Background field reliability and real licensed map catalogs remain unvalidated/blocked.

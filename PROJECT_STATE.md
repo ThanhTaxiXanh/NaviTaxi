@@ -73,7 +73,7 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Android assemble/unit/lint PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43604517429.
 - Android API 35 emulator 3/3 PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43604517455.
 - APK debug 59,718,112 bytes SHA256 7d1f6728914d474b3d97a5d61fae5ab15a10c1f01dce96e4853ac6853d95848a.
-- Remaining Phase 4: WorkManager background reliability and a licensed, signed-off remote package catalog/version discovery/update scheduling. BLOCKED on absent approved package source. Do not claim whole Phase 4 DONE.
+- Remaining Phase 4: long-term device/OEM background reliability validation and a licensed, signed-off remote catalog/version discovery/update scheduling. WorkManager infrastructure now built and emulator tested; no live approved source.
 
 
 ## Phase 4 WorkManager continuation, 2026-11-14
@@ -82,4 +82,6 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - App now reobserves work ID/progress after process recreation using WorkManager Flow. Long-running downloads declare foreground dataSync service; Wi-Fi-only is WorkManager UNMETERED, mobile requires explicit opt-in.
 - WorkManager Data stores only approved non-secret source/version/license/size/SHA256; no GPS coordinates. Reuses Phase 4 streaming ETag/Range and PMTiles v3 integrity gate. Query-string credentials prohibited.
 - Synthetic APK asset only: assets/pmtiles/synthetic_test.pmtiles, 462 bytes. No real speed-limit/sign-location records, no legally sourced 34-province catalog; automated release checks blocked.
-- CI on final PR head and merge are PENDING verification. Do not mark entire Phase 4 complete until green and source blockers resolved.
+- WorkManager code verified on final PR head (Python/SQLite 43606534452, Android build/unit/lint 43606534434, Android Emulator API35 4/4 43606534445). PR #9 merged into main as e1fc7dc423bc96e02c6b44360e5c3a9729c7cfa1. Full Phase 4 remains blocked on real catalog/field proof.
+
+- Real APK audit on Phase 4 WorkManager branch: 60,285,140 bytes, SHA256 2f3492851a2596b20c64e2dea0910e8c4428bd863d143b8aac12bc132b2cd5ca. APK contains exactly five assets (4 JSON + 462-byte synthetic PMTiles) and no .db/.sqlite/.realm records or physical traffic sign dataset.

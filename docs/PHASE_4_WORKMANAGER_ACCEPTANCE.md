@@ -36,3 +36,12 @@ Source confidence must be assessed separately from the mere filename, and no APK
 - WorkManager 2.12.0 release: https://developer.android.com/jetpack/androidx/releases/work
 - Long-running foreground work: https://developer.android.com/develop/background-work/background-tasks/persistent/how-to/long-running
 - WorkManager work state API: https://developer.android.com/reference/kotlin/androidx/work/WorkManager
+
+## Verified acceptance evidence (2026-11-14)
+- SQLite, PMTiles and source provenance: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43606534452 – PASS.
+- Android assembleDebug/testDebugUnitTest/lintDebug: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43606534434 – PASS.
+- Android Emulator API35: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43606534445 – 4/4 PASS, including invalid-manifest worker refusal without network.
+- Code PR https://github.com/ThanhTaxiXanh/NaviTaxi/pull/9 merged to main e1fc7dc423bc96e02c6b44360e5c3a9729c7cfa1.
+- Extracted debug APK bytes 60,285,140; SHA256 2f3492851a2596b20c64e2dea0910e8c4428bd863d143b8aac12bc132b2cd5ca.
+- APK internal: assets/map_styles/offline_empty.json 238 B; assets/map_styles/osm_streets_experimental.json 416 B; assets/map_styles/pmtiles_synthetic.json 698 B; assets/pmtiles/synthetic_manifest.json 525 B; assets/pmtiles/synthetic_test.pmtiles 462 B (SHA256 d9a53b380463498cc31fd59a30d00e07a2f3f32f9f894eefa7b796d20470de9c).
+- No authentic speed_kmh records, roadside sign coordinates or road intelligence SQLite/Realm file in the APK. Real 34-province navigation and automatic update catalog still BLOCKED; this is an API-level infrastructure acceptance, not field acceptance.
