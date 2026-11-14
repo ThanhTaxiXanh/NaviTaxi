@@ -77,6 +77,16 @@ class RoadCandidateAuditTest(unittest.TestCase):
         self.assertTrue(any("Source" in issue for issue in report["issues"]))
         self.assertTrue(any("Road" in issue for issue in report["issues"]))
 
+    def test_impossible_calendar_dates_are_rejected(self):
+        self.insert_test_only_records()
+        con = sqlite3.connect(self.db)
+        con.execute("UPDATE road_segments SET verified_at='2026-02-31'")
+        con.commit()
+        con.close()
+        report = audit_candidate(self.db)
+        self.assertEqual(report["status"], "REJECTED")
+        self.assertTrue(any("Road" in issue for issue in report["issues"]))
+
     def test_mismatched_spatial_index_is_rejected(self):
         self.insert_test_only_records()
         con = sqlite3.connect(self.db)
