@@ -1,0 +1,14 @@
+{
+  "version": 8,
+  "name": "NaviTaxi empty offline (no data)",
+  "sources": {},
+  "layers": [
+    {
+      "id": "offline-background",
+      "type": "background",
+      "paint": {
+        "background-color": "#EFF3EF"
+      }
+    }
+  ]
+}

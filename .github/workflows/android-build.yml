@@ -25,6 +25,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.9"
+      - name: Validate local map styles
+        run: |
+          python -m json.tool app/src/main/assets/map_styles/osm_streets_experimental.json >/dev/null
+          python -m json.tool app/src/main/assets/map_styles/offline_empty.json >/dev/null
       - name: Verify Android project and compile
         run: gradle --no-daemon :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
       - name: Android debug artifact

@@ -40,7 +40,7 @@ private fun simplify(text: String): String =
 
 @Composable
 fun SearchScreen(query: String, onQueryChange: (String) -> Unit,
-                 onVoiceSearch: () -> Unit, onOpenMap: () -> Unit) {
+                 onVoiceSearch: () -> Unit, onOpenMap: (String) -> Unit) {
     var tab by rememberSaveable { mutableStateOf("Địa chỉ") }
     var selectedId by rememberSaveable { mutableStateOf("lake") }
     var starred by rememberSaveable { mutableStateOf(false) }
@@ -188,7 +188,7 @@ fun SearchScreen(query: String, onQueryChange: (String) -> Unit,
                     Text(selected.address, fontSize = 11.sp, color = NaviColors.Muted,
                         maxLines = 2, overflow = TextOverflow.Ellipsis)
                     Text("Khoảng cách: chờ vị trí GPS", fontSize = 10.sp, color = MaterialTheme.colorScheme.primary)
-                    Button(onClick = onOpenMap, modifier = Modifier.fillMaxWidth(),
+                    Button(onClick = { onOpenMap(selected.name) }, modifier = Modifier.fillMaxWidth(),
                         contentPadding = PaddingValues(horizontal = 7.dp, vertical = 7.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = NaviColors.Green)) {
                         Icon(Icons.Default.Navigation, null, modifier = Modifier.size(17.dp))
