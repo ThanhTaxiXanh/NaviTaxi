@@ -84,7 +84,7 @@ def apk_blob_shape(path: str, blob: bytes) -> dict:
             file.write_bytes(blob)
             return {"sqlite_tables": db_summary(file)}
     if suffix == ".pmtiles":
-        if len(blob) < 127 or blob[:8] != b"PMTiles\\x03":
+        if len(blob) < 127 or blob[:8] != b"PMTiles\x03":
             return {"pmtiles_header": {"error": "Not a PMTiles v3 header"}}
         fields = struct.unpack_from("<11Q", blob, 8)
         names = ("root_offset", "root_bytes", "metadata_offset", "metadata_bytes",
