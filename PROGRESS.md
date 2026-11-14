@@ -7,9 +7,9 @@
 - [x] Phase 0 PR #1 merged into main (verified): https://github.com/ThanhTaxiXanh/NaviTaxi/pull/1.
 
 ## Phase 1 — Core Android
-- [ ] Create Kotlin project and Android CI.
-- [ ] Implement interactive Search / Offline Maps / Settings screens.
-- [ ] Build debug APK and verify UI on an Android emulator/device.
+- [x] Create Kotlin project and Android CI.
+- [x] Implement baseline interactive Search / Offline Maps / Settings screens.
+- [x] Build debug APK in CI. Device screenshot/pixel verification deferred; see Phase 15.
 
 ## Phase 1 implementation (work in progress)
 - [x] Kotlin Android project, Gradle and Android Actions build workflow authored.
@@ -17,4 +17,15 @@
 - [x] Explicit unknown/verified speed-limit data contract created.
 - [x] Android :app:assembleDebug, :app:testDebugUnitTest and :app:lintDebug passed with verified APK artifact: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43590922509.
 - [ ] Device screenshots compared against three user references (Phase 15 pixel QA; NOT claimed exact).
-- [ ] Phase 1 PR #2 merged after acceptance gate.
+- [x] Phase 1 PR #2 merged to main as 501b46b.
+
+
+## Phase 2 — MapLibre + OSM (ongoing)
+- [x] Native MapLibre OpenGL ES dependency; Kotlin 2.2.10 compiler alignment.
+- [x] Map tab, search-to-map action, camera zoom/gestures and lifecycle callbacks in Compose.
+- [x] Default limited vector demo; explicit OSM street test consent with app User-Agent and visible attribution; empty offline source.
+- [x] Source-linked road/speed limit and physical traffic sign GeoJSON visual layers gated on optional local SQLite.
+- [x] WGS84 bounds/speed provenance validation and marker-tap coordinates/source text.
+- [x] Phase 0 schema/asset Python checks green, Kotlin app build/lint/unit tests succeeded at 518785a5, CI 43593357604.
+- [x] Emulator API 35 MapLibre startup, empty style switch, exit no-crash test PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43593588383.
+- [x] PR #3 merged into main as 7d9809c after 3 green CI workflows.

@@ -1,8 +1,8 @@
 # Execution backlog (no phases may be silently skipped)
 
-- Phase 0: CI pass; PR and merge on main after verification.
-- Phase 1: Kotlin Android app scaffold; repository state, UI wiring and all three reference screens.
-- Phase 2: MapLibre + OSM, license/attribution and base-map tests.
+- Phase 0: DONE, CI passed and PR #1 merged.
+- Phase 1: CORE DONE and PR #2 merged; accurate device pixel matching remains Phase 15.
+- Phase 2: DONE for experimental renderer, consent/attribution and emulator smoke. PR #3 merged. Actual street-data completeness is NOT claimed.
 - Phase 3: PMTiles reader, range support, checksum and Android offline proof.
 - Phase 4: Offline package manager with pause/resume/cancel and honest package state.
 - Phase 5: 34-province metadata and national coverage with lawful geodata.

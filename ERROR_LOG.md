@@ -11,3 +11,12 @@
 
 - Phase 1 method collision fixed on commit 9224e0b8. Android compile, unit tests and lint all passed in CI run 43590922509. No known build-blocking error remains at that build head.
 - Device UI launch/pixel-accuracy: NOT YET VALIDATED, tracked as pending quality work.
+
+
+## Phase 2 build and runtime tracking (2026-11-14)
+- MapLibre 13.7.1 Kotlin metadata 2.2 incompatible with old Kotlin 2.0.21 compiler: upgraded Kotlin Android and Compose plugins to 2.2.10; verified compiler success.
+- Compose Lint warning-as-error on produceState assignment: replaced with remembered state + LaunchedEffect/IO.
+- Emulator instrumentation test compile error on non-existent assertExists top-level import: import removed on 87d50aee. Emulator test needs a passing run before runtime acceptance.
+- Outbound OSM tile URL is user-opt-in manual testing only; no production service suitable for 50 continuous drivers or offline packages yet.
+
+- Phase 2 emulator test import error fixed on 87d50aee; final 43593588383 PASS (1/1). Prior compiler, lint and instrumentation failures fixed; no known current compile-blocking issue.

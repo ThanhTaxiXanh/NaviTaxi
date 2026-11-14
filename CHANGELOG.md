@@ -13,3 +13,14 @@
 - Added verified-vs-unknown speed-limit contract; no synthetic real-world limits or sign locations.
 
 - Debug Android APK built successfully in CI with unit and lint verification: run 43590922509, artifact ID 14111199844.
+
+
+## 0.2.0-dev — Phase 2 MapLibre/OSM
+- MapLibre Native 13.7.1 OpenGL ES integrated into Compose app and linked to Search.
+- Street-level OSM raster style explicitly opt-in for manual viewport viewing; no bulk downloads.
+- MapLibre demo vector map and honestly empty offline map style; visible provider attribution.
+- Optional read-only sourced speed-limit segment and WGS84 sign overlay with tap to see coordinates and source.
+- Unit tests added for provider restrictions, geographic bounds, speed provenance and no invented source records.
+- Kotlin compiler/Compose plugin updated to 2.2.10; Android emulator integration test introduced.
+
+- Phase 2 emulator MapLibre smoke test passed on API 35 (1/1), run 43593588383; PR #3 merged as 7d9809c. No production map/SLA/traffic intelligence claims.

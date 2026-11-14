@@ -42,3 +42,12 @@ Each phase uses `phase-N/<topic>`, opens a PR against `main`, and merges after e
 
 ## Legal & privacy
 OSM is ODbL: display attribution and ensure compatible redistribution obligations for derivative databases. No user's precise location may be transmitted to outside services without explicit consent.
+
+
+## Phase 2 implementation
+- Current native Android map code lives in app/src/main/java/vn/navitaxi/MapScreen.kt, MapNetwork.kt, MapSourcePolicy.kt and RoadIntelligenceRepository.kt.
+- UI uses AndroidView and explicit MapView lifecycle; map SDK uses OpenGL ES (13.7.1).
+- Map tile sources are isolated: limited MapLibre demonstration vector style, explicit OSM raster manual testing, and a local empty style when offline assets do not exist.
+- No automatic GPS or location transfer. No offline download/prefetch from OSM Foundation servers.
+- WGS84 physical sign GeoJSON and road segment GeoJSON are loaded only from source-linked local SQLite with validated range; missing DB => zero markers and unknown limits.
+- Runtime Android Emulator smoke proof is required before claiming rendering successful; PMTiles reader is Phase 3.
