@@ -166,11 +166,11 @@ fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: 
         NaviCard {
             OfflineSettingRow(Icons.Default.Wifi, "Tự động cập nhật qua Wi-Fi",
                 "Tự động kiểm tra khi có dữ liệu phát hành", preferences.wifiUpdate,
-                preferences::setWifiUpdate)
+                preferences::updateWifiUpdate)
             SettingsDivider()
             OfflineSettingRow(Icons.Default.SignalCellularAlt, "Cho phép tải qua dữ liệu di động",
                 "Dùng 4G/5G khi nguồn dữ liệu sẵn sàng", preferences.cellularDownload,
-                preferences::setCellularDownload)
+                preferences::updateCellularDownload)
         }
     }
 }

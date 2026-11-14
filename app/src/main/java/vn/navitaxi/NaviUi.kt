@@ -65,19 +65,19 @@ class UiPreferences(private val store: SharedPreferences) {
     var wifiUpdate by mutableStateOf(store.getBoolean("wifi", true)); private set
     var cellularDownload by mutableStateOf(store.getBoolean("cellular", false)); private set
 
-    fun setDark(value: Boolean) { isDark = value; store.edit().putBoolean("dark", value).apply() }
-    fun setVolume(value: Float) { volume = value; store.edit().putFloat("volume", value).apply() }
-    fun setVoice(value: String) { voice = value; store.edit().putString("voice", value).apply() }
-    fun setMapTheme(value: String) { mapTheme = value; store.edit().putString("theme", value).apply() }
-    fun setBuildings3d(value: Boolean) { buildings3d = value; store.edit().putBoolean("3d", value).apply() }
-    fun setTraffic(value: Boolean) { traffic = value; store.edit().putBoolean("traffic", value).apply() }
-    fun setGps(value: String) { gps = value; store.edit().putString("gps", value).apply() }
-    fun setSpeedAlerts(value: Boolean) { speedAlerts = value; store.edit().putBoolean("speed_alerts", value).apply() }
-    fun setLaneGuidance(value: Boolean) { laneGuidance = value; store.edit().putBoolean("lane", value).apply() }
-    fun setPoi(value: Boolean) { poi = value; store.edit().putBoolean("poi", value).apply() }
-    fun setDensity(value: String) { density = value; store.edit().putString("density", value).apply() }
-    fun setWifiUpdate(value: Boolean) { wifiUpdate = value; store.edit().putBoolean("wifi", value).apply() }
-    fun setCellularDownload(value: Boolean) { cellularDownload = value; store.edit().putBoolean("cellular", value).apply() }
+    fun updateDark(value: Boolean) { isDark = value; store.edit().putBoolean("dark", value).apply() }
+    fun updateVolume(value: Float) { volume = value; store.edit().putFloat("volume", value).apply() }
+    fun updateVoice(value: String) { voice = value; store.edit().putString("voice", value).apply() }
+    fun updateMapTheme(value: String) { mapTheme = value; store.edit().putString("theme", value).apply() }
+    fun updateBuildings3d(value: Boolean) { buildings3d = value; store.edit().putBoolean("3d", value).apply() }
+    fun updateTraffic(value: Boolean) { traffic = value; store.edit().putBoolean("traffic", value).apply() }
+    fun updateGps(value: String) { gps = value; store.edit().putString("gps", value).apply() }
+    fun updateSpeedAlerts(value: Boolean) { speedAlerts = value; store.edit().putBoolean("speed_alerts", value).apply() }
+    fun updateLaneGuidance(value: Boolean) { laneGuidance = value; store.edit().putBoolean("lane", value).apply() }
+    fun updatePoi(value: Boolean) { poi = value; store.edit().putBoolean("poi", value).apply() }
+    fun updateDensity(value: String) { density = value; store.edit().putString("density", value).apply() }
+    fun updateWifiUpdate(value: Boolean) { wifiUpdate = value; store.edit().putBoolean("wifi", value).apply() }
+    fun updateCellularDownload(value: Boolean) { cellularDownload = value; store.edit().putBoolean("cellular", value).apply() }
 }
 
 @Composable

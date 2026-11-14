@@ -31,7 +31,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
                 }
                 SegmentedChoice(listOf("Sáng", "Tối"),
                     if (preferences.isDark) "Tối" else "Sáng",
-                    { preferences.setDark(it == "Tối") }, Modifier.width(182.dp))
+                    { preferences.updateDark(it == "Tối") }, Modifier.width(182.dp))
             }
         }
         NaviCard {
@@ -46,7 +46,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
                     fontSize = 13.sp, fontWeight = FontWeight.Bold)
             }
             Slider(
-                value = preferences.volume, onValueChange = preferences::setVolume,
+                value = preferences.volume, onValueChange = preferences::updateVolume,
                 valueRange = 0f..1f, colors = SliderDefaults.colors(
                     thumbColor = Color.White, activeTrackColor = NaviColors.Green))
             SettingsDivider()
@@ -64,7 +64,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
                         onDismissRequest = { showVoiceMenu = false }) {
                         listOf("Giọng nữ", "Giọng nam").forEach { label ->
                             DropdownMenuItem(text = { Text(label) }, onClick = {
-                                preferences.setVoice(label); showVoiceMenu = false
+                                preferences.updateVoice(label); showVoiceMenu = false
                             })
                         }
                     }
@@ -85,7 +85,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
             Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
                 listOf("Thực tế", "Đơn giản", "Ban đêm").forEach { style ->
                     val chosen = preferences.mapTheme == style
-                    Column(Modifier.weight(1f).clickable { preferences.setMapTheme(style) },
+                    Column(Modifier.weight(1f).clickable { preferences.updateMapTheme(style) },
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Box(Modifier.fillMaxWidth().height(75.dp)
                             .clip(RoundedCornerShape(12.dp))
@@ -115,25 +115,25 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
             Spacer(Modifier.height(10.dp))
             SettingsDivider()
             ToggleSettingsRow(Icons.Default.Apartment, "Tòa nhà 3D",
-                preferences.buildings3d, preferences::setBuildings3d)
+                preferences.buildings3d, preferences::updateBuildings3d)
             SettingsDivider()
             ToggleSettingsRow(Icons.Default.Traffic, "Lớp giao thông",
-                preferences.traffic, preferences::setTraffic)
+                preferences.traffic, preferences::updateTraffic)
         }
         NaviCard {
             SettingsSectionHeading(Icons.Default.GpsFixed, "GPS")
             Spacer(Modifier.height(10.dp))
             SegmentedChoice(listOf("Tiết kiệm", "Cân bằng", "Cao"), preferences.gps,
-                preferences::setGps, Modifier.fillMaxWidth())
+                preferences::updateGps, Modifier.fillMaxWidth())
         }
         NaviCard {
             SettingsSectionHeading(Icons.Default.Navigation, "Dẫn đường")
             Spacer(Modifier.height(8.dp))
             ToggleSettingsRow(Icons.Default.Speed, "Cảnh báo giới hạn tốc độ",
-                preferences.speedAlerts, preferences::setSpeedAlerts)
+                preferences.speedAlerts, preferences::updateSpeedAlerts)
             SettingsDivider()
             ToggleSettingsRow(Icons.Default.AltRoute, "Chỉ dẫn làn đường",
-                preferences.laneGuidance, preferences::setLaneGuidance)
+                preferences.laneGuidance, preferences::updateLaneGuidance)
             Text("Cảnh báo chỉ kích hoạt khi có dữ liệu biển báo và giới hạn tốc độ đã xác minh.",
                 color = NaviColors.Muted, fontSize = 10.sp,
                 modifier = Modifier.padding(top = 6.dp))
@@ -142,7 +142,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
             SettingsSectionHeading(Icons.Default.Visibility, "Tùy chỉnh hiển thị")
             Spacer(Modifier.height(10.dp))
             ToggleSettingsRow(Icons.Default.Place, "Hiển thị điểm quan tâm (POI)",
-                preferences.poi, preferences::setPoi)
+                preferences.poi, preferences::updatePoi)
             Text("Cây xăng, bãi đỗ xe, bệnh viện, ATM, ...",
                 modifier = Modifier.padding(start = 32.dp),
                 color = NaviColors.Muted, fontSize = 10.sp)
@@ -154,7 +154,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
             }
             Spacer(Modifier.height(9.dp))
             SegmentedChoice(listOf("Thấp", "Vừa", "Cao"), preferences.density,
-                preferences::setDensity, Modifier.fillMaxWidth())
+                preferences::updateDensity, Modifier.fillMaxWidth())
         }
     }
 }
