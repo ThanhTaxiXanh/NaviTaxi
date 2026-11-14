@@ -1,0 +1,15 @@
+# Build outputs, keys, local personal paths, unverified offline assets
+.gradle/
+.idea/
+**/build/
+local.properties
+*.iml
+*.jks
+*.keystore
+*.apk
+*.aab
+*.db
+*.sqlite
+*.realm
+.DS_Store
+!data/road_intelligence/schema.sql
