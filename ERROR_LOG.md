@@ -36,3 +36,9 @@
 - BLOCKED: no licensed 34-province PMTiles/POI/routing source or vetted remote catalog; no legally verified speed limits or sign locations.
 - NOT DONE: app-scoped downloader does not offer Android OS-resilient background WorkManager jobs and scheduled auto-updates. Partial file survives process restart but download must be restarted manually when catalog is supplied.
 - No public OSM Foundation bulk tile downloads or network GPS transmission performed.
+
+
+## WorkManager Phase 4 – pending final verification
+- Initial CI run 43606081949 failed Kotlin compiler because a labelled return used a newline before Result.failure. Fixed after commit 20d6952; rerun required.
+- Official AndroidX CoroutineWorker.onStopped is final: cancellation via coroutine completion/OkHttp timeout instead of overriding.
+- No approved province PMTiles source or real speed/sign DB. Android background quotas and user force-stop behavior not claimed fully validated.

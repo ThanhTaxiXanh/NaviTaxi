@@ -56,3 +56,7 @@ See docs/PHASE_2_ACCEPTANCE.md and docs/ROAD_INTELLIGENCE_MAP_CONTRACT.md.
 - Transport accepts a vetted HTTPS .pmtiles specification with license/source/size/SHA256, supports resumable Range/ETag, pause/resume/cancel and atomic versioned installs. Tested using loopback-only MockWebServer. Production download URLs are NOT configured.
 - Province/full-Vietnam download controls remain unavailable until licensed map packages and their manifests exist. No geographic road data or speed/sign coordinates have been imported.
 - WorkManager/background resume and scheduled update metadata are still pending, so Phase 4 core is verified but the full offline product is BLOCKED.
+
+
+### Phase 4 WorkManager background jobs
+A WorkManager 2.12.0 CoroutineWorker now schedules future approved HTTPS PMTiles package downloads with network constraints, durable job IDs, progress restoration and foreground dataSync notification. The installer continues to require full SHA256, PMTiles v3 header and immutable version activation. No approved real map catalog exists, so the offline page still only installs/deletes a synthetic test grid. No legal speed data or surveyed sign coordinates are bundled.

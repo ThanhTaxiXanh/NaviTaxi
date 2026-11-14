@@ -53,3 +53,14 @@
 - [ ] Background WorkManager/notification and scheduled auto-update: NOT IMPLEMENTED.
 - [ ] Approved downloaded 34-province PMTiles/POI/routing packages: BLOCKED, no licensed external catalog.
 - [ ] Speed limits and traffic sign coordinates: NO verified real-world source data.
+
+
+## Phase 4 WorkManager follow-up – PR #9
+- [x] WorkManager CoroutineWorker, durable package input and foreground dataSync architecture implemented.
+- [x] Offline Manager remote path now uses WorkManager, persists job UUID/spec and reobserves OS work progress on activity restart.
+- [x] Network constraints and controlled cancel/pause/resume, SHA256/Pmtiles header before activation; transfer mutex prevents cleanup race in same process.
+- [x] Offline UI copy distinguishes fixture from real offline road downloads.
+- [x] Unit test WorkManager Data round-trip, source validation, and emulator test invalid worker provenance authored.
+- [ ] Final build/unit/lint/emulator all green on PR head.
+- [ ] PR #9 merged after acceptance.
+- [ ] Approved province catalog and real verified speed limit/sign locations: BLOCKED on authentic legally sourced input.

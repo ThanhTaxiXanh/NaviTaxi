@@ -74,3 +74,12 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Android API 35 emulator 3/3 PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43604517455.
 - APK debug 59,718,112 bytes SHA256 7d1f6728914d474b3d97a5d61fae5ab15a10c1f01dce96e4853ac6853d95848a.
 - Remaining Phase 4: WorkManager background reliability and a licensed, signed-off remote package catalog/version discovery/update scheduling. BLOCKED on absent approved package source. Do not claim whole Phase 4 DONE.
+
+
+## Phase 4 WorkManager continuation, 2026-11-14
+- Branch: phase-4/workmanager-durable-downloads; PR #9 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/9.
+- AndroidX WorkManager 2.12.0 durable approved PMTiles transfers; source files app/src/main/java/vn/navitaxi/OfflineDownloadWorker.kt and OfflineWorkScheduler.kt.
+- App now reobserves work ID/progress after process recreation using WorkManager Flow. Long-running downloads declare foreground dataSync service; Wi-Fi-only is WorkManager UNMETERED, mobile requires explicit opt-in.
+- WorkManager Data stores only approved non-secret source/version/license/size/SHA256; no GPS coordinates. Reuses Phase 4 streaming ETag/Range and PMTiles v3 integrity gate. Query-string credentials prohibited.
+- Synthetic APK asset only: assets/pmtiles/synthetic_test.pmtiles, 462 bytes. No real speed-limit/sign-location records, no legally sourced 34-province catalog; automated release checks blocked.
+- CI on final PR head and merge are PENDING verification. Do not mark entire Phase 4 complete until green and source blockers resolved.
