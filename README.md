@@ -76,3 +76,7 @@ The map no longer accepts speed limits or physical sign positions merely because
 
 ### Road Intelligence verification evidence (PR #15)
 Independent SQLite speed-limit and physical sign coordinate approval gate was merged as `dd53c1a`. Python/SQLite, Android build/unit/lint and API35 emulator all passed on the final PR code. The generated canonical DB and APK inventory both contain **zero source-verified speed limits and zero surveyed traffic signs**; the release allowlist is intentionally empty. This is a verified safety foundation, NOT functional speed-limit alerts.
+
+
+### Phase 4 OSM road reference-only importer (PR #17)
+A Python script can stream locally supplied, SHA-256-pinned .osm or .osm.pbf files, retain original OSM maxspeed and traffic_sign tags, and produce JSONL/manifest/SHA256SUMS ZIP under build/. Android never treats this as approved legal speeds or physical signs. The current CI artifact is a SYNTHETIC test only; no actual Vietnam extract, real legal limit, sign survey or 34-province map is included. See docs/ROAD_INTELLIGENCE_OSM_REFERENCE.md.

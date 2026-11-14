@@ -108,3 +108,13 @@
 - [x] Android API35 emulator new untrusted-source rejection test and existing map/offline tests PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43614134877.
 - [x] Test artifact 14121745051 inspected: SQLite 86,016 B, 0 row sources/roads/signs, both alert flags FALSE. APK audit only five synthetic assets.
 - [ ] Field-verified source road speeds, physical sign lat/lon, real-map downloadable PMTiles/POI/routing and on-road reliability are BLOCKED; Phase 4 not fully accepted.
+
+
+## Phase 4 reference-only OSM road/tag staging (PR #17)
+- [x] Implemented local .osm/.osm.pbf streaming with mandatory full SHA-256, original IDs/tags and an ODbL provenance manifest.
+- [x] Preserved raw mph/conditional/advisory values, with no assumed legal speed_kmh; traffic_sign ways/relations never acquire invented physical coordinates.
+- [x] Added reference-only JSONL and ZIP with SHA256SUMS, non-overwrite behavior and failure cleanup; rejected output to production Android/road DB assets.
+- [x] Python/SQLite CI 43617224402: 36/36 PASS, including actual binary PBF fixture read; Android build/unit/lint 43617224403 PASS on code head.
+- [x] APK audit on code head confirms 5 test-only map assets, no real Road Intelligence database.
+- [ ] PR #17 final-head CI and merge; do not declare entire Phase 4 finished.
+- [ ] Real Vietnam OSM snapshot acquired/licensed/hashed and independently verified speed/sign data: BLOCKED/NOT INGESTED.

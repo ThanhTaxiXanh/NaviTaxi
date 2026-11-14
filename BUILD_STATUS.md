@@ -105,3 +105,11 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Android API35 instrumented smoke, unapproved SQLite signs/speed overlay refusal: SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43614134877.
 - Phase0 evidence artifact ID 14121745051 ZIP sha256 879a17910a724fbebedc6a637f9475badde2a38417b2e989b40450092958d3de; empty DB bytes 86,016, DB SHA256 87193a1b8af8fa2e17c56a2bb9f03c533378321335653590fefae2c8a91de584; `EMPTY_DATABASE`, 0 verified records.
 - APK road-asset audit from Android workflow: five synthetic assets, archive hashes verified. Production release and physical taxi driving tests remain NOT DONE.
+
+
+## PR #17 OSM reference-only source pipeline — code-head evidence
+- Phase 0 / Python 3.12 / pyosmium 4.3.2 / SQLite: SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43617224402; 36/36 unit tests including actual PBF conversion-and-reader, source tampering, sign-node vs way/relations, raw mph/conditional semantics and archive SHA256.
+- Android assembleDebug/testDebugUnitTest/lintDebug and built-APK audit: SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43617224403. No new Android source or runtime dependency.
+- Source test reference artifact ID 14121689381 (GitHub artifact ZIP SHA256 8b6c4304cc55fefec8ef9af5222445d47b084630147e9fa6c4bca35f8618c2fb); contains original synthetic source hash, 1 speed way/2 sign nodes/1 sign way/1 sign relation; all false verification/alert flags.
+- APK audit artifact 14122562328 (ZIP SHA256 ff2248af20f94a94946828f013e8b9aa8999926d0a9be62214938c97487a824d). Exact 5 APK assets: assets/map_styles/offline_empty.json (238 B); osm_streets_experimental.json (416 B); pmtiles_synthetic.json (698 B); assets/pmtiles/synthetic_manifest.json (525 B); synthetic_test.pmtiles (462 B). SHA256SUMS verified, no real speed/sign DB.
+- Final PR documentation-head CI must also pass before merge; nothing here is validation of driving legality or real Vietnam road coverage.

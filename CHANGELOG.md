@@ -82,3 +82,10 @@
 - PR #15 MERGED: https://github.com/ThanhTaxiXanh/NaviTaxi/pull/15 as dd53c1a43991f350ffa980091e4db1faabeddccf.
 - Python candidate/audit 43614134722, Android build/lint/unit 43614134733 and API35 emulator 43614134877 all PASS at final code head.
 - Independent road DB hash pin and per-domain speed/sign approval enforce fail-closed map overlays. Candidate report cannot turn on alerts; no real map or source-backed sign/speed data introduced.
+
+
+## 0.4.4-dev — OSM raw road reference staging (PR #17)
+- Added local SHA-pinned streaming OSM XML/PBF reader, preserving raw maxspeed and traffic_sign tags, original IDs and source provenance; no automatic legal km/h interpretation or inferred physical sign coordinates.
+- Added reference-only JSONL/manifest/SHA256SUMS ZIP and safeguards against Android asset/SQLite ingestion.
+- CI pinned BSD-2-Clause pyosmium 4.3.2, added XML/PBF and archive negative regression tests. Code head Python 36/36 PASS (43617224402), Android assemble/unit/lint PASS (43617224403).
+- No production map catalog, Geofabrik input file, approved real-road speeds or physical sign observations added; Phase 4 remains open.

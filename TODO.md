@@ -62,3 +62,11 @@
 - Obtain real roadside sign coordinate surveys (WGS84 lat/lon, bearing, direction, road applicability and observed/verified timestamps) and vehicle-class-specific legal speed applicability.
 - Review ODbL, independent source permissions and field QA before populating `RoadIntelligenceApprovedPins` with any real database SHA.
 - Keep Phase 4 and Phase 5 blocked where real approved offline data and field tests are absent.
+
+
+## Next tasks after OSM reference-only staging
+- Complete final-head CI/merge PR #17; document exact checksums and source review.
+- Secure a lawful Vietnam Geofabrik snapshot with source URL, size, timestamp, ODbL review and exact SHA-256; run the streaming extractor only into build/reference staging, not Android assets.
+- Report genuine candidate counts from that actual PBF only after parsing; keep OSM tags separate from the verified SQLite/RTree and speed/sign map overlays.
+- Validate each applicable legal speed by travel direction, vehicle class, date and signs; field-confirm the physical WGS84 sign location and orientation before proposing an independently approved database pin.
+- Phase 4 approved PMTiles catalog, OTA version storage, process-death and field/OEM reliability remain blocked; Phase 5 NOT STARTED.

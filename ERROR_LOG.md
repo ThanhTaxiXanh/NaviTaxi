@@ -76,3 +76,9 @@
 - PR #15 code passed all required final-head workflows (Python 43614134722, Android 43614134733, Emulator 43614134877); merged as dd53c1a. No known build blocker from this change.
 - Remaining limitations are *source, legal and field verification*, not a fixed compilation issue. No OSM maxspeed inference, fabricated sign positions, or driver speed alerts were enabled.
 - Runtime DB sidecars intentionally fail closed; a future publisher must checkpoint the database and include only the independently approved immutable bytes.
+
+
+## Phase 4 OSM PBF source audit (PR #17)
+- Local development runtime lacks pyosmium and cannot reach PyPI; GitHub Actions installed pinned osmium 4.3.2 successfully and executed the binary-PBF regression test without skipping it (run 43617224402). No local 317MB Vietnam extract or Geofabrik live data was claimed.
+- Main residual data risk: OSM maxspeed* strings have conditional/directional/advisory/mph semantics; OSM way traffic_sign tags are not surveyed sign points. Reference staging retains them unconverted, disables all alerts and forbids promoting to approved SQLite.
+- APK audit run 43617224403 showed no production speed/sign DB; no compile failure in source-code run.
