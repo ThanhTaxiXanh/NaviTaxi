@@ -47,8 +47,10 @@ def _verified_origin(actual_url: str, expected_path: str) -> None:
         raise AcquisitionError("Invalid Geofabrik redirect origin") from err
 
 
-def acquire_snapshot(directory: Path, opener=urlopen) -> dict:
+def acquire_snapshot(directory: Path, opener=urlopen, expected_bytes: int = EXPECTED_BYTES) -> dict:
     """Download once into a NEW staging directory, or discard it entirely."""
+    if expected_bytes <= 0 or expected_bytes > MAX_DOWNLOAD_BYTES:
+        raise AcquisitionError("Invalid bounded snapshot size")
     directory = directory.resolve()
     parts = directory.parts
     if ("app" in parts and "src" in parts and "main" in parts) or (
@@ -81,7 +83,7 @@ def acquire_snapshot(directory: Path, opener=urlopen) -> dict:
                     length = int(header)
                 except ValueError as err:
                     raise AcquisitionError("Invalid Content-Length") from err
-                if length != EXPECTED_BYTES:
+                if length != expected_bytes:
                     raise AcquisitionError("Unexpected Geofabrik snapshot Content-Length")
             with tmp.open("xb") as output:
                 while True:
@@ -94,7 +96,7 @@ def acquire_snapshot(directory: Path, opener=urlopen) -> dict:
                     digest_md5.update(chunk)
                     digest_sha256.update(chunk)
                     output.write(chunk)
-        if observed_bytes != EXPECTED_BYTES:
+        if observed_bytes != expected_bytes:
             raise AcquisitionError("Downloaded snapshot size differs from dated source listing")
         if digest_md5.hexdigest() != published_md5:
             raise AcquisitionError("Downloaded data does not match publisher MD5 sidecar")
