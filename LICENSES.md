@@ -48,3 +48,9 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 - Python-only pyosmium/osmium 4.3.2 uses BSD-2-Clause (https://pypi.org/project/osmium/), downloaded as CI dependency on GitHub Actions; no library is bundled in Android release.
 - OSM source tags belong to OpenStreetMap contributors and are distributed under ODbL 1.0 (https://www.openstreetmap.org/copyright), requiring attribution and appropriate database derivative notices before redistribution.
 - The only test output uses NaviTaxi synthetic XML fixture; real Geofabrik Vietnam PBF not downloaded or repackaged. No paid APIs/servers/billing added.
+
+
+## Verified 2026-11-12 Vietnam OSM source receipt
+- Actual dated source acquired in GitHub CI #43624034669 under OpenStreetMap ODbL 1.0; © OpenStreetMap contributors. Fixed source SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed and publisher MD5 1f7716ad049551852fc281e969a000aa.
+- No 332MB PBF shipped in GitHub artifacts, Git repo, or Android app. Derived reference-tag ZIP in ephemeral artifact 14124844201 retains ODbL source metadata and attribution; downstream ODbL database share-alike obligations require separate review.
+- Real speed/sign tag data remains NOT legally or field-verified and does not authorize alerts.

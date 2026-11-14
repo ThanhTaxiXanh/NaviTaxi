@@ -118,3 +118,12 @@
 - [x] APK audit on code head confirms 5 test-only map assets, no real Road Intelligence database.
 - [x] PR #17 final-head CI PASSED (Python 43617538573 and Android 43617538560); merged as main 8b6d1f7ae9f995948364bdffcabf0208283a6c3d. Phase 4 overall NOT DONE.
 - [ ] Real Vietnam OSM snapshot acquired/licensed/hashed and independently verified speed/sign data: BLOCKED/NOT INGESTED.
+
+
+## Real Geofabrik Vietnam snapshot + raw speed/sign inventory (PR #19)
+- [x] Acquired dated `vietnam-261112.osm.pbf` source bytes, pinned filename and size 332,558,874; computed SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed and matched publisher MD5 1f7716ad049551852fc281e969a000aa.
+- [x] Actual source CI PASS 43624034669: 44,472 raw speed-tagged OSM ways; 810 sign-tagged OSM nodes, 1 tagged way, 0 tagged relations. 810 unverified original OSM node coordinates. No legal/field-verified count claimed.
+- [x] Source reference receipt/manifest SHA256SUMS and exact JSONL row counts independently checked; all alert/veracity flags false.
+- [x] PR #19 merged as 8e9ad423100234b022506667b269f25d0a3df556; Python 43624034554, Android 43624034656 and main build 43624954395 SUCCESS.
+- [x] Real-source inventory is OUTSIDE the APK; 5 synthetic APK assets remain, no `road_intelligence.db`.
+- [ ] PR #20 raw-reference data quality audit CI, field/legal review, physical sign surveys, certified speeds, approved source DB, PMTiles catalog and road driving tests remain incomplete.

@@ -79,3 +79,11 @@ Independent law, vehicle-class and direction verification; physical survey
 of signs with WGS84 position/bearing; legal licenses; and on-device road
 testing are mandatory before driver warnings. Phase 4 overall remains
 IN PROGRESS and Phase 5 has not begun.
+
+
+## Real-world source execution result — verified
+- PR #19 merged 8e9ad423100234b022506667b269f25d0a3df556 after Python/SQLite 43624034554, actual source workflow 43624034669 and Android 43624034656 all SUCCESS.
+- The dated source file *was actually downloaded and parsed*: 332558874 bytes, SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed, publisher MD5 1f7716ad049551852fc281e969a000aa.
+- Source-tag object counts: 44,472 speed-tagged ways, 810 sign-tagged OSM nodes, 1 sign-tagged way, 0 relations. All OSM sign-node coordinates remain UNVERIFIED reference positions, not surveyed roadside sign points.
+- Reproducibility evidence (14-day GitHub artifact): ID 14124844201, digest sha256:42352c12807767bfbe7ae4af26a060ad156443e2b05411496f7b0c63d47a5370, nested ZIP SHA256 23bfbef5e6fdc63a2a5e268a04fafeaee837f6c83c1fa5a3b21894bf47094380. Nested SHA256SUMS + JSONL line counts were checked.
+- Detailed findings: `docs/VIETNAM_OSM_SPEED_SIGN_AUDIT_2026_11_12.md`. Real-data upload to APK and speed/sign alert flags remain DISABLED.

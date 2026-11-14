@@ -82,3 +82,7 @@ Independent SQLite speed-limit and physical sign coordinate approval gate was me
 A Python script can stream locally supplied, SHA-256-pinned .osm or .osm.pbf files, retain original OSM maxspeed and traffic_sign tags, and produce JSONL/manifest/SHA256SUMS ZIP under build/. Android never treats this as approved legal speeds or physical signs. The current CI artifact is a SYNTHETIC test only; no actual Vietnam extract, real legal limit, sign survey or 34-province map is included. See docs/ROAD_INTELLIGENCE_OSM_REFERENCE.md.
 
 - Reference-only OSM/PBF ingestion pipeline PR #17 merged to main `8b6d1f7`; Python 36/36 PASS (including actual binary PBF test), Android build/unit/lint PASS. **No legally verified real road speeds or physical roadside sign positions** have been imported; see `docs/ROAD_INTELLIGENCE_OSM_REFERENCE.md`.
+
+
+### Actual Vietnam OSM speed/sign reference audit (Phase 4)
+PR #19 acquired and SHA256-verified a real, fixed-date Geofabrik Vietnam OSM snapshot (2026-11-12, 332,558,874 B). It measured **44,472** speed-tagged OSM road ways, **810** sign-tagged OSM nodes and **1** sign-tagged way, all reference-only. See `docs/VIETNAM_OSM_SPEED_SIGN_AUDIT_2026_11_12.md` for exact source hash, downloaded artifact, origin, raw-tag distributions, sign coordinates and limitations. **ZERO** independently validated legal speed records or field-surveyed physical sign positions are enabled in the APK.
