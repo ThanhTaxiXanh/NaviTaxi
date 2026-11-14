@@ -52,3 +52,5 @@
 - No source speed limit or physical traffic sign coordinates; still no real province catalog.
 
 - WorkManager phase4 follow-up completed with 3 successful final workflows (43606534452, 43606534434, 43606534445), merged as main e1fc7dc. Background field reliability and real licensed map catalogs remain unvalidated/blocked.
+
+- Phase 4 stricter network transport consent: save explicit allow_cellular flag, check actual connectivity transport at worker runtime (unmetered cellular blocked by default). Code PR #11 merged as 64ec5e6 after green 43607450905/906/907 CI.

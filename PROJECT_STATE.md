@@ -89,4 +89,4 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 
 ## Phase 4 network consent follow-up
 - Branch phase-4/strict-cellular-consent: worker explicitly checks actual Wi-Fi/Ethernet/Cellular transport even after WorkManager UNMETERED scheduling, so metering status cannot override explicit no-cellular preference.
-- This fix does not create province geodata, legal speed-limit records or roadside sign coordinates. Final CI and merge pending.
+- This fix does not create province geodata, legal speed-limit records or roadside sign coordinates. Final CI PASS: Python/SQLite 43607450905, Android build/unit/lint 43607450906, emulator API35 4/4 43607450907; PR #11 merged as 64ec5e6e5bca5e82808b201939873ca80f87dc33.

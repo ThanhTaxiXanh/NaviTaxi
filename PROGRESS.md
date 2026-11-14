@@ -70,4 +70,4 @@
 - [x] Identified UNMETERED vs Wi-Fi policy distinction.
 - [x] Persist allow_cellular in worker input and check real active transport via NetworkCapabilities before requesting PMTiles bytes.
 - [x] Added unit test for Wi-Fi/Ethernet/Cellular and default opt-out. CI acceptance pending.
-- [ ] Merge policy hardening PR after Kotlin/JUnit/Lint and emulator pass.
+- [x] Phase 4 policy PR #11 merged to main 64ec5e6: Python/SQLite PASS 43607450905, Android build/JUnit/Lint PASS 43607450906, emulator 4/4 PASS 43607450907.
