@@ -18,10 +18,23 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install free OSM PBF streaming reader (BSD-2-Clause)
+        run: |
+          python -m pip install --disable-pip-version-check osmium==4.3.2
+          python -c "import osmium; print('pyosmium PBF reader available')"
       - name: Compile Python
         run: python -m compileall -q scripts tests
       - name: SQLite and provenance tests
         run: python -m unittest discover -s tests -v
+      - name: Stream synthetic OSM test reference without trusting road data
+        run: |
+          PIN=$(sha256sum tests/fixtures/reference_only_synthetic.osm | cut -d ' ' -f1)
+          python scripts/extract_osm_road_reference.py \
+            --input tests/fixtures/reference_only_synthetic.osm \
+            --expected-sha256 "$PIN" \
+            --source-uri https://example.org/test-only/synthetic.osm \
+            --output-dir build/osm-reference-fixture \
+            --archive build/osm-reference-test-only.zip
       - name: Generate empty canonical SQLite for size and structure audit
         run: |
           python scripts/initialize_road_db.py --output build/road_intelligence.db
@@ -37,3 +50,5 @@ jobs:
             build/road-candidate-audit.json
             build/road-assets-report.json
             build/road-intelligence-archive.zip
+            build/osm-reference-fixture/
+            build/osm-reference-test-only.zip
