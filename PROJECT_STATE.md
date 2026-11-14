@@ -90,3 +90,13 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 ## Phase 4 network consent follow-up
 - Branch phase-4/strict-cellular-consent: worker explicitly checks actual Wi-Fi/Ethernet/Cellular transport even after WorkManager UNMETERED scheduling, so metering status cannot override explicit no-cellular preference.
 - This fix does not create province geodata, legal speed-limit records or roadside sign coordinates. Final CI PASS: Python/SQLite 43607450905, Android build/unit/lint 43607450906, emulator API35 4/4 43607450907; PR #11 merged as 64ec5e6e5bca5e82808b201939873ca80f87dc33.
+
+
+## Phase 4 trusted catalog gate — PR #13 (2026-11-14)
+- Working branch: `phase-4/catalog-integrity-release-gates`; PR: https://github.com/ThanhTaxiXanh/NaviTaxi/pull/13.
+- New Python/Android validators require a separately pinned SHA-256 over entire offline catalog JSON; no production pin or live catalog bundled.
+- Android `OfflinePackageManager.startRemote` now takes only `TrustedOfflineCatalog` and package ID, no raw unapproved spec.
+- Catalog release_sequence makes rollback/equal-sequence mutation detectable; no auto-download/version polling enabled.
+- PMTiles metadata cannot claim it has verified speed limits or traffic sign coordinates. The real road DB remains ABSENT.
+- Python/SQLite PR CI 43610420031 SUCCESS; Android compile/emulator PR gates tracked separately.
+- Phase 4 remains IN PROGRESS / BLOCKED for approved geodata and field validation; Phase 5 NOT STARTED.

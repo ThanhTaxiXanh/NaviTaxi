@@ -31,3 +31,9 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 - androidx.work:work-runtime-ktx:2.12.0, Apache License 2.0 (official AndroidX stable release 2026-09-23): https://developer.android.com/jetpack/androidx/releases/work.
 - androidx.work:work-testing:2.12.0 is limited to Android instrumented tests. Existing OkHttp transitive/runtime license unchanged.
 - No third-party map tiles or paid map APIs have been activated in this work.
+
+
+## Phase 4 catalog verifier
+- No new external Android/runtime dependencies or paid services were added. Android uses platform org.json, java.net.URI and SHA-256; Python uses the standard library.
+- Independently pinning metadata does not settle redistribution rights of the underlying PMTiles. Each real release must retain OSM ODbL notices and independently documented source/license approval.
+- Candidate Vietnam OSM extracts: https://download.geofabrik.de/asia/vietnam.html. NOT copied or redistributed in this change.

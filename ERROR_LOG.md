@@ -51,3 +51,9 @@
 - Added actual active-network TRANSPORT_WIFI/ETHERNET/CELLULAR gate in the worker and persisted explicit allow_cellular=false by default. Awaiting CI validation.
 
 - Phase4 cellular transport guard verified in final CI: 43607450905 (Python), 43607450906 (Android), 43607450907 (emulator 4/4). Merged PR #11 as 64ec5e6. No known current compilation blocker; production 34-province catalog and sign/speed data still unavailable.
+
+
+## Phase 4 catalog security review — 2026-11-14
+- Identified risk: `OfflinePackageManager.startRemote` accepted a caller-built package spec without requiring an independently approved catalog digest; Phase 4 PR #13 adds a trust-gated entrypoint. No caller in the existing Offline UI uses the production remote path.
+- There is still no separately authenticated speed-limit database, roadside sign observation collection or licensed province release catalog. No production data was silently synthesized.
+- Android validation of new code must be based on final-commit PR CI, not on previous Phase 4 emulator success.
