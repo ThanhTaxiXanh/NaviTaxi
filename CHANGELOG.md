@@ -34,3 +34,11 @@
 - Added instrumentation smoke for opening PMTiles style without using OSM tile infrastructure.
 
 - Phase 3 final PR #5 merged, main f401f03; Python/SQLite PASS run 43603204053, Android build/unit/lint PASS 43603204092, emulator 2/2 PASS 43603204072.
+
+
+## 0.4.0-dev – Phase 4 core
+- Added OfflinePackageTransfer for HTTPS byte-range resume, strong ETag/If-Range, full SHA256/v3 validation and atomic per-version install. Pause/resume/cancel and explicit delete semantics.
+- Added OfflinePackageManager StateFlow transport coordination and network policy.
+- Offline page now supports install/reverify/delete real embedded synthetic test fixture, accurate installed status and clear absence of production region catalog.
+- Added MockWebServer range/corruption/update/URL unit tests, Android emulator smoke test. Code PR #7 merged as 6fdbcfd.
+- Background WorkManager and real province datasets not shipped.

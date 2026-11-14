@@ -49,3 +49,10 @@ See docs/PHASE_2_ACCEPTANCE.md and docs/ROAD_INTELLIGENCE_MAP_CONTRACT.md.
   python3 scripts/audit_road_assets.py --root . --out build/road-assets-report.json
   python3 scripts/package_road_data.py --root . --output build/road-intelligence-archive.zip
 - Phase 4 will add package management; Phase 5 will add lawful province data. No real speed-limit/traffic-sign dataset is included.
+
+
+## Phase 4 – Offline Package Manager core
+- Offline tab now installs/revalidates/deletes only the bundled 462-byte synthetic PMTiles test tile, displaying its true local state.
+- Transport accepts a vetted HTTPS .pmtiles specification with license/source/size/SHA256, supports resumable Range/ETag, pause/resume/cancel and atomic versioned installs. Tested using loopback-only MockWebServer. Production download URLs are NOT configured.
+- Province/full-Vietnam download controls remain unavailable until licensed map packages and their manifests exist. No geographic road data or speed/sign coordinates have been imported.
+- WorkManager/background resume and scheduled update metadata are still pending, so Phase 4 core is verified but the full offline product is BLOCKED.
