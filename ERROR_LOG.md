@@ -82,3 +82,5 @@
 - Local development runtime lacks pyosmium and cannot reach PyPI; GitHub Actions installed pinned osmium 4.3.2 successfully and executed the binary-PBF regression test without skipping it (run 43617224402). No local 317MB Vietnam extract or Geofabrik live data was claimed.
 - Main residual data risk: OSM maxspeed* strings have conditional/directional/advisory/mph semantics; OSM way traffic_sign tags are not surveyed sign points. Reference staging retains them unconverted, disables all alerts and forbids promoting to approved SQLite.
 - APK audit run 43617224403 showed no production speed/sign DB; no compile failure in source-code run.
+
+- PR #17 final CI had no build or PBF parser failure. Python 36/36 PASS (43617538573), Android build/unit/lint PASS (43617538560), merged 8b6d1f7. Remaining blockers are authentic source snapshots, legal/field validation and offline route/data distribution.

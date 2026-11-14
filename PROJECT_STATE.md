@@ -136,3 +136,11 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Synthetic evidence artifact ID 14121689381 (ZIP SHA256 8b6c4304cc55fefec8ef9af5222445d47b084630147e9fa6c4bca35f8618c2fb): 1 speed-tag way, 2 sign-tag nodes, 1 sign-tag way, 1 sign-tag relation; ALL UNVERIFIED, no authoritative records.
 - Built APK audit artifact ID 14122562328: exactly five synthetic assets (styles 238/416/698 B; manifest 525 B; PMTiles 462 B), and zero verified real sign/speed records.
 - No Vietnam Geofabrik PBF was downloaded, imported, geocoded, or distributed. Phase 4 remains IN PROGRESS / BLOCKED on real lawful sources and field evidence; Phase 5 NOT STARTED.
+
+
+## Verified OSM PBF reference pipeline handoff (2026-11-14)
+- PR #17 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/17 MERGED as main `8b6d1f7ae9f995948364bdffcabf0208283a6c3d`.
+- Final PR head `95da2a517f29893e249e253754fcfe4530e54bc5`: Python/SQLite + pyosmium actual PBF test PASS 43617538573, Android assemble/JUnit/lint + APK audit PASS 43617538560.
+- Source test artifact `phase0-road-data-evidence` includes JSONL/manifest/SHA256SUMS ZIP. Synthetic only: 1 tagged speed way, 2 tagged sign nodes, 1 tagged sign way, 1 tagged sign relation. All approval flags FALSE.
+- Built APK asset audit still finds exactly 5 test-only assets and 0 real speed/sign records. Original absolute paths within APK and bytes are in BUILD_STATUS.md.
+- Real Geofabrik Vietnam PBF was NOT downloaded or examined. Phase 4 remains IN PROGRESS/BLOCKED for lawful real datasets, catalog and field proof. Phase 5 NOT STARTED.

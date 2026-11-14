@@ -1,6 +1,6 @@
 # Phase 4 — OSM Road Intelligence reference-only staging
 
-**Status: source-only implementation verified on code head; final PR CI acceptance pending. NOT a legal speed-limit / traffic-sign source approval.**
+**Status: reference-only implementation CI-verified and merged (PR #17). NOT a legal speed-limit / traffic-sign source approval.**
 
 ## Source and license
 

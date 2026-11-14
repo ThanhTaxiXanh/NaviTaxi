@@ -89,3 +89,5 @@
 - Added reference-only JSONL/manifest/SHA256SUMS ZIP and safeguards against Android asset/SQLite ingestion.
 - CI pinned BSD-2-Clause pyosmium 4.3.2, added XML/PBF and archive negative regression tests. Code head Python 36/36 PASS (43617224402), Android assemble/unit/lint PASS (43617224403).
 - No production map catalog, Geofabrik input file, approved real-road speeds or physical sign observations added; Phase 4 remains open.
+
+- PR #17 code accepted and merged on 2026-11-14 as `8b6d1f7ae9f995948364bdffcabf0208283a6c3d` after final-head Python 43617538573 and Android 43617538560 successful CI. Reference staging is tested infrastructure; actual 34-province speed/sign mapping remains blocked.
