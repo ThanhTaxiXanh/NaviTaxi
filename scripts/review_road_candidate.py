@@ -8,6 +8,7 @@ This script does not fetch maps, infer maxspeed or generate physical sign points
 from __future__ import annotations
 
 import argparse
+from datetime import date, datetime
 import hashlib
 import json
 import math
@@ -33,8 +34,17 @@ MAX_ISSUES = 100
 
 
 def _date_present(value):
-    return isinstance(value, str) and bool(re.fullmatch(
-        r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?)?", value))
+    if not isinstance(value, str) or not re.fullmatch(
+            r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?)?", value):
+        return False
+    try:
+        if len(value) == 10:
+            date.fromisoformat(value)
+        else:
+            datetime.fromisoformat(value.replace("Z", "+00:00"))
+        return True
+    except ValueError:
+        return False
 
 
 def _https_evidence(value):
