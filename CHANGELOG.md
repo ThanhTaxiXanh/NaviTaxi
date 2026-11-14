@@ -68,3 +68,11 @@
 - Code PR #13 MERGED to main as 068c297e1df55466ba0adc50b05755192814087b after Python, Android and emulator CI passed on final head (43611161271 / 43611161247 / 43611161298).
 - New Actions APK forensic inventory and ZIP with SHA256SUMS, JSON shape and SQLite/PMTiles structural inspection. The synthetic asset inventory was inspected; no real speed/sign dataset found.
 - Catalog integrity, provenance and anti-rollback gates accepted **as infrastructure only**. Licensed 34-province maps and surveyed road signs remain unavailable; no automatic production updates enabled.
+
+
+## 0.4.3-dev — candidate data QA and fail-closed Road Intelligence (PR #15)
+- Introduced independently pinned SHA-256 approval for complete SQLite speed/sign datasets; approved scopes separate legal speed-limit observations from physical roadside sign coordinates.
+- Rejected unapproved SQLite/WAL/journal overlays; source/license strings alone cannot turn on verified map data.
+- Added candidate data audit for schema v1, SQLite/RTree and coordinates, explicit `CANDIDATE_REQUIRES_INDEPENDENT_FIELD_REVIEW` status. No automatic approval or map source download.
+- Added Kotlin JUnit, Android API35 instrumentation and Python negative tests plus CI report artifact.
+- Authentic legally verified signs/speed records remain unavailable; Phase 4 not fully complete.

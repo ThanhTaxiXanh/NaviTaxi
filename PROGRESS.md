@@ -89,3 +89,13 @@
 - [x] Android emulator API35 including catalog negative tests: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43611161298 PASS.
 - [x] Actual APK audit artifact 14119833707 inspected: exact five synthetic assets, 0 verified speed/sign records, checksum manifest matches archived files.
 - [ ] Real signed-off PMTiles catalog, release-sequence persistence for real installs, 34-province geodata, source-backed speed/sign DB and vehicle-road tests: still BLOCKED/NOT DONE.
+
+
+## Phase 4 Road Intelligence integrity continuation (PR #15)
+- [x] Identified fail-open provenance weakness: arbitrary SQLite rows joined to nonempty source/license strings could appear as "verified".
+- [x] Authored separately pinned DB SHA and domain-specific speed/sign approval gate, rejecting unhashed SQLite journal sidecars.
+- [x] Reader now suppresses unapproved road/sign overlays and requires observation plus verification dates on eligible rows.
+- [x] Authored offline candidate SQLite integrity/coordinate/RTree report without generating approvals.
+- [x] Added synthetic-only regression tests (Kotlin unit, API35 instrumentation, Python) and GitHub artifact collection.
+- [ ] PR #15 final-head Python/SQLite, Android build/lint/JUnit and emulator CI acceptance; do not claim DONE before those checks complete.
+- [ ] Verified real speed_kmh/physical sign coordinates: BLOCKED (no approved legal/field evidence).

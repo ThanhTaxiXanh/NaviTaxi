@@ -1,6 +1,6 @@
 # Road Intelligence — Independent Approval Gate (Phase 4 hardening)
 
-**Status:** Code and tests under review. **Zero** authoritative speed-limit
+**Status:** Implemented as an untrusted-data gate; CI acceptance is required on PR #15. **Zero** authoritative speed-limit
 records and **zero** field-confirmed physical traffic-sign coordinates are
 shipped. The complete Road Intelligence domain remains **BLOCKED** on lawful
 source data and independent field verification; Phase 5 is not started.
