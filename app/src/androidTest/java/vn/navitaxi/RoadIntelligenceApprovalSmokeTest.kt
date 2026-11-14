@@ -20,7 +20,7 @@ class RoadIntelligenceApprovalSmokeTest {
         assertTrue(folder.isDirectory || folder.mkdirs())
         val file = File(folder, "road_intelligence.db")
         // Avoid touching a user's pre-existing DB if this is run outside CI.
-        if (file.exists()) return
+        assertFalse("Existing road DB must never be overwritten or silently skip QA", file.exists())
         try {
             SQLiteDatabase.openOrCreateDatabase(file, null).use { db ->
                 db.execSQL("CREATE TABLE data_sources(source_id TEXT, source_uri TEXT, license TEXT)")
