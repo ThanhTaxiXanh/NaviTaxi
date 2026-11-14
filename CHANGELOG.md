@@ -32,3 +32,5 @@
 - Added Android-native MapLibre file-backed PMTiles source mode, visibly marked as synthetic and offline.
 - Added PMTiles fixture regeneration, binary validator and local HTTP Range probe with tests.
 - Added instrumentation smoke for opening PMTiles style without using OSM tile infrastructure.
+
+- Phase 3 final PR #5 merged, main f401f03; Python/SQLite PASS run 43603204053, Android build/unit/lint PASS 43603204092, emulator 2/2 PASS 43603204072.

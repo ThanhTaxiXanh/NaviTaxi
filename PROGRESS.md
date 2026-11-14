@@ -38,6 +38,6 @@
 - [x] HTTP Range probe and loopback mock test authored (no third-party tile-server bulk requests).
 - [x] Android emulator opened PMTiles demo in early Phase 3 smoke test (2/2) https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43602555868.
 - [x] Python/SQLite/provenance/PMTiles tests PASS after gzip determinism fix https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43602874345.
-- [ ] Verify latest Android compile + unit + lint on current head and final emulator smoke run.
-- [ ] Merge Phase 3 PR #5 to main only after all CI gates pass.
+- [x] Final branch head CI Android compile + unit + lint PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43603204092; Emulator 2/2 PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43603204072.
+- [x] PR #5 merged into main as f401f03396431f58ddefd23c2ff87a37c039367f after all three checks passed.
 - [ ] Real, licensed Vietnam road-vector PMTiles packages: BLOCKED until verified data extracts (Phase 5); NO geographic coverage claim.

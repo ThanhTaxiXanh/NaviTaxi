@@ -27,3 +27,5 @@
 - Python versions produce different gzip OS metadata bytes when mtime=0. First deterministic binary regeneration test failed; normalized gzip OS byte to 255 to match SHA-256 of the committed fixture; Phase 0/PMTiles tests later passed (run 43602874345).
 - Real offline road datasets, legal speed restrictions and traffic sign positions are NOT provided. Do not fake these from the demo grid.
 - Android emulator PMTiles 2/2 test passed on first phase3 commit. Subsequent code-free gzip and test changes still require final CI checks.
+
+- Phase 3 Python gzip determinism mismatch fully corrected by fixing OS header to 255 in commit ff8ce525; latest CI 43603204053 passed. No active Phase 3 build blocker after 43603204092 / 43603204072. Real offline map input remains unavailable.
