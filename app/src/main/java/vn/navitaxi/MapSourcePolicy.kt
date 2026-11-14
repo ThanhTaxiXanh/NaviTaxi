@@ -4,7 +4,8 @@ package vn.navitaxi
 enum class MapSource(val label: String, val styleUri: String) {
     DEMO_VECTOR("Vector mẫu", "https://demotiles.maplibre.org/style.json"),
     OSM_STREETS("OSM đường phố", "asset://map_styles/osm_streets_experimental.json"),
-    EMPTY_OFFLINE("Chưa có dữ liệu", "asset://map_styles/offline_empty.json")
+    EMPTY_OFFLINE("Chưa có dữ liệu", "asset://map_styles/offline_empty.json"),
+    PMTILES_TEST("PMTiles thử nghiệm", "asset://map_styles/offline_empty.json")
 }
 
 object MapSourcePolicy {
@@ -21,5 +22,5 @@ object MapSourcePolicy {
         source == MapSource.OSM_STREETS
 
     fun isOfflineSafe(source: MapSource): Boolean =
-        source == MapSource.EMPTY_OFFLINE
+        source == MapSource.EMPTY_OFFLINE || source == MapSource.PMTILES_TEST
 }

@@ -10,6 +10,7 @@ class MapSourcePolicyTest {
         assertFalse(MapSourcePolicy.needsExplicitOsMConsent(MapSource.DEMO_VECTOR))
         assertFalse(MapSourcePolicy.isOfflineSafe(MapSource.DEMO_VECTOR))
         assertTrue(MapSourcePolicy.isOfflineSafe(MapSource.EMPTY_OFFLINE))
+        assertTrue(MapSourcePolicy.isOfflineSafe(MapSource.PMTILES_TEST))
     }
     @Test fun noLegalSpeedIsGuessed() {
         assertTrue(MapSourcePolicy.NO_SPEED.contains("Không có dữ liệu"))

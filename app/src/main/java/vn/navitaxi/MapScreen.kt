@@ -37,6 +37,7 @@ import org.maplibre.geojson.Point
 import java.util.Locale
 
 private val HANOI = LatLng(21.0285, 105.8542)
+private val SYNTHETIC_CENTER = LatLng(0.0, 0.0)
 private const val ROADS_SOURCE = "navitaxi-verified-roads"
 private const val SIGNS_SOURCE = "navitaxi-verified-signs"
 
@@ -50,6 +51,24 @@ fun MapScreen(selectedPlace: String? = null, onBack: () -> Unit) {
     val owner = LocalLifecycleOwner.current
     var source by remember { mutableStateOf(MapSource.DEMO_VECTOR) }
     var askToUseOsm by remember { mutableStateOf(false) }
+    var pmtilesReady by remember { mutableStateOf<OfflinePmtilesStore.Prepared?>(null) }
+    var pmtilesMessage by remember { mutableStateOf("Chưa kiểm tra PMTiles") }
+    var pmtilesStyleOpened by remember { mutableStateOf(false) }
+    LaunchedEffect(source) {
+        if (source == MapSource.PMTILES_TEST) {
+            pmtilesReady = null
+            pmtilesStyleOpened = false
+            pmtilesMessage = "Đang xác minh PMTiles (SHA-256)..."
+            try {
+                pmtilesReady = withContext(Dispatchers.IO) {
+                    OfflinePmtilesStore(context).prepareSynthetic()
+                }
+                pmtilesMessage = "PMTiles thử nghiệm đã xác minh SHA-256"
+            } catch (e: Exception) {
+                pmtilesMessage = "Không thể mở PMTiles: " + (e.message ?: "dữ liệu lỗi")
+            }
+        }
+    }
     var map by remember { mutableStateOf<MapLibreMap?>(null) }
     var details by remember { mutableStateOf<String?>(null) }
     var clickListenerInstalled by remember { mutableStateOf(false) }
@@ -90,7 +109,7 @@ fun MapScreen(selectedPlace: String? = null, onBack: () -> Unit) {
         }
     }
 
-    LaunchedEffect(mapView, source, dataset) {
+    LaunchedEffect(mapView, source, dataset, pmtilesReady) {
         mapView.getMapAsync { liveMap ->
             map = liveMap
             if (!clickListenerInstalled) {
@@ -117,12 +136,28 @@ fun MapScreen(selectedPlace: String? = null, onBack: () -> Unit) {
             liveMap.uiSettings.isZoomGesturesEnabled = true
             liveMap.uiSettings.isRotateGesturesEnabled = true
             liveMap.uiSettings.isTiltGesturesEnabled = true
-            liveMap.setStyle(Style.Builder().fromUri(source.styleUri)) { style ->
+            val styleBuilder = if (source == MapSource.PMTILES_TEST && pmtilesReady != null) {
+                Style.Builder().fromJson(pmtilesReady!!.styleJson)
+            } else {
+                Style.Builder().fromUri(
+                    if (source == MapSource.PMTILES_TEST) MapSource.EMPTY_OFFLINE.styleUri
+                    else source.styleUri
+                )
+            }
+            liveMap.setStyle(styleBuilder) { style ->
                 installRoadOverlays(style, dataset)
+                if (source == MapSource.PMTILES_TEST && pmtilesReady != null) {
+                    pmtilesStyleOpened = style.getSource("synthetic") != null &&
+                        style.getLayer("synthetic-grid-line") != null
+                }
             }
             liveMap.cameraPosition = CameraPosition.Builder()
-                .target(HANOI)
-                .zoom(if (source == MapSource.DEMO_VECTOR) 4.0 else 12.0)
+                .target(if (source == MapSource.PMTILES_TEST) SYNTHETIC_CENTER else HANOI)
+                .zoom(when (source) {
+                    MapSource.PMTILES_TEST -> 0.8
+                    MapSource.DEMO_VECTOR -> 4.0
+                    else -> 12.0
+                })
                 .build()
         }
     }
@@ -134,7 +169,7 @@ fun MapScreen(selectedPlace: String? = null, onBack: () -> Unit) {
             text = { Text(
                 "Bản đồ đường phố này tải tile OSM cho khu vực đang xem qua Internet. " +
                 "Dịch vụ cộng đồng không có SLA và cấm tải hàng loạt/offline. " +
-                "PMTiles tự quản sẽ triển khai ở Phase 3."
+                "Gói PMTiles thử nghiệm hoạt động riêng, không dùng máy chủ OSM."
             ) },
             confirmButton = {
                 TextButton(onClick = {
@@ -189,6 +224,16 @@ fun MapScreen(selectedPlace: String? = null, onBack: () -> Unit) {
                         if (dataset.signCount == 0) "Chưa có tọa độ xác minh"
                         else dataset.signCount.toString() + " vị trí có nguồn",
                         fontSize = 12.sp)
+                    if (source == MapSource.PMTILES_TEST) {
+                        Text(pmtilesMessage, fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.primary)
+                        if (pmtilesStyleOpened) {
+                            Text("MapLibre đã mở style PMTiles cục bộ",
+                                fontSize = 11.sp, color = MaterialTheme.colorScheme.primary)
+                        }
+                        Text("Chỉ có 2 đường sơ đồ nhân tạo; KHÔNG phải đường giao thông.",
+                            fontSize = 11.sp, color = MaterialTheme.colorScheme.error)
+                    }
                     if (details != null) {
                         Text(details!!, fontSize = 11.sp,
                             color = MaterialTheme.colorScheme.primary)
@@ -223,6 +268,7 @@ fun MapScreen(selectedPlace: String? = null, onBack: () -> Unit) {
                         MapSource.OSM_STREETS -> "© OpenStreetMap contributors · xem trực tuyến"
                         MapSource.DEMO_VECTOR -> "MapLibre demo · Natural Earth countries"
                         MapSource.EMPTY_OFFLINE -> "Chưa tải gói bản đồ ngoại tuyến"
+                        MapSource.PMTILES_TEST -> "Dữ liệu mô phỏng tự tạo · hoàn toàn ngoại tuyến"
                     },
                     fontSize = 10.sp
                 )
