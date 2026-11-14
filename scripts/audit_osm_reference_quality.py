@@ -204,7 +204,10 @@ def audit_reference(directory: Path, receipt_path: Path | None = None) -> dict:
                     not -90 <= lat <= 90 or not -180 <= lon <= 180):
                 raise AuditError("Invalid OSM node WGS84 point")
 
-    if counts != manifest.get("counts"):
+    claimed = manifest.get("counts")
+    if (not isinstance(claimed, dict) or
+            any(type(v) is not int or v < 0 for v in claimed.values()) or
+            counts != claimed):
         raise AuditError("Reference manifest count mismatch")
     return {
         "format": "navitaxi-osm-reference-quality/v1",
@@ -225,6 +228,14 @@ def audit_reference(directory: Path, receipt_path: Path | None = None) -> dict:
 
 
 def _assert_unverified(row):
+    if set(row) != {"kind", "osm", "tags", "osm_node_coordinate",
+                    "position_type", "independently_verified_legal_speed",
+                    "independently_verified_physical_sign",
+                    "approved_for_driver_alert"}:
+        raise AuditError("Unexpected fields or missing reference-only record fields")
+    if not isinstance(row.get("osm"), dict) or set(row["osm"]) != {
+            "type", "id", "version", "timestamp"}:
+        raise AuditError("Malformed raw OSM object identity fields")
     for name in ("independently_verified_legal_speed",
                  "independently_verified_physical_sign",
                  "approved_for_driver_alert"):
