@@ -25,6 +25,7 @@ jobs:
       - name: Generate empty canonical SQLite for size and structure audit
         run: |
           python scripts/initialize_road_db.py --output build/road_intelligence.db
+          python scripts/review_road_candidate.py --db build/road_intelligence.db --out build/road-candidate-audit.json
           python scripts/audit_road_assets.py --root . --out build/road-assets-report.json
           python scripts/package_road_data.py --root . --output build/road-intelligence-archive.zip
       - name: Archive test evidence
@@ -33,5 +34,6 @@ jobs:
           name: phase0-road-data-evidence
           path: |
             build/road_intelligence.db
+            build/road-candidate-audit.json
             build/road-assets-report.json
             build/road-intelligence-archive.zip
