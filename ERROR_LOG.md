@@ -70,3 +70,9 @@
 - SQLite main-file hashing is insufficient when mutable WAL/journal sidecars exist; gate now rejects `-wal`, `-shm`, `-journal` unless a future signed immutable release design handles them explicitly.
 - Candidate audit is structural only; an apparently clean DB is still NOT independent legal or physical field proof. No production sign/speed data is included.
 - New Kotlin and Python tests must pass CI; see PR #15.
+
+
+## Road Intelligence gate CI verified
+- PR #15 code passed all required final-head workflows (Python 43614134722, Android 43614134733, Emulator 43614134877); merged as dd53c1a. No known build blocker from this change.
+- Remaining limitations are *source, legal and field verification*, not a fixed compilation issue. No OSM maxspeed inference, fabricated sign positions, or driver speed alerts were enabled.
+- Runtime DB sidecars intentionally fail closed; a future publisher must checkpoint the database and include only the independently approved immutable bytes.

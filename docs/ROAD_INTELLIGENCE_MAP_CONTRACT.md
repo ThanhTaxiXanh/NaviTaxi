@@ -25,3 +25,9 @@ Commands from the repository root:
 Use --apk only when an actual, lawfully inspectable APK is supplied. Report paths are relative to the APK root (e.g. assets/road/signs.sqlite). The ZIP bundles the original files, manifest, SHA256SUMS and canonical SQL schema. No real road/sign data currently exists in the NaviTaxi repository.
 
 Future Phase 11: verify checksum/version/source license and coordinates, atomically import datasets, filter by viewport, map-match speed by direction, and only then enable verified-speed and sign warnings.
+
+
+## Phase 4 source approval requirement, accepted PR #15
+- Reader now refuses arbitrary app-private `road_intelligence.db` even if `data_sources` self-reports a source/license and timestamps. `RoadDatabaseApprovalGate` requires the SHA-256 of the exact immutable DB to match a separately code-reviewed pin and independently enabled speed/sign scope. Current pin list is empty.
+- `scripts/review_road_candidate.py` produces a candidate-only JSON structure/count/WGS84/RTree/source check; it never approves legal limits or physical signs. See `docs/ROAD_INTELLIGENCE_APPROVAL_GATE.md`.
+- API35 emulator PASS 43614134877 plus Python PASS 43614134722 / Android build PASS 43614134733. Production speed/sign records: 0 verified, no APK DB file and no GPS data transmitted.

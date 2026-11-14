@@ -76,3 +76,9 @@
 - Added candidate data audit for schema v1, SQLite/RTree and coordinates, explicit `CANDIDATE_REQUIRES_INDEPENDENT_FIELD_REVIEW` status. No automatic approval or map source download.
 - Added Kotlin JUnit, Android API35 instrumentation and Python negative tests plus CI report artifact.
 - Authentic legally verified signs/speed records remain unavailable; Phase 4 not fully complete.
+
+
+## 0.4.3-dev — verified Road Intelligence gate accepted
+- PR #15 MERGED: https://github.com/ThanhTaxiXanh/NaviTaxi/pull/15 as dd53c1a43991f350ffa980091e4db1faabeddccf.
+- Python candidate/audit 43614134722, Android build/lint/unit 43614134733 and API35 emulator 43614134877 all PASS at final code head.
+- Independent road DB hash pin and per-domain speed/sign approval enforce fail-closed map overlays. Candidate report cannot turn on alerts; no real map or source-backed sign/speed data introduced.

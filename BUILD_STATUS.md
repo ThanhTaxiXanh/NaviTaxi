@@ -96,3 +96,12 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Checks required: Phase 0 Python/SQLite candidate data integrity + artifact report; Android assembleDebug/JUnit/lint + APK asset scan; API35 emulator test that unapproved synthetic speed/sign rows produce zero overlays.
 - GitHub PR CI is the build source of truth; no local Android SDK/device road test is claimed.
 - No new real road DB asset or observed physical sign coordinates. The old synthetic PMTiles 462-byte fixture remains the only offline tile content.
+
+
+## Accepted PR #15, final-head CI and Road Intelligence artifact
+- Commit `26d75df6c0751df89a060d0efc1e209ff65b5078`, merged main `dd53c1a43991f350ffa980091e4db1faabeddccf`.
+- Phase 0 Python SQLite/source/coordinate/RTree audit: SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43614134722.
+- Android :app:assembleDebug :app:testDebugUnitTest :app:lintDebug and APK inventory: SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43614134733.
+- Android API35 instrumented smoke, unapproved SQLite signs/speed overlay refusal: SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43614134877.
+- Phase0 evidence artifact ID 14121745051 ZIP sha256 879a17910a724fbebedc6a637f9475badde2a38417b2e989b40450092958d3de; empty DB bytes 86,016, DB SHA256 87193a1b8af8fa2e17c56a2bb9f03c533378321335653590fefae2c8a91de584; `EMPTY_DATABASE`, 0 verified records.
+- APK road-asset audit from Android workflow: five synthetic assets, archive hashes verified. Production release and physical taxi driving tests remain NOT DONE.

@@ -97,5 +97,14 @@
 - [x] Reader now suppresses unapproved road/sign overlays and requires observation plus verification dates on eligible rows.
 - [x] Authored offline candidate SQLite integrity/coordinate/RTree report without generating approvals.
 - [x] Added synthetic-only regression tests (Kotlin unit, API35 instrumentation, Python) and GitHub artifact collection.
-- [ ] PR #15 final-head Python/SQLite, Android build/lint/JUnit and emulator CI acceptance; do not claim DONE before those checks complete.
+- [x] PR #15 acceptance on final-head Python/SQLite, Android build/lint/JUnit and API35 emulator verified; details in closure section below.
 - [ ] Verified real speed_kmh/physical sign coordinates: BLOCKED (no approved legal/field evidence).
+
+
+## Phase 4 road candidate source and gate — ACCEPTED CI (PR #15)
+- [x] PR #15 merged main `dd53c1a43991f350ffa980091e4db1faabeddccf`.
+- [x] Python/SQLite candidate audit, field metadata and RTree negative cases PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43614134722.
+- [x] Kotlin Android JUnit, lint and assembleDebug PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43614134733.
+- [x] Android API35 emulator new untrusted-source rejection test and existing map/offline tests PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43614134877.
+- [x] Test artifact 14121745051 inspected: SQLite 86,016 B, 0 row sources/roads/signs, both alert flags FALSE. APK audit only five synthetic assets.
+- [ ] Field-verified source road speeds, physical sign lat/lon, real-map downloadable PMTiles/POI/routing and on-road reliability are BLOCKED; Phase 4 not fully accepted.

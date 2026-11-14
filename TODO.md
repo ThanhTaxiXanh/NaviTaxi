@@ -54,3 +54,11 @@
 - Source-gathering follow-up: legally usable Vietnam OSM snapshot and independent speed-sign ground surveys with WGS84 coordinates, sign_code, direction, applicability and observation date.
 - Review OSM `traffic_sign` node-vs-way semantics; never derive a physical sign coordinate from the center of a road segment or assume an unsurveyed `maxspeed` is enforceable.
 - Reconcile verified DB schema, provenance and checksum at publication. Keep 34-province offline catalog blocked without approved distribution/license chain.
+
+
+## After verified PR #15 — next Road Intelligence work
+- PR #15 secure SQLite source approval and candidate audit: VERIFIED infrastructure and merged. Do not repeat the gate unless a substantive flaw is found.
+- Locate and lawfully extract Vietnam OSM tags (`maxspeed`, `traffic_sign`) into a reference-only staging inventory with SHA, original object IDs and source version; prevent tags from becoming legal alerts without separate reviewer evidence.
+- Obtain real roadside sign coordinate surveys (WGS84 lat/lon, bearing, direction, road applicability and observed/verified timestamps) and vehicle-class-specific legal speed applicability.
+- Review ODbL, independent source permissions and field QA before populating `RoadIntelligenceApprovedPins` with any real database SHA.
+- Keep Phase 4 and Phase 5 blocked where real approved offline data and field tests are absent.
