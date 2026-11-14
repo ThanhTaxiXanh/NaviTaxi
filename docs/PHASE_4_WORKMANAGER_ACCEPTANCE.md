@@ -51,3 +51,9 @@ Source confidence must be assessed separately from the mere filename, and no APK
 - Important distinction: WorkManager UNMETERED is a scheduling constraint, not a guarantee of Wi-Fi. Some cellular networks can be reported as non-metered.
 - Persist the explicit allow_cellular boolean inside the durable WorkManager Data (false by default). Check actual ConnectivityManager NetworkCapabilities at worker execution: Wi-Fi or Ethernet always allowed, cellular only when the user enabled it. No Internet-capable transport => retry; do not consume mobile data.
 - OfflineConnectionPolicy unit tests cover Wi-Fi, Ethernet, blocked cellular, explicitly allowed cellular and disconnected network. Regression must pass before merge.
+
+## Strict Wi-Fi/cellular policy acceptance
+- Final source PR https://github.com/ThanhTaxiXanh/NaviTaxi/pull/11 merged as 64ec5e6.
+- Worker now persists explicit allow_cellular=false unless consented; verifies actual active Wi-Fi/Ethernet/Cellular transport using ConnectivityManager before beginning HTTPS download. UNMETERED alone is not treated as equivalent to Wi-Fi.
+- Unit source policy in OfflineWorkContractTest; Android Gradle PASS 43607450906; emulator 4/4 PASS 43607450907; Python/SQLite PASS 43607450905.
+- No changes to synthetic-only data; real road/legal speed/physical sign coordinates remain absent.

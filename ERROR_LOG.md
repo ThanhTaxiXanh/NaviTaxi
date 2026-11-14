@@ -49,3 +49,5 @@
 ## Phase 4 network consent audit
 - Detected policy gap: Android WorkManager NetworkType.UNMETERED may include unmetered cellular; user has a separate cellular-download opt-in.
 - Added actual active-network TRANSPORT_WIFI/ETHERNET/CELLULAR gate in the worker and persisted explicit allow_cellular=false by default. Awaiting CI validation.
+
+- Phase4 cellular transport guard verified in final CI: 43607450905 (Python), 43607450906 (Android), 43607450907 (emulator 4/4). Merged PR #11 as 64ec5e6. No known current compilation blocker; production 34-province catalog and sign/speed data still unavailable.

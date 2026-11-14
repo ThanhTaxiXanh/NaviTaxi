@@ -64,3 +64,11 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Source test APK PMTiles synthetic only; no source-backed road speed/sign location databases.
 
 - Actual debug APK 60,285,140 bytes; SHA256 2f3492851a2596b20c64e2dea0910e8c4428bd863d143b8aac12bc132b2cd5ca. GitHub Actions artifact ID 14118780517 on run 43606534434; exact APK paths assets/pmtiles/synthetic_test.pmtiles (462 bytes), assets/pmtiles/synthetic_manifest.json (525 bytes), three map_styles JSON files (238, 416, 698 bytes). No embedded source-backed road intelligence DB.
+
+## Phase 4 strict no-cellular hardening
+- Code PR #11 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/11 merged to main as 64ec5e6e5bca5e82808b201939873ca80f87dc33.
+- Python/SQLite/PMTiles PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43607450905.
+- Android debug compile/unit/lint PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43607450906.
+- Android API35 emulator 4/4 PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43607450907.
+- Actual branch debug APK 60,285,140 bytes SHA256 34fe6d504e1b492f29b39cfc3ea522a0d7053b03f875ff375d7742df9e580f61; exact PMTiles asset remains 462 bytes, sha256 d9a53b380463498cc31fd59a30d00e07a2f3f32f9f894eefa7b796d20470de9c.
+- No real speed/sign DB, approved province PMTiles catalog or production background field validation. Phase 4 catalog/updates remains BLOCKED.
