@@ -51,3 +51,11 @@ OSM is ODbL: display attribution and ensure compatible redistribution obligation
 - No automatic GPS or location transfer. No offline download/prefetch from OSM Foundation servers.
 - WGS84 physical sign GeoJSON and road segment GeoJSON are loaded only from source-linked local SQLite with validated range; missing DB => zero markers and unknown limits.
 - Runtime Android Emulator smoke proof is required before claiming rendering successful; PMTiles reader is Phase 3.
+
+
+## Phase 3 PMTiles read / integrity
+- A packaged PMTiles v3 archive is accepted only when its manifest shows synthetic fixture identity/license, valid version and non-real-data flags, exact byte size and full SHA-256. PMTiles header offsets/type are sanity-checked before being used.
+- MapLibre Android lacks byte-range support for pmtiles://asset://. The verified archive is copied from APK assets into an app-private file and loaded from pmtiles://file://. Never expose the app-private path to an external service.
+- The app never requests GPS permission or downloads any map data to run this fixture. A future Phase 4 package manager must verify all archived packages before atomic installation.
+- For remote lawful PMTiles services MapLibre offers pmtiles://https:// requiring HTTP Range; scripts/pmtiles_range_probe.py tests a server's 206 behavior without bulk downloading.
+- This fixture is an MVT grid, not genuine road segments. No speed limit or traffic sign coordinate is claimed unless a licensed verified Road Intelligence database supplies it.

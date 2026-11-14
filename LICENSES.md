@@ -18,3 +18,10 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 - OSMF raster tile infrastructure is NOT freely redistributable for bulk offline use: https://operations.osmfoundation.org/policies/tiles/
 - Demo vector style (country boundaries) from MapLibre demotiles / Natural Earth; demonstration not licensed to imply street-grade coverage: https://github.com/maplibre/demotiles
 - Exact transitive dependency licenses and notices still require final release audit; do not claim audited production license bundle.
+
+
+## Phase 3 fixture and protocol
+- Bundled 462-byte synthetic PMTiles/MVT grid was generated from code owned by NaviTaxi project and contains no third-party OSM map tiles; not licensed as a real road basemap.
+- PMTiles v3 format is documented by Protomaps: https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md.
+- MapLibre Native PMTiles file:/// support: https://maplibre.org/maplibre-native/android/examples/data/PMTiles/.
+- No OSMF tile-server contents were downloaded for offline packaging; no live cost or billing activated.

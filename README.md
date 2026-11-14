@@ -34,3 +34,18 @@ The development branch adds a real MapLibre Native MapView, interactive controls
 Android debug CI: GitHub Actions, using Gradle 8.9, Kotlin 2.2.10 and MapLibre 13.7.1 OpenGL ES. Actual Android emulator MapView startup test is tracked separately. No live speed limits, traffic sign coordinates, routing, turn-by-turn navigation or PMTiles package has been shipped.
 
 See docs/PHASE_2_ACCEPTANCE.md and docs/ROAD_INTELLIGENCE_MAP_CONTRACT.md.
+
+
+## PMTiles native offline test (Phase 3)
+- In the map tab select **PMTiles thử nghiệm**. The app verifies SHA-256 of a synthetic PMTiles v3 archive, copies it into private storage, then opens it via native MapLibre pmtiles://file://.
+- The fixture has one MVT z0 tile with two schematic cross lines. It is deliberately NOT a real map and cannot be used for routing or speed/sign alerts.
+- Rebuild and validate test data:
+  python3 scripts/build_synthetic_pmtiles.py
+  python3 scripts/validate_pmtiles.py
+  python3 -m unittest discover -s tests -v
+- Validate a lawful, self-hosted PMTiles server's HTTP Range support with:
+  python3 scripts/pmtiles_range_probe.py https://your-operated-host/example.pmtiles
+- To inspect and ZIP discovered source assets:
+  python3 scripts/audit_road_assets.py --root . --out build/road-assets-report.json
+  python3 scripts/package_road_data.py --root . --output build/road-intelligence-archive.zip
+- Phase 4 will add package management; Phase 5 will add lawful province data. No real speed-limit/traffic-sign dataset is included.

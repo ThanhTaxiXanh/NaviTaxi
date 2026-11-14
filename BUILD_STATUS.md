@@ -35,3 +35,11 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 
 - Latest accepted code head before squash: 87d50aeee5f2052b7b7b773be427797e542525dc; three required CI workflows passed.
 - PR #3 merged on main as 7d9809cd95e582d911697db96b9fe9215e9c16ee.
+
+
+## Phase 3 — PMTiles
+- Synthetic PMTiles v3 fixture exactly 462 bytes, SHA-256 d9a53b380463498cc31fd59a30d00e07a2f3f32f9f894eefa7b796d20470de9c.
+- Python PMTiles generation reproducibility, gzip header consistency, checksum tamper rejection and local HTTP Range test: PASS in current branch latest CI run 43602874345.
+- Android API 35 Emulator initial PMTiles validation + MapLibre style rendering smoke: PASS (2/2) https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43602555868.
+- Pending at this note: final head app assemble/unit/lint and emulator rerun.
+- No production APK, no 34-province PMTiles, no verified speed/sign data.
