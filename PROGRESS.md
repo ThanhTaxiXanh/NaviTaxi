@@ -10,3 +10,11 @@
 - [ ] Create Kotlin project and Android CI.
 - [ ] Implement interactive Search / Offline Maps / Settings screens.
 - [ ] Build debug APK and verify UI on an Android emulator/device.
+
+## Phase 1 implementation (work in progress)
+- [x] Kotlin Android project, Gradle and Android Actions build workflow authored.
+- [x] Three Compose pages and NaviTaxi brand created, with search and persisted local settings.
+- [x] Explicit unknown/verified speed-limit data contract created.
+- [ ] Android :app:assembleDebug success and APK artifact verified.
+- [ ] Device screenshots compared against three user references.
+- [ ] Phase 1 PR #2 merged after acceptance gate.

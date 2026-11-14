@@ -18,3 +18,10 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Push CI passed: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43589361023.
 - Tests: Python compilation, unittest SQLite schema/provenance/RTree, APK entry path audit and ZIP checksums; artifact created.
 - PR: https://github.com/ThanhTaxiXanh/NaviTaxi/pull/1.
+
+## Phase 1 current work
+
+- Isolated working branch: `phase-1/android-ui-reference-screens`, PR #2: https://github.com/ThanhTaxiXanh/NaviTaxi/pull/2.
+- Core Kotlin/Compose app and reference search/offline/settings pages added; Android CI is the build verification source.
+- In-app maps/downloads/traffic overlays/speed-limit alarms have not been claimed functional without validated datasets and engines.
+- Phase 0 merged on main as squash commit `5aabd8c79d444bbf261bcc5d78a2325a62565ceb` after GitHub Actions success.

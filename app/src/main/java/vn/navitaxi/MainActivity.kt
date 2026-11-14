@@ -53,10 +53,10 @@ private fun NaviTaxiApp() {
 
     MaterialTheme(colorScheme = if (preferences.isDark) darkNaviColorScheme() else lightNaviColorScheme()) {
         Scaffold(
-            containerColor = NaviColors.Background,
+            containerColor = MaterialTheme.colorScheme.background,
             snackbarHost = { SnackbarHost(snackbarHostState) },
             bottomBar = {
-                NavigationBar(containerColor = NaviColors.Card, tonalElevation = 5.dp) {
+                NavigationBar(containerColor = MaterialTheme.colorScheme.surface, tonalElevation = 5.dp) {
                     Screen.entries.forEach { target ->
                         val icon = when (target) {
                             Screen.SEARCH -> Icons.Default.Search
@@ -71,7 +71,7 @@ private fun NaviTaxiApp() {
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = NaviColors.Green,
                                 selectedTextColor = NaviColors.Green,
-                                indicatorColor = NaviColors.PaleGreen
+                                indicatorColor = MaterialTheme.colorScheme.secondaryContainer
                             )
                         )
                     }

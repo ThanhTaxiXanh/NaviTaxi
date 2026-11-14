@@ -10,3 +10,8 @@
 - Android device UI/screenshot tests: NOT STARTED.
 
 Acceptance policy: source creation != test pass; record GitHub Actions run, job result, artifact checksum and device model once available.
+
+## Phase 1
+- Android CI workflow: `.github/workflows/android-build.yml`.
+- First attempt failed SDK installation (not a Kotlin compiler result); workflow fixed in follow-up commit.
+- No verified compiled APK yet. Build status remains IN PROGRESS.

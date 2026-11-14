@@ -38,7 +38,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
             SettingsSectionHeading(Icons.Default.VolumeUp, "Âm thanh")
             Spacer(Modifier.height(14.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.VolumeUp, null, tint = NaviColors.Deep)
+                Icon(Icons.Default.VolumeUp, null, tint = MaterialTheme.colorScheme.primary)
                 Spacer(Modifier.width(10.dp))
                 Text("Âm lượng dẫn đường", fontSize = 13.sp,
                     modifier = Modifier.weight(1f))
@@ -51,14 +51,14 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
                     thumbColor = Color.White, activeTrackColor = NaviColors.Green))
             SettingsDivider()
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Mic, null, tint = NaviColors.Deep)
+                Icon(Icons.Default.Mic, null, tint = MaterialTheme.colorScheme.primary)
                 Spacer(Modifier.width(10.dp))
                 Text("Giọng đọc dẫn đường", fontSize = 13.sp, modifier = Modifier.weight(1f))
                 Box {
                     OutlinedButton(onClick = { showVoiceMenu = true },
                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 5.dp)) {
-                        Text(preferences.voice, fontSize = 11.sp, color = NaviColors.Deep)
-                        Icon(Icons.Default.KeyboardArrowDown, null, tint = NaviColors.Deep)
+                        Text(preferences.voice, fontSize = 11.sp, color = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.Default.KeyboardArrowDown, null, tint = MaterialTheme.colorScheme.primary)
                     }
                     DropdownMenu(expanded = showVoiceMenu,
                         onDismissRequest = { showVoiceMenu = false }) {
@@ -77,7 +77,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
             SettingsSectionHeading(Icons.Default.Layers, "Bản đồ")
             Spacer(Modifier.height(14.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Map, null, tint = NaviColors.Deep)
+                Icon(Icons.Default.Map, null, tint = MaterialTheme.colorScheme.primary)
                 Spacer(Modifier.width(8.dp))
                 Text("Chủ đề bản đồ", fontSize = 13.sp, modifier = Modifier.weight(1f))
             }
@@ -96,7 +96,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
                                     else -> Color(0xFF162A3F)
                                 })
                             .border(if (chosen) 3.dp else 1.dp,
-                                if (chosen) NaviColors.Green else NaviColors.Stroke,
+                                if (chosen) NaviColors.Green else MaterialTheme.colorScheme.outlineVariant,
                                 RoundedCornerShape(12.dp)),
                             contentAlignment = Alignment.Center) {
                             Icon(Icons.Default.Map, null,
@@ -148,7 +148,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
                 color = NaviColors.Muted, fontSize = 10.sp)
             SettingsDivider()
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Layers, null, tint = NaviColors.Deep)
+                Icon(Icons.Default.Layers, null, tint = MaterialTheme.colorScheme.primary)
                 Spacer(Modifier.width(10.dp))
                 Text("Mật độ hiển thị", fontSize = 13.sp, modifier = Modifier.weight(1f))
             }
@@ -163,7 +163,7 @@ fun SettingsScreen(preferences: UiPreferences, onBack: () -> Unit) {
 private fun ToggleSettingsRow(icon: ImageVector, title: String, checked: Boolean,
                               onCheck: (Boolean) -> Unit) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Icon(icon, null, tint = NaviColors.Deep, modifier = Modifier.size(23.dp))
+        Icon(icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(23.dp))
         Spacer(Modifier.width(10.dp))
         Text(title, fontSize = 13.sp, modifier = Modifier.weight(1f))
         NaviToggle(checked, onCheck)

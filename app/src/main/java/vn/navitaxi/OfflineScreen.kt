@@ -56,7 +56,7 @@ fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: 
                 Column(Modifier.weight(1f)) {
                     Text("Dung lượng thiết bị", color = NaviColors.Muted, fontSize = 12.sp)
                     Text(gb(space.first), fontWeight = FontWeight.Bold, fontSize = 25.sp,
-                        color = NaviColors.Dark)
+                        color = MaterialTheme.colorScheme.onSurface)
                 }
                 Column(horizontalAlignment = Alignment.End) {
                     Text("Đã dùng: " + gb(used), fontSize = 11.sp)
@@ -69,11 +69,11 @@ fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: 
                 color = NaviColors.Green, trackColor = NaviColors.LightGray)
             Spacer(Modifier.height(10.dp))
             Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp))
-                .background(NaviColors.PaleGreen).padding(10.dp),
+                .background(MaterialTheme.colorScheme.secondaryContainer).padding(10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("Tổng dung lượng bản đồ ngoại tuyến", fontSize = 12.sp)
                 Text("0 GB", fontWeight = FontWeight.Bold,
-                    color = NaviColors.Deep, fontSize = 12.sp)
+                    color = MaterialTheme.colorScheme.primary, fontSize = 12.sp)
             }
         }
         SegmentedChoice(
@@ -91,7 +91,7 @@ fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(Icons.Default.Public, null, tint = NaviColors.Green,
                             modifier = Modifier.size(76.dp))
-                        Text("Việt Nam", fontWeight = FontWeight.Bold, color = NaviColors.Deep)
+                        Text("Việt Nam", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                         Text("Sơ đồ minh họa", fontSize = 9.sp, color = NaviColors.Muted)
                     }
                 }
@@ -105,14 +105,14 @@ fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: 
                             modifier = Modifier.size(18.dp)) },
                         placeholder = { Text("Tìm tỉnh/thành...", fontSize = 12.sp) }
                     )
-                    Text("☆  Khu vực gợi ý", color = NaviColors.Deep,
+                    Text("☆  Khu vực gợi ý", color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     offlineSamples.filter {
                         provinceQuery.isBlank() || it.name.contains(provinceQuery, ignoreCase = true)
                     }.forEach { region ->
                         Surface(onClick = missingSource, shape = RoundedCornerShape(14.dp),
-                            color = NaviColors.Card,
-                            border = BorderStroke(1.dp, NaviColors.Stroke)) {
+                            color = MaterialTheme.colorScheme.surface,
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)) {
                             Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 9.dp),
                                 verticalAlignment = Alignment.CenterVertically) {
                                 Text(region.icon, color = NaviColors.Green, fontSize = 21.sp)
@@ -180,7 +180,7 @@ private fun OfflineSettingRow(icon: androidx.compose.ui.graphics.vector.ImageVec
                               title: String, description: String,
                               checked: Boolean, onCheck: (Boolean) -> Unit) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Icon(icon, null, tint = NaviColors.Deep, modifier = Modifier.size(25.dp))
+        Icon(icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(25.dp))
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text(title, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)

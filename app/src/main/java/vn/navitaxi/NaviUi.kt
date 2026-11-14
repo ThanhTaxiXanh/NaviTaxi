@@ -40,11 +40,13 @@ object NaviColors {
 fun lightNaviColorScheme() = lightColorScheme(
     primary = NaviColors.Green, onPrimary = Color.White,
     background = NaviColors.Background, surface = NaviColors.Card,
+    secondaryContainer = NaviColors.PaleGreen, onSecondaryContainer = NaviColors.Deep,
     onSurface = NaviColors.Dark
 )
 fun darkNaviColorScheme() = darkColorScheme(
     primary = Color(0xFF56CBB5), onPrimary = NaviColors.Dark,
     background = Color(0xFF12191E), surface = Color(0xFF222A30),
+    secondaryContainer = Color(0xFF12433D), onSecondaryContainer = Color.White,
     onSurface = Color.White
 )
 
@@ -86,18 +88,18 @@ fun BrandHeader() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(48.dp).clip(RoundedCornerShape(14.dp)).background(NaviColors.PaleGreen),
+            Box(Modifier.size(48.dp).clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.secondaryContainer),
                 contentAlignment = Alignment.Center) {
-                Icon(Icons.Default.DirectionsCar, null, tint = NaviColors.Deep,
+                Icon(Icons.Default.DirectionsCar, null, tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(35.dp))
                 Text("TAXI", fontSize = 8.sp, color = NaviColors.Green,
                     fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.TopCenter))
             }
             Spacer(Modifier.width(9.dp))
             Text("NaviTaxi", fontSize = 28.sp, fontWeight = FontWeight.Black,
-                fontStyle = FontStyle.Italic, color = NaviColors.Dark)
+                fontStyle = FontStyle.Italic, color = MaterialTheme.colorScheme.onSurface)
             Text("Map", fontSize = 28.sp, fontWeight = FontWeight.Black,
-                fontStyle = FontStyle.Italic, color = NaviColors.Deep)
+                fontStyle = FontStyle.Italic, color = MaterialTheme.colorScheme.primary)
         }
         Text("⌁", fontSize = 32.sp, color = NaviColors.Golden)
     }
@@ -109,7 +111,7 @@ fun PageHeading(title: String, subtitle: String? = null, onBack: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             SmallIconButton(Icons.Default.ArrowBackIosNew, onBack)
             Spacer(Modifier.width(15.dp))
-            Text(title, fontSize = 28.sp, fontWeight = FontWeight.Bold, color = NaviColors.Deep)
+            Text(title, fontSize = 28.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
         }
         if (subtitle != null) {
             Text(subtitle, color = NaviColors.Muted, fontSize = 12.sp,
@@ -121,16 +123,16 @@ fun PageHeading(title: String, subtitle: String? = null, onBack: () -> Unit) {
 @Composable
 fun SmallIconButton(icon: ImageVector, onClick: () -> Unit) {
     Surface(
-        onClick = onClick, shape = RoundedCornerShape(16.dp), color = NaviColors.Card,
+        onClick = onClick, shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surface,
         shadowElevation = 3.dp, modifier = Modifier.size(46.dp)
     ) { Box(contentAlignment = Alignment.Center) {
-        Icon(icon, null, modifier = Modifier.size(23.dp), tint = NaviColors.Deep)
+        Icon(icon, null, modifier = Modifier.size(23.dp), tint = MaterialTheme.colorScheme.primary)
     } }
 }
 
 @Composable
 fun NaviCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Surface(modifier = modifier.fillMaxWidth(), color = NaviColors.Card,
+    Surface(modifier = modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.surface,
         shadowElevation = 2.dp, shape = RoundedCornerShape(22.dp)) {
         Column(Modifier.padding(14.dp), content = content)
     }
@@ -139,9 +141,9 @@ fun NaviCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() 
 @Composable
 fun SectionHeading(icon: ImageVector, title: String, tail: String? = null) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Icon(icon, null, tint = NaviColors.Deep, modifier = Modifier.size(26.dp))
+        Icon(icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(26.dp))
         Spacer(Modifier.width(10.dp))
-        Text(title, color = NaviColors.Dark, fontSize = 19.sp,
+        Text(title, color = MaterialTheme.colorScheme.onSurface, fontSize = 19.sp,
             fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
         if (tail != null) Text(tail, color = NaviColors.Green, fontSize = 12.sp)
     }
@@ -150,12 +152,12 @@ fun SectionHeading(icon: ImageVector, title: String, tail: String? = null) {
 @Composable
 fun SettingsSectionHeading(icon: ImageVector, title: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(Modifier.size(38.dp).background(NaviColors.PaleGreen, RoundedCornerShape(12.dp)),
+        Box(Modifier.size(38.dp).background(MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center) {
-            Icon(icon, null, tint = NaviColors.Deep, modifier = Modifier.size(22.dp))
+            Icon(icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(22.dp))
         }
         Spacer(Modifier.width(12.dp))
-        Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = NaviColors.Dark)
+        Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 
@@ -175,7 +177,7 @@ fun SegmentedChoice(options: List<String>, selected: String,
             ) {
                 Text(label, fontSize = 13.sp,
                     fontWeight = if (active) FontWeight.Bold else FontWeight.Medium,
-                    color = if (active) Color.White else NaviColors.Dark, maxLines = 1)
+                    color = if (active) Color.White else MaterialTheme.colorScheme.onSurface, maxLines = 1)
             }
         }
     }
@@ -193,5 +195,5 @@ fun NaviToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
 
 @Composable
 fun SettingsDivider() {
-    HorizontalDivider(color = NaviColors.Stroke, modifier = Modifier.padding(vertical = 4.dp))
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(vertical = 4.dp))
 }

@@ -69,16 +69,16 @@ fun SearchScreen(query: String, onQueryChange: (String) -> Unit,
             modifier = Modifier.fillMaxWidth(), singleLine = true,
             shape = RoundedCornerShape(34.dp),
             placeholder = { Text("Tìm địa chỉ, địa điểm, POI hoặc điểm đón/trả...", fontSize = 13.sp) },
-            leadingIcon = { Icon(Icons.Default.Search, null, tint = NaviColors.Dark) },
+            leadingIcon = { Icon(Icons.Default.Search, null, tint = MaterialTheme.colorScheme.onSurface) },
             trailingIcon = {
                 IconButton(onClick = onVoiceSearch) {
-                    Icon(Icons.Default.Mic, "Tìm kiếm bằng giọng nói", tint = NaviColors.Dark)
+                    Icon(Icons.Default.Mic, "Tìm kiếm bằng giọng nói", tint = MaterialTheme.colorScheme.onSurface)
                 }
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = NaviColors.Card,
-                unfocusedContainerColor = NaviColors.Card,
-                unfocusedBorderColor = NaviColors.Stroke,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
                 focusedBorderColor = NaviColors.Green
             )
         )
@@ -102,13 +102,13 @@ fun SearchScreen(query: String, onQueryChange: (String) -> Unit,
             Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
                 categories.forEach { (label, icon, filter) ->
                     Column(Modifier.weight(1f).clip(RoundedCornerShape(13.dp))
-                        .background(if (category == filter) NaviColors.PaleGreen else Color(0xFFF9F7F5))
+                        .background(if (category == filter) MaterialTheme.colorScheme.secondaryContainer else Color(0xFFF9F7F5))
                         .clickable { category = if (category == filter) "" else filter }
                         .padding(vertical = 12.dp, horizontal = 1.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(icon, null, tint = NaviColors.Green, modifier = Modifier.size(23.dp))
-                        Text(label, fontSize = 10.sp, color = NaviColors.Dark,
+                        Text(label, fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurface,
                             maxLines = 1, softWrap = false)
                     }
                 }
@@ -132,8 +132,8 @@ fun SearchScreen(query: String, onQueryChange: (String) -> Unit,
                     val item = places.first { it.id == id }
                     Surface(
                         onClick = { selectedId = id; onQueryChange(item.name); category = "" },
-                        shape = RoundedCornerShape(28.dp), color = NaviColors.Card,
-                        border = BorderStroke(1.dp, NaviColors.Stroke), shadowElevation = 1.dp
+                        shape = RoundedCornerShape(28.dp), color = MaterialTheme.colorScheme.surface,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant), shadowElevation = 1.dp
                     ) {
                         Row(Modifier.padding(horizontal = 11.dp, vertical = 9.dp),
                             verticalAlignment = Alignment.CenterVertically) {
@@ -155,7 +155,7 @@ fun SearchScreen(query: String, onQueryChange: (String) -> Unit,
             } else {
                 results.take(5).forEach { item ->
                     Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(15.dp))
-                        .background(if (item.id == selectedId) NaviColors.PaleGreen else Color.Transparent)
+                        .background(if (item.id == selectedId) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent)
                         .padding(8.dp)) {
                         SearchPlaceRow(item, compact = true, onClick = { selectedId = item.id })
                     }
@@ -179,7 +179,7 @@ fun SearchScreen(query: String, onQueryChange: (String) -> Unit,
                     Row {
                         Text(selected.name, modifier = Modifier.weight(1f),
                             fontWeight = FontWeight.Bold, fontSize = 17.sp,
-                            color = NaviColors.Dark, maxLines = 2)
+                            color = MaterialTheme.colorScheme.onSurface, maxLines = 2)
                         IconButton(onClick = { starred = !starred }, modifier = Modifier.size(28.dp)) {
                             Icon(if (starred) Icons.Default.Star else Icons.Default.StarBorder,
                                 "Yêu thích", tint = if (starred) NaviColors.Golden else NaviColors.Muted)
@@ -187,7 +187,7 @@ fun SearchScreen(query: String, onQueryChange: (String) -> Unit,
                     }
                     Text(selected.address, fontSize = 11.sp, color = NaviColors.Muted,
                         maxLines = 2, overflow = TextOverflow.Ellipsis)
-                    Text("Khoảng cách: chờ vị trí GPS", fontSize = 10.sp, color = NaviColors.Deep)
+                    Text("Khoảng cách: chờ vị trí GPS", fontSize = 10.sp, color = MaterialTheme.colorScheme.primary)
                     Button(onClick = onOpenMap, modifier = Modifier.fillMaxWidth(),
                         contentPadding = PaddingValues(horizontal = 7.dp, vertical = 7.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = NaviColors.Green)) {
@@ -208,12 +208,12 @@ private fun SearchPlaceRow(item: PlaceItem, compact: Boolean = false, onClick: (
         verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(38.dp).clip(RoundedCornerShape(10.dp))
             .background(Color(0xFFF0F3EF)), contentAlignment = Alignment.Center) {
-            Icon(item.icon, null, tint = NaviColors.Deep, modifier = Modifier.size(22.dp))
+            Icon(item.icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(22.dp))
         }
         Spacer(Modifier.width(10.dp))
         Column(Modifier.weight(1f)) {
             Text(item.name, fontWeight = FontWeight.Bold, fontSize = 14.sp,
-                color = NaviColors.Dark, maxLines = 1)
+                color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
             Text(item.address, fontSize = 11.sp, color = NaviColors.Muted,
                 maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
