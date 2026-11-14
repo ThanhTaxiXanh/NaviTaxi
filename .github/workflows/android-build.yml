@@ -1,7 +1,7 @@
 name: NaviTaxi Android Debug Build
 on:
   push:
-    branches: ["phase-1/**", "main"]
+    branches: ["main"]
   pull_request:
     branches: ["main"]
   workflow_dispatch:
@@ -26,7 +26,7 @@ jobs:
         with:
           gradle-version: "8.9"
       - name: Verify Android project and compile
-        run: gradle --no-daemon :app:assembleDebug :app:lintDebug
+        run: gradle --no-daemon :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
       - name: Android debug artifact
         uses: actions/upload-artifact@v4
         with:
