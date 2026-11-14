@@ -116,5 +116,5 @@
 - [x] Added reference-only JSONL and ZIP with SHA256SUMS, non-overwrite behavior and failure cleanup; rejected output to production Android/road DB assets.
 - [x] Python/SQLite CI 43617224402: 36/36 PASS, including actual binary PBF fixture read; Android build/unit/lint 43617224403 PASS on code head.
 - [x] APK audit on code head confirms 5 test-only map assets, no real Road Intelligence database.
-- [ ] PR #17 final-head CI and merge; do not declare entire Phase 4 finished.
+- [x] PR #17 final-head CI PASSED (Python 43617538573 and Android 43617538560); merged as main 8b6d1f7ae9f995948364bdffcabf0208283a6c3d. Phase 4 overall NOT DONE.
 - [ ] Real Vietnam OSM snapshot acquired/licensed/hashed and independently verified speed/sign data: BLOCKED/NOT INGESTED.

@@ -65,7 +65,7 @@
 
 
 ## Next tasks after OSM reference-only staging
-- Complete final-head CI/merge PR #17; document exact checksums and source review.
+- PR #17 independently pinned OSM reference extractor: CI PASSED and MERGED. Do not label this reference tooling as validated Vietnam road coverage.
 - Secure a lawful Vietnam Geofabrik snapshot with source URL, size, timestamp, ODbL review and exact SHA-256; run the streaming extractor only into build/reference staging, not Android assets.
 - Report genuine candidate counts from that actual PBF only after parsing; keep OSM tags separate from the verified SQLite/RTree and speed/sign map overlays.
 - Validate each applicable legal speed by travel direction, vehicle class, date and signs; field-confirm the physical WGS84 sign location and orientation before proposing an independently approved database pin.
