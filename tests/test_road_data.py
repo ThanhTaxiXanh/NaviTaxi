@@ -84,7 +84,8 @@ class RoadDataTests(unittest.TestCase):
         self.assertIn("sqlite_tables", discovered["assets"][0])
         output = root / "build/road-archive.zip"
         record = package(root, output)
-        self.assertEqual(record["real_geospatial_asset_count"], 2)
+        self.assertEqual(record["discovered_asset_file_count"], 2)
+        self.assertEqual(record["verified_real_road_speed_or_sign_records"], 0)
         with zipfile.ZipFile(output) as z:
             self.assertIn("project/app/src/main/assets/road_intelligence/map.sqlite", z.namelist())
             self.assertIn("project/res/raw/signs.geojson", z.namelist())
