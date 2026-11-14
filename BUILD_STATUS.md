@@ -55,3 +55,10 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - GitHub artifact 14117896754: app-debug.apk size 59,718,112 bytes; SHA-256 7d1f6728914d474b3d97a5d61fae5ab15a10c1f01dce96e4853ac6853d95848a.
 - PR #7 merged into main as 6fdbcfd3f6cace9220a93aec62c1b76130492d61.
 - Production APK, background transfer, real 34-province maps, speed/sign surveys and phone driving validation remain NOT DONE.
+
+
+## Phase 4 background WorkManager – PR #9
+- WorkManager version 2.12.0 released 2026-09-23, minSdk24 and compatible with project minSdk26.
+- Initial Python/SQLite pass 43606081873; initial Android build fail 43606081949 (corrected labelled return).
+- Final head Android compile, JUnit, lint, emulator results PENDING. Do not claim verified APK or merge until all gates pass.
+- Source test APK PMTiles synthetic only; no source-backed road speed/sign location databases.

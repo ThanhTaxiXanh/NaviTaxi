@@ -24,3 +24,10 @@
 - No licensed geo speed/sign datasets present. Never fill gaps with guesses.
 - No local Android SDK; use GitHub Actions and Android runner for build.
 - Real 100% UI reproduction depends on matching device resolution and source graphic assets; do not claim it without screenshots and acceptance tests.
+
+
+## Phase 4 active checks
+- Validate PR #9 WorkManager/foreground service Kotlin compatibility, Android emulator launch and final APK manifest.
+- Confirm no .db/.sqlite/.realm speed/sign assets or real sign locations are embedded.
+- Add approved signed-off HTTPS PMTiles catalog before activating remote downloads or automatic version checks; no public OSM tile server bulk use.
+- WorkManager can reschedule work on system stop, but user force-stop and Android 15 dataSync time limits require field testing.

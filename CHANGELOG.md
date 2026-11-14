@@ -42,3 +42,11 @@
 - Offline page now supports install/reverify/delete real embedded synthetic test fixture, accurate installed status and clear absence of production region catalog.
 - Added MockWebServer range/corruption/update/URL unit tests, Android emulator smoke test. Code PR #7 merged as 6fdbcfd.
 - Background WorkManager and real province datasets not shipped.
+
+
+## 0.4.1-dev – WorkManager recovery
+- Added WorkManager 2.12.0 durable approved download worker and foreground dataSync notification.
+- Replaced app-only remote coroutine execution with OS-managed constrained requests and work status Flow; saved UUID for process re-creation.
+- Serialized in-process cancellation/partial cleanup; reject URL query secrets in persisted specs and check free storage.
+- Added WorkManager contract unit tests and invalid-provenance Android instrumentation test.
+- No source speed limit or physical traffic sign coordinates; still no real province catalog.

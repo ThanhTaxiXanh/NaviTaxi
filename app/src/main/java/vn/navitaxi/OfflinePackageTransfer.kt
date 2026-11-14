@@ -32,7 +32,7 @@ data class OfflinePackageSpec(
         require(license.isNotBlank() && sourceUri.isNotBlank()) { "Missing legal provenance" }
         val parsed = URI(url)
         val host = parsed.host?.lowercase(Locale.ROOT) ?: error("Missing host")
-        require(parsed.rawUserInfo == null && parsed.fragment == null) { "Unexpected URL component" }
+        require(parsed.rawUserInfo == null && parsed.fragment == null && parsed.rawQuery == null) { "Unexpected URL component" }
         require(parsed.scheme == "https" ||
             (allowLoopbackInTests && parsed.scheme == "http" &&
              host in setOf("127.0.0.1", "localhost"))) { "Only HTTPS PMTiles transport is allowed" }
@@ -81,6 +81,10 @@ class OfflinePackageTransfer(
         spec.validate(allowLoopbackInTests)
         require(folder.isDirectory || folder.mkdirs()) { "Cannot create package directory" }
         val target = installed(spec)
+        val usable = folder.usableSpace
+        if (usable > 0L && usable < spec.sizeBytes + 10L * 1024L * 1024L) {
+            throw IOException("Not enough free device storage for verified PMTiles")
+        }
         if (validArchive(target, spec)) return TransferResult(target, spec.sizeBytes, spec.sha256)
         require(!target.exists()) { "Conflicting installed version; refusing overwrite" }
         val part = partial(spec)
