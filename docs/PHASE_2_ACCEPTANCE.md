@@ -26,3 +26,9 @@ OSMF policy: https://operations.osmfoundation.org/policies/tiles/
 - Runtime Android emulator/device screenshot and no-crash test must confirm map actually renders, switch to empty-offline, leave/return, and map gestures.
 - Android rendering must remain NOT VERIFIED until emulator/device evidence is collected.
 - No legal speed limit or real traffic sign coordinates exist in Phase 2; tests must reject any claims otherwise.
+
+## Verified acceptance evidence
+- Compile + unit tests + lint: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43593588389 — SUCCESS.
+- Android Emulator API 35 instrumented MapLibre smoke: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43593588383 — 1/1 PASSED (open MapView, local style, return to search). It does NOT validate OSM street tile coverage or driving performance.
+- Road provenance Python checks: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43593588394 — SUCCESS.
+- Merged source PR: https://github.com/ThanhTaxiXanh/NaviTaxi/pull/3, main commit 7d9809c.

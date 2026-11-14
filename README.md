@@ -26,3 +26,11 @@ Generated databases are **empty by design** until licensed, verifiable source da
 Git workflow: one branch per phase, CI, PR targeting `main`, merge only after phase acceptance criteria have passed. See [ARCHITECTURE.md](ARCHITECTURE.md), [DATA_SOURCES.md](DATA_SOURCES.md), [LICENSES.md](LICENSES.md).
 
 The original design references are user supplied PNG/JPEG images; they are not production maps, measurements, or legal speed-limit data.
+
+
+## MapLibre / Android development (Phase 2)
+The development branch adds a real MapLibre Native MapView, interactive controls and search-to-map navigation. This is still an experimental basemap, not a safe taxi navigation product. The OSM raster street view requires manual confirmation and cannot be used for bulk offline downloads.
+
+Android debug CI: GitHub Actions, using Gradle 8.9, Kotlin 2.2.10 and MapLibre 13.7.1 OpenGL ES. Actual Android emulator MapView startup test is tracked separately. No live speed limits, traffic sign coordinates, routing, turn-by-turn navigation or PMTiles package has been shipped.
+
+See docs/PHASE_2_ACCEPTANCE.md and docs/ROAD_INTELLIGENCE_MAP_CONTRACT.md.

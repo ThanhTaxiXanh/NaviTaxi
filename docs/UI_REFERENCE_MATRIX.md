@@ -15,7 +15,7 @@ The source files are user-supplied `IMG_4480.jpeg` (Search), `IMG_4483.jpeg` (Of
 | Search results and place selection | Local sample entries | Live coordinate/distance lookup Phase 6/9 |
 | Favorite star | Clickable state | Persistent POI favorites pending |
 | Preview image | **Explicitly illustrative** | Actual map preview Phase 2 |
-| View on map | Explanation of pending MapLibre feature | Phase 2 |
+| View on map | Opens actual MapLibre map screen; point not pinned without verified coordinates | Core map Phase 2; geocoded point Phase 9 |
 
 ## IMG_4483 — Offline Maps
 
