@@ -11,7 +11,9 @@ class RoadIntelligenceRepository(context: Context) {
     private val sourceDb = File(context.filesDir, "road_intelligence/road_intelligence.db")
 
     fun read(): VerifiedRoadDataset {
-        if (!sourceDb.isFile) return VerifiedRoadDataset.EMPTY
+        // A source_id and a license string inside an arbitrary DB are NOT approval.
+        val approval = RoadDatabaseApprovalGate().check(sourceDb)
+            ?: return VerifiedRoadDataset.EMPTY
         return try {
             val db = SQLiteDatabase.openDatabase(
                 sourceDb.absolutePath, null, SQLiteDatabase.OPEN_READONLY
@@ -19,11 +21,13 @@ class RoadIntelligenceRepository(context: Context) {
             try {
                 val signs = JSONArray()
                 val roads = JSONArray()
-                db.rawQuery(
+                if (approval.approvedSigns) db.rawQuery(
                     """SELECT s.sign_id, s.sign_code, s.longitude, s.latitude, s.source_id
                        FROM traffic_signs s
                        INNER JOIN data_sources d ON s.source_id = d.source_id
                        WHERE length(d.license) > 0 AND length(d.source_uri) > 0
+                         AND length(trim(coalesce(s.observed_at, ''))) > 0
+                         AND length(trim(coalesce(s.verified_at, ''))) > 0
                        ORDER BY s.sign_id LIMIT 5000""", null
                 ).use { cursor ->
                     while (cursor.moveToNext()) {
@@ -42,11 +46,13 @@ class RoadIntelligenceRepository(context: Context) {
                                 .put("source_id", sourceId)))
                     }
                 }
-                db.rawQuery(
+                if (approval.approvedSpeeds) db.rawQuery(
                     """SELECT r.segment_id, r.speed_kmh, r.geometry_geojson, r.source_id
                        FROM road_segments r
                        INNER JOIN data_sources d ON r.source_id = d.source_id
                        WHERE length(d.license) > 0 AND length(d.source_uri) > 0
+                         AND length(trim(coalesce(r.observed_at, ''))) > 0
+                         AND length(trim(coalesce(r.verified_at, ''))) > 0
                        ORDER BY r.segment_id LIMIT 5000""", null
                 ).use { cursor ->
                     while (cursor.moveToNext()) {
@@ -71,7 +77,7 @@ class RoadIntelligenceRepository(context: Context) {
                         .put("features", signs).toString(),
                     roadCount = roads.length(),
                     signCount = signs.length(),
-                    verifiedDatasetPresent = true
+                    verifiedDatasetPresent = roads.length() > 0 || signs.length() > 0
                 )
             } finally { db.close() }
         } catch (_: Exception) {
