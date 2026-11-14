@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import java.util.Locale
 
 private data class OfflineRegion(val name: String, val icon: String)
@@ -30,6 +31,9 @@ private fun gb(bytes: Long): String = String.format(Locale("vi", "VN"), "%.1f GB
 
 @Composable
 fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: () -> Unit) {
+    val context = LocalContext.current
+    val manager = remember(context) { OfflinePackageManager.get(context) }
+    val managerState by manager.state.collectAsState()
     var allVietnam by rememberSaveable { mutableStateOf(false) }
     var provinceQuery by rememberSaveable { mutableStateOf("") }
     val space = remember {
@@ -39,7 +43,7 @@ fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: 
     val used = (space.first - space.second).coerceAtLeast(0L)
     val fraction = if (space.first <= 0L) 0f else used.toFloat() / space.first.toFloat()
     val missingSource: () -> Unit = {
-        notify("Chưa có máy chủ hoặc bộ PMTiles có nguồn hợp lệ. Tải bản đồ sẽ được tích hợp ở Phase 3–5.")
+        notify("Chưa có danh mục bản đồ PMTiles Việt Nam được xác minh. Gói tải theo tỉnh/toàn quốc còn chờ dữ liệu ở Phase 5.")
     }
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())
@@ -72,7 +76,7 @@ fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: 
                 .background(MaterialTheme.colorScheme.secondaryContainer).padding(10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("Tổng dung lượng bản đồ ngoại tuyến", fontSize = 12.sp)
-                Text("0 GB", fontWeight = FontWeight.Bold,
+                Text(if (managerState.demoInstalled) "462 B (mô phỏng)" else "0 B", fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary, fontSize = 12.sp)
             }
         }
@@ -152,16 +156,69 @@ fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: 
             }
         }
         NaviCard {
-            SectionHeading(Icons.Default.CloudDownload, "Đang tải (0)", "Tạm dừng tất cả")
-            Spacer(Modifier.height(10.dp))
-            Text("Chưa có tiến trình tải. Dữ liệu PMTiles chưa được kết nối.",
-                fontSize = 12.sp, color = NaviColors.Muted)
+            SectionHeading(Icons.Default.CloudDownload,
+                if (managerState.downloading) "Đang tải (1)" else "Đang tải (0)")
+            Spacer(Modifier.height(9.dp))
+            Text(managerState.status, fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurface)
+            if (managerState.totalBytes > 0L) {
+                Spacer(Modifier.height(7.dp))
+                LinearProgressIndicator(
+                    progress = { (managerState.bytesRead.toFloat() /
+                        managerState.totalBytes.toFloat()).coerceIn(0f, 1f) },
+                    modifier = Modifier.fillMaxWidth().height(8.dp),
+                    color = NaviColors.Green
+                )
+                Text(managerState.bytesRead.toString() + "/" +
+                    managerState.totalBytes.toString() + " byte",
+                    fontSize = 11.sp, color = NaviColors.Muted)
+            }
+            if (managerState.error != null) {
+                Text(managerState.error ?: "", fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.error)
+            }
+            if (managerState.downloading || managerState.paused) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (managerState.downloading) {
+                        OutlinedButton(onClick = { manager.pause() }) { Text("Tạm dừng") }
+                    }
+                    if (managerState.paused) {
+                        Button(onClick = { manager.resume(preferences.cellularDownload) }) {
+                            Text("Tiếp tục")
+                        }
+                    }
+                    OutlinedButton(onClick = { manager.cancel() }) { Text("Hủy tải") }
+                }
+            }
+            Spacer(Modifier.height(5.dp))
+            Text("Chỉ tải từ nguồn PMTiles HTTPS được duyệt; có hỗ trợ Range/ETag và SHA-256.",
+                fontSize = 11.sp, color = NaviColors.Muted)
+            Text("Chưa cấu hình danh mục tải đường phố thực tế.",
+                fontSize = 11.sp, color = MaterialTheme.colorScheme.error)
         }
         NaviCard {
-            SectionHeading(Icons.Default.CheckCircleOutline, "Đã tải (0)", "Tổng: 0 GB")
+            SectionHeading(Icons.Default.CheckCircleOutline,
+                if (managerState.demoInstalled) "Đã tải (1 gói thử nghiệm)" else "Đã tải (0)",
+                if (managerState.demoInstalled) "462 B" else "0 B")
             Spacer(Modifier.height(10.dp))
-            Text("Chưa có bản đồ ngoại tuyến được xác thực trên thiết bị.",
+            Text("Gói PMTiles mô phỏng gồm 2 nét sơ đồ nhân tạo, không có đường phố, " +
+                "giới hạn tốc độ hoặc vị trí biển báo thực địa.",
                 fontSize = 12.sp, color = NaviColors.Muted)
+            Spacer(Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                Button(onClick = { manager.installDemo() },
+                    colors = ButtonDefaults.buttonColors(containerColor = NaviColors.Green),
+                    modifier = Modifier.weight(1f)) {
+                    Text(if (managerState.demoInstalled) "Xác minh lại" else "Cài bản thử",
+                        fontSize = 12.sp, maxLines = 1)
+                }
+                if (managerState.demoInstalled) {
+                    OutlinedButton(onClick = { manager.removeDemo() },
+                        modifier = Modifier.weight(1f)) {
+                        Text("Xóa gói", fontSize = 12.sp)
+                    }
+                }
+            }
         }
         NaviCard {
             OfflineSettingRow(Icons.Default.Wifi, "Tự động cập nhật qua Wi-Fi",
