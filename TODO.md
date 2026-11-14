@@ -39,3 +39,11 @@
 - Store verified installed release_sequence durably when a real approved catalog exists; define rollback policy for older installs without sequence.
 - Test process death, changed ETag, missing storage and cross-process race under real Android conditions when source exists.
 - Do not enable 34-province downloads or legal speed/sign warnings from OSM tag presence alone.
+
+
+## Next work after accepted PR #13
+- Phase 4 catalog verifier + APK asset audit: ACCEPTED infrastructure on main 068c297e; no production source approved.
+- Prepare lawful, vetted OSM extract -> own PMTiles pipeline with source snapshot/ODbL review; obtain independent approval for catalog digest and release sequence persistence before enabling downloads.
+- Prioritize Road Intelligence source survey/import plan with true WGS84 roadside sign observations and evidence, rather than using OSM way centroids or inferred speed limits.
+- Run device/OEM process death, ETag-change, disk-full and connectivity loss tests; emulator passing is not field acceptance.
+- Phase 5 remains NOT STARTED/BLOCKED until provenance and baseline catalog are approved.

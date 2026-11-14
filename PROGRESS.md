@@ -80,3 +80,12 @@
 - [x] Added Python catalog negative tests (no pin, duplicate/extra fields, unsafe URLs, fake speed/sign verification, rollback); CI 43610420031 PASS.
 - [ ] Android compile, unit, lint and API35 new instrumentation verification on final PR head.
 - [ ] Production approved catalog, original Vietnam PBF approval/processing, actual verified road speed/sign coordinates: BLOCKED on legitimate source and field evidence.
+
+
+## Phase 4 trusted catalog and APK scan — verified closure (2026-11-14)
+- [x] PR #13 merged main 068c297e1df55466ba0adc50b05755192814087b after FINAL HEAD checks.
+- [x] Python/SQLite/source audit: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43611161271 PASS.
+- [x] Android assembleDebug/testDebugUnitTest/lintDebug plus APK JSON/SQLite/PMTiles deep scan and ZIP archive: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43611161247 PASS.
+- [x] Android emulator API35 including catalog negative tests: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43611161298 PASS.
+- [x] Actual APK audit artifact 14119833707 inspected: exact five synthetic assets, 0 verified speed/sign records, checksum manifest matches archived files.
+- [ ] Real signed-off PMTiles catalog, release-sequence persistence for real installs, 34-province geodata, source-backed speed/sign DB and vehicle-road tests: still BLOCKED/NOT DONE.
