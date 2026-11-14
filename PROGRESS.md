@@ -41,3 +41,15 @@
 - [x] Final branch head CI Android compile + unit + lint PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43603204092; Emulator 2/2 PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43603204072.
 - [x] PR #5 merged into main as f401f03396431f58ddefd23c2ff87a37c039367f after all three checks passed.
 - [ ] Real, licensed Vietnam road-vector PMTiles packages: BLOCKED until verified data extracts (Phase 5); NO geographic coverage claim.
+
+
+## Phase 4 – Offline Manager (core verified, live source blocked)
+- [x] Resumable HTTPS transport with Range/strong ETag/If-Range, persistent partial and cancel cleanup.
+- [x] Strict package identity, version, source license, bytes/SHA256 and PMTiles v3 header gate; immutable old-version retention; no OSM bulk tile downloads.
+- [x] Wired offline UI status, demo install/reverify/delete, transport pause/resume/cancel and Wi-Fi/cellular policy.
+- [x] Python provenance PASS run 43604517491; Kotlin assemble/unit/lint PASS run 43604517429.
+- [x] Android Emulator API35 3/3 PASS run 43604517455.
+- [x] Code PR #7 merged main as 6fdbcfd.
+- [ ] Background WorkManager/notification and scheduled auto-update: NOT IMPLEMENTED.
+- [ ] Approved downloaded 34-province PMTiles/POI/routing packages: BLOCKED, no licensed external catalog.
+- [ ] Speed limits and traffic sign coordinates: NO verified real-world source data.

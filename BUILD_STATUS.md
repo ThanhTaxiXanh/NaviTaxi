@@ -46,3 +46,12 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 
 - Phase 3 code PR #5 merged: https://github.com/ThanhTaxiXanh/NaviTaxi/pull/5; main f401f03396431f58ddefd23c2ff87a37c039367f.
 - Verified debug APK artifact ID 14116868765, app-debug.apk 59,685,344 bytes; SHA-256 d7da7d1a0dd982f2a956df6289dda22a0a872806a12292fe36724083cadbc727. APK asset PMTiles SHA-256 d9a53b380463498cc31fd59a30d00e07a2f3f32f9f894eefa7b796d20470de9c.
+
+
+## Phase 4 – validated core
+- Python/SQLite/PMTiles: SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43604517491.
+- Android assembleDebug + testDebugUnitTest (MockWebServer) + lintDebug: SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43604517429.
+- Android Emulator API35: 3/3 tests passed https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43604517455.
+- GitHub artifact 14117896754: app-debug.apk size 59,718,112 bytes; SHA-256 7d1f6728914d474b3d97a5d61fae5ab15a10c1f01dce96e4853ac6853d95848a.
+- PR #7 merged into main as 6fdbcfd3f6cace9220a93aec62c1b76130492d61.
+- Production APK, background transfer, real 34-province maps, speed/sign surveys and phone driving validation remain NOT DONE.

@@ -29,3 +29,10 @@
 - Android emulator PMTiles 2/2 test passed on first phase3 commit. Subsequent code-free gzip and test changes still require final CI checks.
 
 - Phase 3 Python gzip determinism mismatch fully corrected by fixing OS header to 255 in commit ff8ce525; latest CI 43603204053 passed. No active Phase 3 build blocker after 43603204092 / 43603204072. Real offline map input remains unavailable.
+
+
+## Phase 4 – verification and external blockers
+- Code PR #7 no active Kotlin/build failure. All three workflows passed on code head: Python/SQLite 43604517491; Android unit/build/lint 43604517429; Emulator 3/3 43604517455.
+- BLOCKED: no licensed 34-province PMTiles/POI/routing source or vetted remote catalog; no legally verified speed limits or sign locations.
+- NOT DONE: app-scoped downloader does not offer Android OS-resilient background WorkManager jobs and scheduled auto-updates. Partial file survives process restart but download must be restarted manually when catalog is supplied.
+- No public OSM Foundation bulk tile downloads or network GPS transmission performed.

@@ -2,7 +2,7 @@
 
 - Repository: `ThanhTaxiXanh/NaviTaxi`
 - Starting main SHA: `40f6c89b7e1027c3f64c552bfc0d2271dffc79d2` (originally README only)
-- Current phase: **4 — NEXT** (offline package download/update manager). Phase 0/1/2/3 merged.
+- Current phase: **4 — CORE VERIFIED / INTEGRATION BLOCKED**. Phase 0/1/2/3 and Phase 4 core code are merged.
 - Build environment observed: OpenJDK 21, Kotlin CLI present; Android SDK/Gradle/AAPT2/Apksigner not detected in current runtime. GitHub Actions is the intended Android build environment.
 - Data discovery: no APK, `assets/`, `res/raw`, `res/assets` or real source DBs existed in the initial GitHub repo. None can be claimed extracted.
 - Three UI references examined: search, offline maps, settings. Implementation follows Phase 1; screenshot-perfect acceptance requires emulator/device comparison.
@@ -59,3 +59,18 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - HTTP Range verification: scripts/pmtiles_range_probe.py and loopback test tests/test_pmtiles_range_probe.py. This does NOT create a real public tile service.
 - Emulator MapLibre PMTiles smoke passed 2/2 on final Phase 3 head: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43603204072.
 - Phase 3 final code PR #5 MERGED into main as f401f03396431f58ddefd23c2ff87a37c039367f. All three final-head workflows passed. Next: Phase 4 download/pause/resume/cancel/update with verified data. Do not call 34-province coverage complete.
+
+
+## Phase 4 – verified resumable package manager core (2026-11-14)
+- Code PR #7 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/7 merged as 6fdbcfd3f6cace9220a93aec62c1b76130492d61.
+- New Kotlin: app/src/main/java/vn/navitaxi/OfflinePackageTransfer.kt, OfflinePackageManager.kt.
+- Updated app/src/main/java/vn/navitaxi/OfflineScreen.kt and app/build.gradle.kts.
+- New tests app/src/test/java/vn/navitaxi/OfflinePackageTransferTest.kt and app/src/androidTest/java/vn/navitaxi/OfflineManagerSmokeTest.kt.
+- Download transport: approved HTTPS package spec with immutable id/version, expected size and SHA-256, legal provenance; HTTP Range + strong ETag/If-Range; pause retains partial, resume validates byte range, cancel discards partial, corrupt file never activated, new version retains prior file.
+- Wi-Fi/mobile transport gate; public OSM tile and MapLibre demo hosts prohibited for bulk downloads.
+- App UI can install, reverify and delete ONLY the existing synthetic PMTiles fixture. No verified 34-province catalog, true road/speed/sign datasets or production offline navigation.
+- Python/SQLite provenance PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43604517491.
+- Android assemble/unit/lint PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43604517429.
+- Android API 35 emulator 3/3 PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43604517455.
+- APK debug 59,718,112 bytes SHA256 7d1f6728914d474b3d97a5d61fae5ab15a10c1f01dce96e4853ac6853d95848a.
+- Remaining Phase 4: WorkManager background reliability and a licensed, signed-off remote package catalog/version discovery/update scheduling. BLOCKED on absent approved package source. Do not claim whole Phase 4 DONE.
