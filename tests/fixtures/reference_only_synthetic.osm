@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- NAVITAXI TEST-ONLY OSM XML. NOT REAL ROAD OR PHYSICAL SIGN OBSERVATIONS. -->
+<osm version="0.6" generator="NaviTaxi synthetic CI fixture">
+  <node id="11" lat="0" lon="0" version="1" timestamp="2026-11-01T00:00:00Z">
+    <tag k="traffic_sign" v="maxspeed"/>
+    <tag k="maxspeed" v="50"/>
+    <tag k="direction" v="forward"/>
+  </node>
+  <node id="12" lat="1" lon="1" version="1">
+    <tag k="traffic_sign:backward" v="give_way"/>
+  </node>
+  <way id="101" version="1">
+    <nd ref="11"/><nd ref="12"/>
+    <tag k="highway" v="residential"/>
+    <tag k="maxspeed" v="30 mph"/>
+    <tag k="maxspeed:conditional" v="20 @ (Mo-Fr 07:00-09:00)"/>
+    <tag k="traffic_sign" v="maxspeed"/>
+  </way>
+  <relation id="201" version="1">
+    <member type="way" ref="101" role=""/>
+    <tag k="traffic_sign" v="end_of_maxspeed"/>
+  </relation>
+</osm>
