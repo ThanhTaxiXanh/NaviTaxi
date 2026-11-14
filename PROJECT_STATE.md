@@ -118,3 +118,11 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Added offline `scripts/review_road_candidate.py` for SQLite v1, source evidence, geometry, WGS84, verification timestamps, RTree and SHA-256 audit; report never approves driver alerts.
 - New synthetic-only JUnit/Python/API35 emulator tests; CI acceptance tracked in PR #15.
 - No real source DB, no measured sign position and no legal speed record added. Phase 4 IN PROGRESS/BLOCKED for licensed release sources and phone field tests; Phase 5 NOT STARTED.
+
+
+## Verified Road Intelligence approval-gate handoff — 2026-11-14
+- Code PR #15 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/15 MERGED as main `dd53c1a43991f350ffa980091e4db1faabeddccf`.
+- Final PR head `26d75df6c0751df89a060d0efc1e209ff65b5078`: Python/SQLite candidate/road audit PASS run 43614134722; Android assemble/JUnit/lint+APK scan PASS run 43614134733; API35 emulator PASS run 43614134877.
+- Candidate audit evidence GitHub artifact ID 14121745051 (ZIP SHA-256 879a17910a724fbebedc6a637f9475badde2a38417b2e989b40450092958d3de). Empty canonical road DB = 86,016 bytes, SHA256 87193a1b8af8fa2e17c56a2bb9f03c533378321335653590fefae2c8a91de584; 0 sources/roads/signs. JSON status `EMPTY_DATABASE`, approval flags both FALSE.
+- APK inventory on same final head: 5 synthetic assets, no approved road DB; archived file hashes match MANIFEST. `RoadIntelligenceApprovedPins.entries` remains empty; speed/sign overlays cannot be activated using only self-attested source/verification dates.
+- Overall Phase 4 remains IN PROGRESS/BLOCKED (real lawful download catalog, device/OEM field proof). Phase 5 NOT STARTED. Real vehicle-applicable speeds and physical roadside sign coordinates remain 0 verified.

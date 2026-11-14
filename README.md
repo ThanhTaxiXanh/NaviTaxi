@@ -72,3 +72,7 @@ PR #13 (https://github.com/ThanhTaxiXanh/NaviTaxi/pull/13) is merged as main `06
 
 ## Road Intelligence source approval (Phase 4 security prerequisite)
 The map no longer accepts speed limits or physical sign positions merely because a local SQLite file contains source/license strings. `RoadDatabaseApprovalGate` requires independently pinned, code-reviewed SHA-256 bytes and separate approval for each domain. Its production pin list is deliberately EMPTY: **zero legal speed observations and zero surveyed traffic-sign coordinates are present**. Candidate SQLite inspection (not approval) is described in `docs/ROAD_INTELLIGENCE_APPROVAL_GATE.md`. See PR #15 and CI; Phase 4 remains blocked on authentic geodata and field proof.
+
+
+### Road Intelligence verification evidence (PR #15)
+Independent SQLite speed-limit and physical sign coordinate approval gate was merged as `dd53c1a`. Python/SQLite, Android build/unit/lint and API35 emulator all passed on the final PR code. The generated canonical DB and APK inventory both contain **zero source-verified speed limits and zero surveyed traffic signs**; the release allowlist is intentionally empty. This is a verified safety foundation, NOT functional speed-limit alerts.
