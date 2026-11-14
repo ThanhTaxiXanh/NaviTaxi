@@ -1,0 +1,37 @@
+name: Phase 0 - Road Data Integrity
+on:
+  push:
+    branches: ["phase-0/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  road-data-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile Python
+        run: python -m compileall -q scripts tests
+      - name: SQLite and provenance tests
+        run: python -m unittest discover -s tests -v
+      - name: Generate empty canonical SQLite for size and structure audit
+        run: |
+          python scripts/initialize_road_db.py --output build/road_intelligence.db
+          python scripts/audit_road_assets.py --root . --out build/road-assets-report.json
+          python scripts/package_road_data.py --root . --output build/road-intelligence-archive.zip
+      - name: Archive test evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase0-road-data-evidence
+          path: |
+            build/road_intelligence.db
+            build/road-assets-report.json
+            build/road-intelligence-archive.zip
