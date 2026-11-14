@@ -44,3 +44,8 @@
 - No approved province PMTiles source or real speed/sign DB. Android background quotas and user force-stop behavior not claimed fully validated.
 
 - WorkManager final Kotlin fix verified: CI Android 43606534434 and emulator 43606534445 (4/4 tests) both successful; PR #9 merged as e1fc7dc. Existing prior Phase4 note saying WorkManager NOT DONE refers to the older PR #7 and is superseded by this entry.
+
+
+## Phase 4 network consent audit
+- Detected policy gap: Android WorkManager NetworkType.UNMETERED may include unmetered cellular; user has a separate cellular-download opt-in.
+- Added actual active-network TRANSPORT_WIFI/ETHERNET/CELLULAR gate in the worker and persisted explicit allow_cellular=false by default. Awaiting CI validation.

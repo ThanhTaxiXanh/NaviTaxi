@@ -45,4 +45,16 @@ class OfflineWorkContractTest {
         assertFalse(data.getBoolean("verified_speed", true))
         assertFalse(data.getBoolean("verified_sign", true))
     }
+
+    @Test fun wifiOnlyNeverFallsBackToCellularEvenWhenUnmetered() {
+        assertTrue(OfflineConnectionPolicy.allowed(true, false, false, false))
+        assertTrue(OfflineConnectionPolicy.allowed(false, true, false, false))
+        assertFalse(OfflineConnectionPolicy.allowed(false, false, true, false))
+        assertTrue(OfflineConnectionPolicy.allowed(false, false, true, true))
+        assertFalse(OfflineConnectionPolicy.allowed(false, false, false, true))
+        assertFalse(OfflineWorkContract.encode(sample())
+            .getBoolean("allow_cellular", true))
+        assertTrue(OfflineWorkContract.encode(sample(), allowMobileData = true)
+            .getBoolean("allow_cellular", false))
+    }
 }

@@ -4,6 +4,8 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.content.pm.ServiceInfo
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -34,7 +36,7 @@ object OfflineWorkContract {
     const val STATUS_MESSAGE = "status"
     const val INSTALLED_NAME = "installed_name"
 
-    fun encode(spec: OfflinePackageSpec): Data {
+    fun encode(spec: OfflinePackageSpec, allowMobileData: Boolean = false): Data {
         spec.validate()
         require(spec.url.length <= 2048 && spec.sourceUri.length <= 1024 &&
             spec.license.length <= 300) { "Metadata too large for durable work" }
@@ -49,6 +51,7 @@ object OfflineWorkContract {
             .putBoolean("real_map", spec.isRealMap)
             .putBoolean("verified_speed", spec.hasVerifiedSpeeds)
             .putBoolean("verified_sign", spec.hasVerifiedSigns)
+            .putBoolean("allow_cellular", allowMobileData)
             .build()
     }
 
@@ -78,6 +81,13 @@ internal object OfflineTransferGate {
         locks.computeIfAbsent(spec.fileStem) { Any() }
 }
 
+/** Transport identity is checked again in the worker, not inferred from UNMETERED. */
+object OfflineConnectionPolicy {
+    fun allowed(wifi: Boolean, ethernet: Boolean, cellular: Boolean,
+                allowCellular: Boolean): Boolean =
+        wifi || ethernet || (allowCellular && cellular)
+}
+
 class OfflineDownloadWorker(
     appContext: Context,
     params: WorkerParameters
@@ -87,6 +97,10 @@ class OfflineDownloadWorker(
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val spec = OfflineWorkContract.decode(inputData) ?: return@withContext Result.failure(Data.Builder()
                 .putString(OfflineWorkContract.STATUS_MESSAGE, "Invalid approved manifest").build())
+
+        if (!connectedThroughApprovedTransport(inputData.getBoolean("allow_cellular", false))) {
+            return@withContext Result.retry()
+        }
 
         val client = OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -152,6 +166,20 @@ class OfflineDownloadWorker(
             cancellation.dispose()
             call = null
         }
+    }
+
+    private fun connectedThroughApprovedTransport(allowCellular: Boolean): Boolean {
+        val manager = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE)
+            as? ConnectivityManager ?: return false
+        val active = manager.activeNetwork ?: return false
+        val caps = manager.getNetworkCapabilities(active) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+            OfflineConnectionPolicy.allowed(
+                caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI),
+                caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET),
+                caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR),
+                allowCellular
+            )
     }
 
     private fun foreground(message: String, current: Long, total: Long): ForegroundInfo {
