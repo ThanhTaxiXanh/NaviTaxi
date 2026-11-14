@@ -126,3 +126,13 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Candidate audit evidence GitHub artifact ID 14121745051 (ZIP SHA-256 879a17910a724fbebedc6a637f9475badde2a38417b2e989b40450092958d3de). Empty canonical road DB = 86,016 bytes, SHA256 87193a1b8af8fa2e17c56a2bb9f03c533378321335653590fefae2c8a91de584; 0 sources/roads/signs. JSON status `EMPTY_DATABASE`, approval flags both FALSE.
 - APK inventory on same final head: 5 synthetic assets, no approved road DB; archived file hashes match MANIFEST. `RoadIntelligenceApprovedPins.entries` remains empty; speed/sign overlays cannot be activated using only self-attested source/verification dates.
 - Overall Phase 4 remains IN PROGRESS/BLOCKED (real lawful download catalog, device/OEM field proof). Phase 5 NOT STARTED. Real vehicle-applicable speeds and physical roadside sign coordinates remain 0 verified.
+
+
+## Phase 4 OSM speed/sign reference-only staging — PR #17 (2026-11-14)
+- Branch phase-4/osm-road-reference-staging; PR: https://github.com/ThanhTaxiXanh/NaviTaxi/pull/17.
+- New scripts/extract_osm_road_reference.py streams local SHA-256-pinned .osm.pbf (BSD-2-Clause pyosmium 4.3.2) or .osm XML. It preserves raw maxspeed*/traffic_sign* tags, OSM object type/id/version/time and node-only original coordinate. Way/relation sign coordinates stay NULL.
+- Reference-only outputs: JSONL speed/sign files, provenance/ODbL manifest, SHA256SUMS ZIP. No output under Android assets or approved SQLite, no legal speed_kmh inference, no physical-sign survey verification, no driving alerts.
+- Code-head Python/SQLite run 43617224402: SUCCESS, all 36 tests including actual PBF parser test; Android assemble/unit/lint run 43617224403 SUCCESS. Final documentation-head verification still required before merging PR.
+- Synthetic evidence artifact ID 14121689381 (ZIP SHA256 8b6c4304cc55fefec8ef9af5222445d47b084630147e9fa6c4bca35f8618c2fb): 1 speed-tag way, 2 sign-tag nodes, 1 sign-tag way, 1 sign-tag relation; ALL UNVERIFIED, no authoritative records.
+- Built APK audit artifact ID 14122562328: exactly five synthetic assets (styles 238/416/698 B; manifest 525 B; PMTiles 462 B), and zero verified real sign/speed records.
+- No Vietnam Geofabrik PBF was downloaded, imported, geocoded, or distributed. Phase 4 remains IN PROGRESS / BLOCKED on real lawful sources and field evidence; Phase 5 NOT STARTED.

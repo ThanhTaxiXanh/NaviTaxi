@@ -42,3 +42,9 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 ## Phase 4 Road Intelligence approval gate
 - Added only standard Python libraries and Android/JDK SHA-256, SQLite and Kotlin code, no new paid or external dependencies.
 - Geofabrik/OSM data reuse is a separate ODbL licensing and derivative database redistribution decision; source attribution and legal/field verification must be documented before production ingestion. No PBF or third-party sign dataset was downloaded or bundled by this change.
+
+
+## Phase 4 OSM PBF reference adapter (PR #17)
+- Python-only pyosmium/osmium 4.3.2 uses BSD-2-Clause (https://pypi.org/project/osmium/), downloaded as CI dependency on GitHub Actions; no library is bundled in Android release.
+- OSM source tags belong to OpenStreetMap contributors and are distributed under ODbL 1.0 (https://www.openstreetmap.org/copyright), requiring attribution and appropriate database derivative notices before redistribution.
+- The only test output uses NaviTaxi synthetic XML fixture; real Geofabrik Vietnam PBF not downloaded or repackaged. No paid APIs/servers/billing added.

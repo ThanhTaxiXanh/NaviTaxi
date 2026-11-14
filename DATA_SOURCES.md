@@ -42,3 +42,11 @@ A data source's URL and license must be recorded before its content can be shipp
 - OSM `traffic_sign` can be a node (potential real-world position) or a way (a section rather than a physical sign location): https://wiki.openstreetmap.org/wiki/Key:traffic_sign. No road centroid may be misrepresented as a sign coordinate.
 - New candidate inspection command: `python3 scripts/review_road_candidate.py --db /path/to/candidate.sqlite --out build/road-candidate-report.json`. Even a structurally clean candidate keeps `driver_speed_alerts_allowed=false` and `physical_sign_alerts_allowed=false` until separate field/legal review and code-reviewed approval pin.
 - Canonical source-backed table path remains `data/road_intelligence/schema.sql`; runtime DB `<filesDir>/road_intelligence/road_intelligence.db` is NOT PRESENT/APPROVED. Physical sign locations: 0 verified; site-specific legal speed observations: 0 verified.
+
+
+## OSM source staging / PR #17 (2026-11-14)
+- Geofabrik Vietnam PBF catalog: https://download.geofabrik.de/asia/vietnam.html ; intended locally supplied source URI: https://download.geofabrik.de/asia/vietnam-latest.osm.pbf . This is an external source candidate only; the file was NOT fetched or inspected in this PR.
+- New scripts/extract_osm_road_reference.py requires exact source SHA256 and records original OSM node/way/relation ID, version, timestamp, raw maxspeed* / traffic_sign* values and source URI/ODbL attribution.
+- Real source records imported: 0. Real physical sign locations field verified: 0. The only populated reference archive is an explicitly synthetic CI fixture with no legal/physical verification.
+- Original sign node lat/lon remains an unverified OSM point; sign way/relation has no physical coordinate. Conditional/advisory/mph speed strings stay raw, never translated to legal speed_kmh.
+- No OSMF public tile service downloads, no source DB SHA approval, no MapScreen verified overlay changes. Canonical schema remains data/road_intelligence/schema.sql and the trusted DB list remains empty.

@@ -66,3 +66,10 @@ OSM is ODbL: display attribution and ensure compatible redistribution obligation
 - Android OfflinePackageManager requires a trusted catalog entry to schedule downloads; the worker separately preserves SHA-256/PMTiles/header/transport checks.
 - Release identities carry a monotonically increasing `release_sequence`; rollback and conflicting same-sequence bytes must be refused. The catalog layer never fabricates verified road speed/sign datasets.
 - An approved production catalog is still absent. Installed release_sequence migration, live download/update discovery and road-data independent provenance verification are future prerequisites.
+
+
+## Phase 4 raw OSM reference pipeline boundary
+- scripts/extract_osm_road_reference.py is an OFFLINE ingestion staging adapter, not an app UI/SQLite importer or map producer. It streams .osm.pbf using Python-only pyosmium 4.3.2 (or .osm XML using stdlib).
+- Mandatory exact local source SHA256 before/after reading, HTTPS provenance URI, ODbL attribution, immutable JSONL/manifest/ZIP; output cannot be placed inside app/src/main/assets, res or canonical approved road DB.
+- All maxspeed tags remain verbatim reference strings (including conditional/mph); sign nodes only retain unverified original OSM coordinates, sign ways/relations have NULL physical positions. No OSM-derived alerts or assumed legal speed.
+- Release chain remains separate: actual source approval and field validation -> scripts/review_road_candidate.py -> independently code-reviewed RoadDatabaseApprovalGate pin per domain. This pipeline DOES NOT cross that trust boundary.
