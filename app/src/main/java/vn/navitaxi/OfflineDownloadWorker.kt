@@ -21,6 +21,7 @@ import okhttp3.OkHttpClient
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Everything needed for a restart is stored in WorkManager's durable Data record.
@@ -70,6 +71,13 @@ object OfflineWorkContract {
 }
 
 /** WorkManager persists and reschedules the request; .part/.etag persist tile bytes. */
+/** Serializes cleanup/resume against a still-closing worker in this app process. */
+internal object OfflineTransferGate {
+    private val locks = ConcurrentHashMap<String, Any>()
+    fun forVersion(spec: OfflinePackageSpec): Any =
+        locks.computeIfAbsent(spec.fileStem) { Any() }
+}
+
 class OfflineDownloadWorker(
     appContext: Context,
     params: WorkerParameters
@@ -77,8 +85,7 @@ class OfflineDownloadWorker(
     @Volatile private var call: Call? = null
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        val spec = OfflineWorkContract.decode(inputData) ?: return@withContext
-            Result.failure(Data.Builder()
+        val spec = OfflineWorkContract.decode(inputData) ?: return@withContext Result.failure(Data.Builder()
                 .putString(OfflineWorkContract.STATUS_MESSAGE, "Invalid approved manifest").build())
 
         val client = OkHttpClient.Builder()
@@ -95,7 +102,8 @@ class OfflineDownloadWorker(
         }
         try {
             setForeground(foreground("Đang tải gói bản đồ đã duyệt", 0, spec.sizeBytes))
-            val result = store.download(
+            val result = synchronized(OfflineTransferGate.forVersion(spec)) {
+                store.download(
                 spec,
                 stopped = { isStopped || Thread.currentThread().isInterrupted },
                 onProgress = { bytes, total ->
@@ -105,7 +113,8 @@ class OfflineDownloadWorker(
                         .build())
                 },
                 onCall = { call = it }
-            )
+                )
+            }
             setProgress(Data.Builder()
                 .putLong(OfflineWorkContract.PROGRESS_BYTES, result.sizeBytes)
                 .putLong(OfflineWorkContract.TOTAL_BYTES, result.sizeBytes)

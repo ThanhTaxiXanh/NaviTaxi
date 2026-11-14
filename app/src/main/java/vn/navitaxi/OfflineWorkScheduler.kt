@@ -92,7 +92,9 @@ class OfflineWorkScheduler(private val app: Context) {
         if (spec != null) {
             val transfer = OfflinePackageTransfer(okhttp3.OkHttpClient(),
                 File(app.filesDir, "offline_packages"))
-            transfer.discardPartial(spec)
+            synchronized(OfflineTransferGate.forVersion(spec)) {
+                transfer.discardPartial(spec)
+            }
         }
         prefs.edit().remove("spec_json").remove("work_id")
             .remove("allow_mobile").putBoolean("paused", false).commit()

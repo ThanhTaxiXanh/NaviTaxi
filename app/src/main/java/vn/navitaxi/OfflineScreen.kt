@@ -51,7 +51,7 @@ fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: 
         verticalArrangement = Arrangement.spacedBy(13.dp)) {
         BrandHeader()
         PageHeading("Bản đồ ngoại tuyến",
-            "Tải và quản lý bản đồ để dẫn đường ổn định khi không có mạng", onBack)
+            "Quản lý bản đồ; dữ liệu đường phố thực tế vẫn đang được xác minh", onBack)
         NaviCard {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Layers, null, tint = NaviColors.Green,
@@ -222,11 +222,11 @@ fun OfflineScreen(preferences: UiPreferences, notify: (String) -> Unit, onBack: 
         }
         NaviCard {
             OfflineSettingRow(Icons.Default.Wifi, "Tự động cập nhật qua Wi-Fi",
-                "Tự động kiểm tra khi có dữ liệu phát hành", preferences.wifiUpdate,
+                "Chưa kích hoạt cập nhật tự động; cần danh mục phát hành hợp lệ", preferences.wifiUpdate,
                 preferences::updateWifiUpdate)
             SettingsDivider()
             OfflineSettingRow(Icons.Default.SignalCellularAlt, "Cho phép tải qua dữ liệu di động",
-                "Dùng 4G/5G khi nguồn dữ liệu sẵn sàng", preferences.cellularDownload,
+                "Chỉ dùng 4G/5G cho gói tải được phê duyệt", preferences.cellularDownload,
                 preferences::updateCellularDownload)
         }
     }

@@ -102,6 +102,9 @@ class OfflinePackageTransferTest {
             spec("http://example.com/maps.pmtiles").validate()
         }
         assertThrows(IllegalArgumentException::class.java) {
+            spec("https://example.org/maps.pmtiles?secret=private").validate()
+        }
+        assertThrows(IllegalArgumentException::class.java) {
             spec("https://example.org/map.pmtiles", "../unsafe").validate()
         }
         assertThrows(IllegalArgumentException::class.java) {
