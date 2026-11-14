@@ -166,6 +166,8 @@ def audit_reference(directory: Path, receipt_path: Path | None = None) -> dict:
             semantics["non_plain_integer_maxspeed"] += 1
 
     for row in records(EXPECTED_FILES[1]):
+        if row.get("kind") != "traffic_sign_tag":
+            raise AuditError("Unexpected traffic-sign record kind")
         obj = row.get("osm")
         if not isinstance(obj, dict) or obj.get("type") not in ("node", "way", "relation") or (
                 type(obj.get("id")) is not int or obj["id"] <= 0):
