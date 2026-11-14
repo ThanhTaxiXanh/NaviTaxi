@@ -11,3 +11,5 @@
 - Added voice-search Android intent and sample offline search with accents normalization.
 - Added actual device storage readout and a truthful no-data offline status.
 - Added verified-vs-unknown speed-limit contract; no synthetic real-world limits or sign locations.
+
+- Debug Android APK built successfully in CI with unit and lint verification: run 43590922509, artifact ID 14111199844.

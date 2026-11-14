@@ -25,3 +25,11 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Core Kotlin/Compose app and reference search/offline/settings pages added; Android CI is the build verification source.
 - In-app maps/downloads/traffic overlays/speed-limit alarms have not been claimed functional without validated datasets and engines.
 - Phase 0 merged on main as squash commit `5aabd8c79d444bbf261bcc5d78a2325a62565ceb` after GitHub Actions success.
+
+## Phase 1 verified evidence
+
+- Android CI passed at `691ddd94312e86b187b1680809b23f26fab2577e`: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43590922509.
+- APK artifact ID `14111199844`, 16,416,125 bytes, SHA-256 `1b1824ecd27f4a7364ef38f7fbc85f6e8f803743144928f6c083be06947c7171`.
+- Scope complete: Android Core skeleton, persistent settings, three reference-inspired navigation UI layouts and verifiable unknown/verified road-sign data models.
+- Scope explicitly incomplete: pixel-perfect screenshot QA, map rendering, PMTiles/offline downloads, GPS, traffic sign datasets and speed warnings; follow corresponding phases.
+- PR #2 pending merge: https://github.com/ThanhTaxiXanh/NaviTaxi/pull/2.

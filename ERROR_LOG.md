@@ -8,3 +8,6 @@
 
 - Phase 1 Android CI compiler identified missing `dp` import in MainActivity; fixed in commit 517c238d.
 - Next compiler run detected preference property-setter JVM signature clashes; renamed method API `setX` to `updateX` and updated call sites in commit 9224e0b8.
+
+- Phase 1 method collision fixed on commit 9224e0b8. Android compile, unit tests and lint all passed in CI run 43590922509. No known build-blocking error remains at that build head.
+- Device UI launch/pixel-accuracy: NOT YET VALIDATED, tracked as pending quality work.

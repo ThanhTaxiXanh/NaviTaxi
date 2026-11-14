@@ -15,6 +15,6 @@
 - [x] Kotlin Android project, Gradle and Android Actions build workflow authored.
 - [x] Three Compose pages and NaviTaxi brand created, with search and persisted local settings.
 - [x] Explicit unknown/verified speed-limit data contract created.
-- [ ] Android :app:assembleDebug success and APK artifact verified.
-- [ ] Device screenshots compared against three user references.
+- [x] Android :app:assembleDebug, :app:testDebugUnitTest and :app:lintDebug passed with verified APK artifact: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43590922509.
+- [ ] Device screenshots compared against three user references (Phase 15 pixel QA; NOT claimed exact).
 - [ ] Phase 1 PR #2 merged after acceptance gate.
