@@ -50,7 +50,7 @@
 - [x] Python provenance PASS run 43604517491; Kotlin assemble/unit/lint PASS run 43604517429.
 - [x] Android Emulator API35 3/3 PASS run 43604517455.
 - [x] Code PR #7 merged main as 6fdbcfd.
-- [ ] Background WorkManager/notification and scheduled auto-update: NOT IMPLEMENTED.
+- [x] WorkManager foreground dataSync download infrastructure verified in PR #9. [ ] Scheduled auto-update blocked: no approved catalog.
 - [ ] Approved downloaded 34-province PMTiles/POI/routing packages: BLOCKED, no licensed external catalog.
 - [ ] Speed limits and traffic sign coordinates: NO verified real-world source data.
 
@@ -61,6 +61,6 @@
 - [x] Network constraints and controlled cancel/pause/resume, SHA256/Pmtiles header before activation; transfer mutex prevents cleanup race in same process.
 - [x] Offline UI copy distinguishes fixture from real offline road downloads.
 - [x] Unit test WorkManager Data round-trip, source validation, and emulator test invalid worker provenance authored.
-- [ ] Final build/unit/lint/emulator all green on PR head.
-- [ ] PR #9 merged after acceptance.
+- [x] Final branch head Python/SQLite PASS 43606534452, Android assemble/unit/lint PASS 43606534434, Emulator API35 4/4 PASS 43606534445.
+- [x] PR #9 merged to main as e1fc7dc423bc96e02c6b44360e5c3a9729c7cfa1.
 - [ ] Approved province catalog and real verified speed limit/sign locations: BLOCKED on authentic legally sourced input.

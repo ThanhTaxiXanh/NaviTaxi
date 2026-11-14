@@ -42,3 +42,5 @@
 - Initial CI run 43606081949 failed Kotlin compiler because a labelled return used a newline before Result.failure. Fixed after commit 20d6952; rerun required.
 - Official AndroidX CoroutineWorker.onStopped is final: cancellation via coroutine completion/OkHttp timeout instead of overriding.
 - No approved province PMTiles source or real speed/sign DB. Android background quotas and user force-stop behavior not claimed fully validated.
+
+- WorkManager final Kotlin fix verified: CI Android 43606534434 and emulator 43606534445 (4/4 tests) both successful; PR #9 merged as e1fc7dc. Existing prior Phase4 note saying WorkManager NOT DONE refers to the older PR #7 and is superseded by this entry.

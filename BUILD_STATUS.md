@@ -54,11 +54,13 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Android Emulator API35: 3/3 tests passed https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43604517455.
 - GitHub artifact 14117896754: app-debug.apk size 59,718,112 bytes; SHA-256 7d1f6728914d474b3d97a5d61fae5ab15a10c1f01dce96e4853ac6853d95848a.
 - PR #7 merged into main as 6fdbcfd3f6cace9220a93aec62c1b76130492d61.
-- Production APK, background transfer, real 34-province maps, speed/sign surveys and phone driving validation remain NOT DONE.
+- Production APK, real 34-province maps, speed/sign surveys, phone background/force-stop driving validation and automatic release checks remain NOT DONE. WorkManager queued-worker infrastructure now verified in PR #9.
 
 
 ## Phase 4 background WorkManager – PR #9
 - WorkManager version 2.12.0 released 2026-09-23, minSdk24 and compatible with project minSdk26.
 - Initial Python/SQLite pass 43606081873; initial Android build fail 43606081949 (corrected labelled return).
-- Final head Android compile, JUnit, lint, emulator results PENDING. Do not claim verified APK or merge until all gates pass.
+- Final head Android compile/JUnit/lint PASS 43606534434; Python/SQLite PASS 43606534452; Android Emulator 4/4 PASS 43606534445. PR #9 merged as e1fc7dc.
 - Source test APK PMTiles synthetic only; no source-backed road speed/sign location databases.
+
+- Actual debug APK 60,285,140 bytes; SHA256 2f3492851a2596b20c64e2dea0910e8c4428bd863d143b8aac12bc132b2cd5ca. GitHub Actions artifact ID 14118780517 on run 43606534434; exact APK paths assets/pmtiles/synthetic_test.pmtiles (462 bytes), assets/pmtiles/synthetic_manifest.json (525 bytes), three map_styles JSON files (238, 416, 698 bytes). No embedded source-backed road intelligence DB.
