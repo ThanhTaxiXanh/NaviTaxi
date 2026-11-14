@@ -38,9 +38,15 @@ def mvt():
              field(5, 0, 4096) + field(15, 0, 2))
     return field(3, 2, layer)
 
+def stable_gzip(data):
+    # Python 3.11 and 3.12 differ in gzip OS header byte with mtime=0.
+    result = bytearray(gzip.compress(data, mtime=0))
+    result[9] = 3
+    return bytes(result)
+
 def build(output, manifest):
-    tile = gzip.compress(mvt(), mtime=0)
-    root = gzip.compress(b"".join(map(varint, [1, 0, 1, len(tile), 1])), mtime=0)
+    tile = stable_gzip(mvt())
+    root = stable_gzip(b"".join(map(varint, [1, 0, 1, len(tile), 1])))
     metadata = {
         "name": "NaviTaxi synthetic grid test",
         "description": "SYNTHETIC ONLY. No real roads, speed limits or traffic signs.",
@@ -51,7 +57,7 @@ def build(output, manifest):
             "minzoom": 0, "maxzoom": 0, "fields": {}
         }]
     }
-    meta = gzip.compress(json.dumps(metadata, sort_keys=True, separators=(",", ":")).encode(), mtime=0)
+    meta = stable_gzip(json.dumps(metadata, sort_keys=True, separators=(",", ":")).encode())
     root_start = 127
     meta_start = root_start + len(root)
     tile_start = meta_start + len(meta)
