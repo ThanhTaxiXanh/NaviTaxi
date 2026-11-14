@@ -29,6 +29,8 @@ jobs:
         run: |
           python -m json.tool app/src/main/assets/map_styles/osm_streets_experimental.json >/dev/null
           python -m json.tool app/src/main/assets/map_styles/offline_empty.json >/dev/null
+          python -m json.tool app/src/main/assets/map_styles/pmtiles_synthetic.json >/dev/null
+          python scripts/validate_pmtiles.py
       - name: Verify Android project and compile
         run: gradle --no-daemon :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
       - name: Android debug artifact

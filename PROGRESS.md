@@ -29,3 +29,15 @@
 - [x] Phase 0 schema/asset Python checks green, Kotlin app build/lint/unit tests succeeded at 518785a5, CI 43593357604.
 - [x] Emulator API 35 MapLibre startup, empty style switch, exit no-crash test PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43593588383.
 - [x] PR #3 merged into main as 7d9809c after 3 green CI workflows.
+
+
+## Phase 3 — PMTiles and synthetic offline test
+- [x] Deterministic PMTiles v3/MVT synthetic fixture and SHA-256 JSON manifest authored, no real road/sign data invented.
+- [x] MapLibre Native pmtiles://file:// source with verified copy from APK assets to app-private filesDir; guard bad headers and checksums.
+- [x] MapLibre screen demonstrates offline fixture, with explicit "synthetic" and unknown speed/sign notices.
+- [x] HTTP Range probe and loopback mock test authored (no third-party tile-server bulk requests).
+- [x] Android emulator opened PMTiles demo in early Phase 3 smoke test (2/2) https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43602555868.
+- [x] Python/SQLite/provenance/PMTiles tests PASS after gzip determinism fix https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43602874345.
+- [ ] Verify latest Android compile + unit + lint on current head and final emulator smoke run.
+- [ ] Merge Phase 3 PR #5 to main only after all CI gates pass.
+- [ ] Real, licensed Vietnam road-vector PMTiles packages: BLOCKED until verified data extracts (Phase 5); NO geographic coverage claim.

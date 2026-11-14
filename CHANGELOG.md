@@ -24,3 +24,11 @@
 - Kotlin compiler/Compose plugin updated to 2.2.10; Android emulator integration test introduced.
 
 - Phase 2 emulator MapLibre smoke test passed on API 35 (1/1), run 43593588383; PR #3 merged as 7d9809c. No production map/SLA/traffic intelligence claims.
+
+
+## 0.3.0-dev — Phase 3 PMTiles v3
+- Added one deterministic, synthetic MVT tile in a valid PMTiles v3 archive, not real roads/signs.
+- Added streaming SHA-256 package verification, strict PMTiles header guards and atomic copy to private app storage.
+- Added Android-native MapLibre file-backed PMTiles source mode, visibly marked as synthetic and offline.
+- Added PMTiles fixture regeneration, binary validator and local HTTP Range probe with tests.
+- Added instrumentation smoke for opening PMTiles style without using OSM tile infrastructure.

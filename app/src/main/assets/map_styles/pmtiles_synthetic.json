@@ -1,0 +1,33 @@
+{
+  "version": 8,
+  "name": "NaviTaxi synthetic PMTiles offline visual test",
+  "sources": {
+    "synthetic": {
+      "type": "vector",
+      "url": "__VERIFIED_PM_TILES_URI__",
+      "minzoom": 0,
+      "maxzoom": 0,
+      "attribution": "Schematic synthetic cross only — not real streets"
+    }
+  },
+  "layers": [
+    {
+      "id": "offline-bg",
+      "type": "background",
+      "paint": {
+        "background-color": "#E4F3EA"
+      }
+    },
+    {
+      "id": "synthetic-grid-line",
+      "type": "line",
+      "source": "synthetic",
+      "source-layer": "demo_grid",
+      "paint": {
+        "line-color": "#008B72",
+        "line-width": 6,
+        "line-opacity": 0.9
+      }
+    }
+  ]
+}

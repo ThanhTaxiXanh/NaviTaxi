@@ -1,0 +1,17 @@
+{
+  "format": "navitaxi-offline-package/v1",
+  "id": "synthetic-grid-test",
+  "version": "0.0.1",
+  "origin": "created by scripts/build_synthetic_pmtiles.py",
+  "license": "NaviTaxi own synthetic test-only content",
+  "is_real_map": false,
+  "has_verified_speed_limits": false,
+  "has_verified_signs": false,
+  "tile_type": "mvt",
+  "layer": "demo_grid",
+  "minzoom": 0,
+  "maxzoom": 0,
+  "file": "synthetic_test.pmtiles",
+  "size_bytes": 462,
+  "sha256": "d9a53b380463498cc31fd59a30d00e07a2f3f32f9f894eefa7b796d20470de9c"
+}
