@@ -1,0 +1,89 @@
+name: Phase 4 - Dated Vietnam OSM PBF Reference Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/acquire_geofabrik_vietnam.py'
+      - 'tests/test_geofabrik_vietnam_acquisition.py'
+      - '.github/workflows/vietnam-real-road-reference.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vietnam-osm-reference-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned free OSM PBF reader
+        run: python -m pip install --disable-pip-version-check osmium==4.3.2
+      - name: Verify download safeguards with zero network test mocks
+        run: python -m unittest tests/test_geofabrik_vietnam_acquisition.py -v
+      - name: Download the immutable-date Vietnam Geofabrik extract exactly once
+        run: |
+          python scripts/acquire_geofabrik_vietnam.py \
+            --output-dir build/geofabrik-vietnam-source
+          test "$(stat -c '%s' build/geofabrik-vietnam-source/vietnam-261112.osm.pbf)" -eq 332558874
+      - name: Stream REAL OSM speed/sign tags to reference-only JSONL and checksum ZIP
+        run: |
+          PIN=$(python -c "import json; print(json.load(open('build/geofabrik-vietnam-source/receipt.json'))['sha256'])")
+          python scripts/extract_osm_road_reference.py \
+            --input build/geofabrik-vietnam-source/vietnam-261112.osm.pbf \
+            --expected-sha256 "$PIN" \
+            --source-uri https://download.geofabrik.de/asia/vietnam-261112.osm.pbf \
+            --output-dir build/vietnam-osm-reference-only \
+            --archive build/vietnam-osm-reference-only.zip
+      - name: Check exact source hash and prohibit automatic legal/survey approval
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r = json.loads(Path('build/geofabrik-vietnam-source/receipt.json').read_text())
+          m = json.loads(Path('build/vietnam-osm-reference-only/manifest.json').read_text())
+          assert m['source_snapshot']['sha256'] == r['sha256']
+          assert m['source_snapshot']['size_bytes'] == r['size_bytes'] == 332558874
+          assert m['source_snapshot']['source_uri'] == r['source_uri']
+          assert not r['driver_alerts_allowed']
+          assert not r['physical_sign_coordinates_verified']
+          assert not r['legal_speed_limits_verified']
+          assert not any(m['prohibitions'].values())
+          assert m['status'] == 'UNVERIFIED_OSM_REFERENCE_ONLY'
+          summary = {
+              'format': 'navitaxi-vietnam-real-osm-reference-audit/v1',
+              'source_snapshot_sha256': r['sha256'],
+              'source_filename': r['filename'],
+              'source_uri': r['source_uri'],
+              'source_bytes': r['size_bytes'],
+              'publisher_md5': r['md5'],
+              'source_license': 'ODbL-1.0',
+              'attribution': '© OpenStreetMap contributors',
+              'counts': m['counts'],
+              'status': m['status'],
+              'independent_legal_speed_verifications': 0,
+              'field_verified_physical_traffic_signs': 0,
+              'driver_alerts_allowed': False,
+              'does_not_approve_any_road_data': True,
+          }
+          Path('build/vietnam-osm-reference-summary.json').write_text(
+              json.dumps(summary, indent=2, ensure_ascii=False) + '\n')
+          print(json.dumps(summary, indent=2, ensure_ascii=False))
+          PY
+          sha256sum build/vietnam-osm-reference-only.zip
+      - name: Archive sourced audit receipt and reference-only OSM derivatives
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-real-vietnam-osm-reference-NOT-VERIFIED
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            build/geofabrik-vietnam-source/receipt.json
+            build/vietnam-osm-reference-only/manifest.json
+            build/vietnam-osm-reference-summary.json
+            build/vietnam-osm-reference-only.zip
+          # Never upload/ship the original 332 MB PBF in a CI artifact.
