@@ -84,3 +84,8 @@
 - APK audit run 43617224403 showed no production speed/sign DB; no compile failure in source-code run.
 
 - PR #17 final CI had no build or PBF parser failure. Python 36/36 PASS (43617538573), Android build/unit/lint PASS (43617538560), merged 8b6d1f7. Remaining blockers are authentic source snapshots, legal/field validation and offline route/data distribution.
+
+
+## Verified Vietnam OSM data reference QA results
+- Raw OSM was actually parsed with pyosmium from dated Geofabrik PBF (PR #19), and data quality tool added (PR #20). No known Python or Android CI failures on final code head: Python 51/51 PASS 43625497790, Android PASS 43625497719.
+- Remaining incomplete work is regulatory applicability, physical sign direction/position field evidence and safe production offline packaging, NOT a source parser or APK compilation error. No approval pin or driver safety alert has been enabled.
