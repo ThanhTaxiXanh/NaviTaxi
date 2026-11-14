@@ -35,6 +35,11 @@ jobs:
             --source-uri https://example.org/test-only/synthetic.osm \
             --output-dir build/osm-reference-fixture \
             --archive build/osm-reference-test-only.zip
+      - name: Independently verify synthetic OSM reference JSONL hashes and safety fields
+        run: |
+          python scripts/audit_osm_reference_quality.py \
+            --reference-dir build/osm-reference-fixture \
+            --out build/osm-reference-quality-test.json
       - name: Generate empty canonical SQLite for size and structure audit
         run: |
           python scripts/initialize_road_db.py --output build/road_intelligence.db
@@ -52,3 +57,4 @@ jobs:
             build/road-intelligence-archive.zip
             build/osm-reference-fixture/
             build/osm-reference-test-only.zip
+            build/osm-reference-quality-test.json
