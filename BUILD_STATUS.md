@@ -113,3 +113,13 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Source test reference artifact ID 14121689381 (GitHub artifact ZIP SHA256 8b6c4304cc55fefec8ef9af5222445d47b084630147e9fa6c4bca35f8618c2fb); contains original synthetic source hash, 1 speed way/2 sign nodes/1 sign way/1 sign relation; all false verification/alert flags.
 - APK audit artifact 14122562328 (ZIP SHA256 ff2248af20f94a94946828f013e8b9aa8999926d0a9be62214938c97487a824d). Exact 5 APK assets: assets/map_styles/offline_empty.json (238 B); osm_streets_experimental.json (416 B); pmtiles_synthetic.json (698 B); assets/pmtiles/synthetic_manifest.json (525 B); synthetic_test.pmtiles (462 B). SHA256SUMS verified, no real speed/sign DB.
 - PR #17 final head Python 43617538573 and Android 43617538560 PASSED, merged to main as 8b6d1f7ae9f995948364bdffcabf0208283a6c3d. This is only a verified test-data reference pipeline, NOT real legal speed/sign coverage.
+
+
+## Real Vietnam Geofabrik PBF source CI evidence — PR #19 merged
+- PR #19 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/19 MERGED main 8e9ad423100234b022506667b269f25d0a3df556. Post-merge Android build PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43624954395.
+- Source-backed real Vietnam PBF workflow PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43624034669: full 332,558,874 B source, SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed, MD5 1f7716ad049551852fc281e969a000aa. Actual PBF pyosmium parsing PASS.
+- Source audit measured: 44,472 maxspeed-tagged highway ways, 810 tagged sign nodes, 1 tagged sign way, 0 tagged sign relations. All unverified.
+- Python provenance/source tests PASS 43624034554, Android assembly/unit/lint and forensic APK audit PASS 43624034656.
+- Actual source audit artifact ID 14124844201, outer ZIP sha256:42352c12807767bfbe7ae4af26a060ad156443e2b05411496f7b0c63d47a5370; nested reference archive SHA256 23bfbef5e6fdc63a2a5e268a04fafeaee837f6c83c1fa5a3b21894bf47094380; all 3 SHA256SUMS entries verified.
+- APK forensic audit artifact ID 14125266676, archive sha256:a7813b05f51d502d003ac64872c75cd819d661eb73af48d687dd6528d76f0833; 5 synthetic assets exactly, and 0 approved real signs/speeds.
+- Supplemental reference-only QA script/tests CI pending; no taxi field test or production legal sign/speed alerts claimed.

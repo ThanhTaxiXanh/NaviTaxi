@@ -144,3 +144,14 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Source test artifact `phase0-road-data-evidence` includes JSONL/manifest/SHA256SUMS ZIP. Synthetic only: 1 tagged speed way, 2 tagged sign nodes, 1 tagged sign way, 1 tagged sign relation. All approval flags FALSE.
 - Built APK asset audit still finds exactly 5 test-only assets and 0 real speed/sign records. Original absolute paths within APK and bytes are in BUILD_STATUS.md.
 - Real Geofabrik Vietnam PBF was NOT downloaded or examined. Phase 4 remains IN PROGRESS/BLOCKED for lawful real datasets, catalog and field proof. Phase 5 NOT STARTED.
+
+
+## Phase 4 real Vietnam speed/sign OSM snapshot acquired (2026-11-15)
+- PR #19 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/19 MERGED main `8e9ad423100234b022506667b269f25d0a3df556`. Main post-merge Android build 43624954395 SUCCESS.
+- REAL Geofabrik Vietnam snapshot 2026-11-12 `vietnam-261112.osm.pbf` 332,558,874 bytes. SHA256 `ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed`, publisher MD5 `1f7716ad049551852fc281e969a000aa`.
+- REAL PBF CI https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43624034669 PASS; source integrity + streaming PBF extracted EXACTLY 44,472 OSM speed-tagged ways, 810 OSM sign-tagged nodes, 1 sign-tagged way and 0 sign relations. This is OSM reference data ONLY; physical sign surveys: 0 verified; enforceable legal speed records: 0 verified.
+- Audited 810 original OSM node coordinates, 68 ways with conditional speed tags, 276 with advisory, no mph variants in real snapshot. Not human-verified law/sign positions.
+- GitHub source audit evidence artifact 14124844201 digest sha256:42352c12807767bfbe7ae4af26a060ad156443e2b05411496f7b0c63d47a5370; verified JSONL counts, nested archive SHA256SUMS and all approval flags FALSE.
+- PR #19 final-head Python SQLite CI 43624034554 SUCCESS, Android compile/test/lint and APK asset deep scan 43624034656 SUCCESS. APK still 5 synthetic assets; no real `road_intelligence.db`, signed legal rules, surveyed physical signs or production alarms.
+- Follow-up source quality audit in `scripts/audit_osm_reference_quality.py`, tests and docs; source reference-only staging remains separate from Android approval.
+- **Phase 4 is STILL IN PROGRESS** (legally approved offline map catalog and field/OEM reliability blocked); Phase 5 NOT STARTED; Phase 11 Road Intelligence law/survey approval blocked.

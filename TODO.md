@@ -70,3 +70,11 @@
 - Report genuine candidate counts from that actual PBF only after parsing; keep OSM tags separate from the verified SQLite/RTree and speed/sign map overlays.
 - Validate each applicable legal speed by travel direction, vehicle class, date and signs; field-confirm the physical WGS84 sign location and orientation before proposing an independently approved database pin.
 - Phase 4 approved PMTiles catalog, OTA version storage, process-death and field/OEM reliability remain blocked; Phase 5 NOT STARTED.
+
+
+## Next tasks after REAL Vietnam OSM snapshot audit (PR #19)
+- Raw Vietnam OSM source obtained and hashed; do NOT call 44,472 OSM-tagged ways legal speed observations or 810 OSM node coordinates field-surveyed physical traffic signs.
+- Complete quality audit `scripts/audit_osm_reference_quality.py` and negative tests, per-record deduplication and exact WGS84/sign node-vs-way constraints; CI acceptance pending on PR #20.
+- Independently source applicable Vietnamese road law, vehicle type/direction, dated physical sign surveys and reliable WGS84/bearing evidence before populating production `RoadDatabaseApprovalGate` pins.
+- Review ODbL derivative data distribution and preserve upstream object provenance/attribution. Do not publish unverified source as a driver speed/sign overlay.
+- Phase 4 real licensed 34-province PMTiles map packages, scheduler OEM/background road tests remain blocked. Phase 5 NOT STARTED.

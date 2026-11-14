@@ -50,3 +50,11 @@ A data source's URL and license must be recorded before its content can be shipp
 - Real source records imported: 0. Real physical sign locations field verified: 0. The only populated reference archive is an explicitly synthetic CI fixture with no legal/physical verification.
 - Original sign node lat/lon remains an unverified OSM point; sign way/relation has no physical coordinate. Conditional/advisory/mph speed strings stay raw, never translated to legal speed_kmh.
 - No OSMF public tile service downloads, no source DB SHA approval, no MapScreen verified overlay changes. Canonical schema remains data/road_intelligence/schema.sql and the trusted DB list remains empty.
+
+
+## Source evidence update: REAL Vietnam Geofabrik dated PBF (2026-11-12)
+- SOURCE ACQUIRED in a single GitHub Actions run 43624034669. URL https://download.geofabrik.de/asia/vietnam-261112.osm.pbf, exact size 332558874 B, SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed and publisher MD5 1f7716ad049551852fc281e969a000aa.
+- ODbL-1.0 © OpenStreetMap contributors. Source raw PBF NOT stored in Git/APK or artifact. Derived tag/coordinate reference rows archived with source/manifest checksum and ODbL attribution in GitHub artifact 14124844201 (retention 14d).
+- Measured from actual PBF: 44,472 OSM ways with raw speed-related tags; 810 OSM sign-tagged nodes (all with syntactically valid OSM source coordinates), 1 tagged way, 0 sign relations. Exactly 68 speed ways include conditional tags; 276 advisory.
+- OSM coordinates are only mapping nodes, NOT field-surveyed positions of actual roadside signs; a sign-tagged way is not a physical sign point. OSM `maxspeed=50` etc are tag strings, NOT date/class/direction-specific legal road speed limits. Real independently verified driver speed/sign records remain **0**.
+- Detailed inventory, exact paths, artifacts and legal blockers: docs/VIETNAM_OSM_SPEED_SIGN_AUDIT_2026_11_12.md.

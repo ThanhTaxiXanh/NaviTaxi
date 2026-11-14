@@ -91,3 +91,9 @@
 - No production map catalog, Geofabrik input file, approved real-road speeds or physical sign observations added; Phase 4 remains open.
 
 - PR #17 code accepted and merged on 2026-11-14 as `8b6d1f7ae9f995948364bdffcabf0208283a6c3d` after final-head Python 43617538573 and Android 43617538560 successful CI. Reference staging is tested infrastructure; actual 34-province speed/sign mapping remains blocked.
+
+
+## 0.4.5-dev — Real dated Vietnam OSM source provenance and reference QA
+- PR #19 MERGED as 8e9ad423100234b022506667b269f25d0a3df556: bounded, provenance-checked acquisition of 2026-11-12 fixed-date Geofabrik Vietnam OSM PBF (332,558,874 B; SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed).
+- Real CI source run 43624034669 PASS: 44,472 speed-tagged OSM ways and 811 sign-tagged OSM objects (810 nodes + 1 way); none legally or physically field verified. Original source bytes not shipped.
+- Added follow-up independent JSONL/receipt/sign-coordinate/raw-speed QA and regression tests; release restrictions remain false by default. Phase 4 and field verification remain blocked.
