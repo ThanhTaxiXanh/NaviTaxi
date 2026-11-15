@@ -127,10 +127,11 @@ class FieldEvidenceTests(unittest.TestCase):
     def test_sign_is_never_inferred_from_osm_way_point(self):
         packet = deepcopy(self.packet)
         packet["sign_evidence"][0]["review_id"] = "osm:way:101@1"
+        packet["speed_evidence"] = []  # isolate source-object type from linked speed
         result = self.audit(packet)
         # Even a manually claimed point cannot be treated as a surveyed approval.
         self.assertEqual(result["approved_physical_sign_coordinates"], 0)
-        self.assertEqual(result["ready_for_independent_human_review"], 2)
+        self.assertEqual(result["ready_for_independent_human_review"], 1)
         self.assertFalse(result["driver_alerts_allowed"])
 
     def test_malformed_or_unknown_sign_code_is_rejected(self):
@@ -138,6 +139,7 @@ class FieldEvidenceTests(unittest.TestCase):
             with self.subTest(code=code):
                 packet = deepcopy(self.packet)
                 packet["sign_evidence"][0]["sign_code"] = code
+                packet["speed_evidence"] = []
                 self.assertEqual(self.audit(packet)["rejected_records"], 1)
 
     def test_gps_accuracy_bearing_and_wgs84_are_mandatory(self):
@@ -147,6 +149,7 @@ class FieldEvidenceTests(unittest.TestCase):
             with self.subTest(field=field, value=value):
                 packet = deepcopy(self.packet)
                 packet["sign_evidence"][0][field] = value
+                packet["speed_evidence"] = []
                 self.assertEqual(self.audit(packet)["rejected_records"], 1)
 
     def test_photo_bytes_must_match_sha256_and_license(self):
@@ -156,6 +159,7 @@ class FieldEvidenceTests(unittest.TestCase):
             with self.subTest(key=key):
                 packet = deepcopy(self.packet)
                 packet["sign_evidence"][0]["photo"][key] = value
+                packet["speed_evidence"] = []
                 self.assertEqual(self.audit(packet)["rejected_records"], 1)
 
     def test_sign_must_be_close_to_independently_supplied_geometry(self):
@@ -192,6 +196,7 @@ class FieldEvidenceTests(unittest.TestCase):
     def test_untrusted_reviewer_self_attestation_rejected(self):
         packet = deepcopy(self.packet)
         packet["sign_evidence"][0]["reviewer"] = "synthetic-surveyor"
+        packet["speed_evidence"] = []
         self.assertEqual(self.audit(packet)["rejected_records"], 1)
 
     def test_duplicate_evidence_ids_do_not_silently_authorize(self):
