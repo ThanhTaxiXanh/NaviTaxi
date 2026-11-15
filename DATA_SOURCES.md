@@ -72,3 +72,9 @@ A data source's URL and license must be recorded before its content can be shipp
 - New scripts/review_road_field_evidence.py consumes the existing 2026-11-12 real Vietnam UNVERIFIED review queue ZIP when separately provided with exact SHA256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c. It never downloads OSM tiles or calls paid APIs.
 - Independent survey evidence JSON and photo bytes are distinct external private inputs. No real survey JSON/photos added to Git. Mechanical test uses only synthetic fixtures. Real approved legal km/h records: 0; approved measured physical sign coordinates: 0.
 - Legal official references remain 74/2026/VBHN-TT-BXD and 38/2024/TT-BGTVT; no automatic speed inference from either or OSM.
+
+
+## 2026-11-15 evidence conflict quarantine
+- Existing Geofabrik Vietnam dated source: vietnam-261112.osm.pbf (332,558,874 bytes), SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed, ODbL-1.0, reference-only. The original unverified review ZIP SHA256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c is NOT present in the repository/APK.
+- Enhanced evidence checker now detects repeated sign photo SHA, duplicate source IDs and same code/point, road geometry mismatches, incompatible field and law times; this is mechanical screening, not field/legal verification.
+- Unverified queue: 811 sign candidates, 44,472 speed-way candidates; verified legal speeds 0; approved physical sign coordinates 0; no Android road DB or driver warnings.
