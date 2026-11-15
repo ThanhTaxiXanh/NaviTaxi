@@ -239,3 +239,13 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Python evidence photo validator, self-contained TIFF/Exif helper and synthetic regression tests only. No Android code/dependencies or production speed/sign databases added.
 - Python/SQLite full suite and Android `:app:assembleDebug :app:testDebugUnitTest :app:lintDebug` plus APK asset audit **NOT YET ACCEPTED** for this new branch until final-head GitHub Actions complete.
 - Android `RoadIntelligenceApprovedPins.entries` must remain empty; 0 legal speeds, 0 surveyed sign GPS points and alerts BLOCKED.
+
+
+## 2026-11-15 — PR #34 original JPEG EXIF safeguard accepted on main
+
+- Python/SQLite 135/135 PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43685525932.
+- Android PR-head assembleDebug/testDebugUnitTest/lintDebug plus APK road-asset scan SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43685525912.
+- PR #34 merge main `d7032bb2f774499c1c95376b1cb63a6785231d61`, post-merge Android SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43685630989.
+- Downloaded post-merge artifacts: road audit ZIP ID 14149758685 (7,894 B SHA256 5de197cc6741eb02c83354b75091896706b3e3c715ed3eab607a830bf97e1c59), inner ZIP 8,952 B SHA256 5da47f49f3bb3cb12712eec7a5c3996c1a976c748744082cf36d1aa4b94cac4d, CRC PASS, SHA256SUMS 13/13 PASS.
+- Android debug ZIP ID 14150485688 (33,473,017 B SHA256 f3a7e80262a3fd22c75103f7ed0c70c2bc4db73b96f7df21d532f074410e5e4c); inner app-debug.apk 60,301,524 B SHA256 5091257a3b20b0aca1bb11a60132172486bfcde7aa6a6578ebefc66073cc68f4, CRC PASS.
+- Exact APK filenames/sizes/shapes and source code gate in `docs/ROAD_INTELLIGENCE_PR34_VERIFIED_EXIF_AUDIT.md`. No validated real road-speed/sign data in APK; this is a debug artifact, not field-tested release. All approval pins EMPTY; alerts BLOCKED.
