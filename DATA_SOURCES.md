@@ -107,3 +107,22 @@ A data source's URL and license must be recorded before its content can be shipp
   every archived photo path comes from the independent packet's
   sign_evidence[*].photo.path; unreferenced photo content fails review.
   Valid-looking filenames/checksums do not establish genuine field surveying.
+
+
+## Optional original GNSS GPX sign-coordinate evidence — PR #28
+- `gps_track` within independently collected sign evidence may cite a
+  separately owned original GPX 1.1 file and its exact SHA256, source URI,
+  path and license. Validation compares an actual recorded WGS84 track,
+  route or waypoint sample to the survey point and observation time.
+  Missing optional GPX is not falsely labeled GNSS-verified; supplied bad
+  GNSS data fails. GPS trace bytes are never downloaded from OSM or generated.
+- New private archive records exact `tracks/<relative>.gpx` source bytes,
+  file SHA256, optional track count and independently replayed audit.
+  Check photographer and GPS collector source permissions before sharing.
+- Real `vietnam-261112.osm.pbf` size 332,558,874 SHA256
+  ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed
+  ODbL-1.0 reference-only; original unverified queue ZIP expected SHA256
+  26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c
+  still outside repo. 811 sign objects / 44,472 speed ways unverified;
+  **0** physical roadside sign coordinates and **0** enforceable legal
+  speed values independently approved.

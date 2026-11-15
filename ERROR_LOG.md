@@ -137,3 +137,21 @@
 - Await PR #27 CI; never claim real sign/speed approval or enable alerts.
 
 - Synthetic adversity tests `test_extra_private_photo_rejected_even_if_checksums_are_resigned`, `test_archive_must_not_be_created_anywhere_in_git_workspace`, `test_future_physical_sign_and_speed_claims_are_rejected` PASS on PR #27 code-head CI; Python 105/105 PASS (43669326250), Android PASS (43669326276). No current unresolved implementation regression on this head; final docs-head and main CI still to be confirmed.
+
+
+## 2026-11-15 GNSS field-sign evidence intake (PR #28)
+- Prior physical sign survey required JPEG/PNG photo and declared measured
+  WGS84 point but lacked an optional raw GPS sensor-log cross-check; the
+  sign could still be marked mechanically ready without sensor provenance.
+  This status was NEVER legal/field approval; Android SHA pins remain empty.
+- New supplemental GPX 1.1 local file is hash-checked and matched to
+  declared physical-sign location/timestamp, with DTD/ENTITY blocked and
+  path ancestors checked for symlinks. A supplied invalid trace REJECTS.
+  No GPX is created by inference from OSM.
+- Previously `survey_photo` only refused a symlink at the final filename,
+  not a symlinked parent pointing elsewhere within the allowed root.
+  Updated to refuse any linked component.
+- Original GPS sensor logs, genuine photos and independent legal speed
+  assessments are not available for actual field evidence processing.
+  CI code-head Python 114/114 PASS at run 43670317025; Android and final
+  merge acceptance to be verified.

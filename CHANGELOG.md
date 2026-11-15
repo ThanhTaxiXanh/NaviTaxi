@@ -150,3 +150,18 @@
   approved digest or Android driver alert added.
 
 - PR #27 code-head CI recorded: Python/SQLite 105/105 PASS (43669326250); Android assemble/unit/lint/APK audit PASS (43669326276). No real legal/physical approval or Android pin modifications.
+
+
+## 0.4.10-dev — Phase 11 optional GNSS GPX physical sign corroboration (PR #28)
+- Independent field-sign intake can validate an **optional original GPX 1.1**
+  trace against claimed survey point/time with byte-level SHA256, source URI,
+  WGS84 bounds, maximum 2 MB, 10,000 points, and XML entity/DTD prohibition.
+- Private portable evidence ZIP retains only cited actual GPX bytes under
+  `tracks/`, alongside exactly cited photo bytes and unverified source review ZIP;
+  original SHA256SUMS and complete offline auditor replay reject re-signed
+  tampering or unreferenced GPS tracks.
+- Hardened photo validation against symlinked ancestor folders. Legacy
+  no-track v1 packets remain accepted for **human review only**, never as GNSS
+  authenticated. Synthetic-only regressions: Python 114/114 PASS run 43670317025.
+- No real survey, site-specific legal speed, sign coordinate, release DB pin,
+  APK road data or alert activation added.

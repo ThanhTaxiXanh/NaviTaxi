@@ -94,3 +94,16 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
   restricted private evidence. Still independently verify photographer
   rights, personal-data consent and ODbL reuse requirements before any
   release or transmission. SHA256 does not grant redistribution rights.
+
+
+## PR #28 — optional physically surveyed GPX evidence
+- New Python uses standard library `xml.etree.ElementTree` and existing
+  SHA256/ZIP modules only, no billed API or new Android runtime dependency.
+- A submitted GPX trace can reveal a collector's precise travelled
+  coordinates and timestamps. Keep it as confidential field evidence,
+  restrict access and redistribution, and document true creator rights,
+  provenance and retention. A source URL or user-entered `license`
+  string is not independent proof of legal permission.
+- OSM/Geofabrik raw tagging and review queues remain © OpenStreetMap
+  contributors ODbL-1.0. No GPS traces, photographs, source PBF, real
+  speed/kmh entries or observed sign positions are checked into Git/Android.
