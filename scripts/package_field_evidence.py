@@ -189,13 +189,17 @@ def package(review_zip, expected_queue_sha, evidence, photo_root, output):
                    for name, spec in sorted(specs.items()))
     specs[SUMS_NAME] = _bytes_spec(sums.encode("utf-8"))
     output.parent.mkdir(parents=True, exist_ok=True)
+    created = False
     try:
         with output.open("xb") as f:
+            created = True
             with zipfile.ZipFile(f, "w", allowZip64=True) as z:
                 for name, spec in sorted(specs.items()):
                     _write_member(z, name, spec)
     except Exception:
-        output.unlink(missing_ok=True)
+        # Never delete an output we failed to create (e.g. a concurrent file).
+        if created:
+            output.unlink(missing_ok=True)
         raise
     size, checksum = file_hash(output, MAX_ARCHIVE)
     return {"archive": str(output), "size_bytes": size, "sha256": checksum,
