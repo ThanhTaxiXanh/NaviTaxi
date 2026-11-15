@@ -66,3 +66,8 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 - Validator uses Python standard library only: no new dependencies, remote billing or external service.
 - Existing OSM review ZIP remains derived from OpenStreetMap contributors under ODbL 1.0; a newly collected photo requires its own lawful provenance/license before dissemination. Photo/source licensing strings in audit packets are NOT independent license approval.
 - No new real survey photos or derived map data redistributed in this PR. Future release requires ODbL/photographic permissions and independent human approval.
+
+
+## Phase 11 conflict-quarantine patch
+- Python standard-library-only change, no external libraries, API payments, added OSM material or private field-photo data. ODbL 1.0 responsibilities for existing OSM-derived review queues remain unchanged.
+- Matching evidence/photo SHA256 is a tamper-evidence check, not a copyright grant or physical-location proof. Independent image/geodata license permission and accurate legal interpretation remain prerequisites to release.
