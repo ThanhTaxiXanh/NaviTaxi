@@ -68,7 +68,8 @@ def https(url, official=False):
         return False
     if host in ("openstreetmap.org", "www.openstreetmap.org") or host.endswith(".openstreetmap.org"):
         return False  # OSM reference is not independent field/legal evidence
-    return not official or host.endswith(".gov.vn") or host == "vbpl.vn"
+    return (not official or host.endswith(".gov.vn") or host == "vbpl.vn"
+            or host == "chinhphu.vn" or host.endswith(".chinhphu.vn"))
 
 
 def date_at(value):
