@@ -59,6 +59,13 @@ substantive applicability_note. Law effective date must be no later than
 the actual observation. An official link is ONLY a citation; it does NOT
 automatically prove law applicability at the road position/date/direction.
 
+
+If posted_sign_status is observed, sign_evidence_ids MUST point to complete
+sign entries in the same evidence packet for the same OSM way and travel
+direction. References to rejected, absent or contradictory signs fail the speed
+packet. A none_confirmed status must NOT simultaneously provide sign IDs.
+Even a syntactically consistent match still requires field/independent review.
+
 Hashes for LineString JSON are SHA-256 over UTF-8 of
 json.dumps(geometry, ensure_ascii=False, sort_keys=True,
 separators=(",", ":"), allow_nan=False). Time fields use full ISO-8601 with
