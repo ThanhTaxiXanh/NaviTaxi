@@ -107,7 +107,8 @@ class FieldEvidenceTests(unittest.TestCase):
         if data is None:
             data = (
                 b'<?xml version="1.0" encoding="UTF-8"?>'
-                b'<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1">'
+                b'<gpx xmlns="http://www.topografix.com/GPX/1/1" '
+                b'version="1.1" creator="NaviTaxi Synthetic Unit Test">'
                 b'<trk><trkseg><trkpt lat="0.0" lon="0.0">'
                 b'<time>2026-11-14T01:00:00Z</time>'
                 b'</trkpt></trkseg></trk></gpx>'
@@ -125,6 +126,116 @@ class FieldEvidenceTests(unittest.TestCase):
         report = self.audit(packet)
         self.assertEqual(report["status"], "HUMAN_REVIEW_REQUIRED")
         self.assertEqual(report["ready_for_independent_human_review"], 2)
+        self.assertEqual(report["approved_physical_sign_coordinates"], 0)
+        self.assertFalse(report["driver_alerts_allowed"])
+
+    def test_gpx_requires_original_1_1_creator_and_fixed_version(self):
+        for label, attrs in (
+            ("missing creator", 'version="1.1"'),
+            ("blank creator", 'version="1.1" creator=" "'),
+            ("missing version", 'creator="synthetic-test"'),
+            ("wrong version", 'version="1.0" creator="synthetic-test"'),
+        ):
+            with self.subTest(label=label):
+                source = (
+                    '<gpx xmlns="http://www.topografix.com/GPX/1/1" '
+                    + attrs + '><trk><trkseg><trkpt lat="0" lon="0">'
+                    '<time>2026-11-14T01:00:00Z</time>'
+                    '</trkpt></trkseg></trk></gpx>'
+                ).encode()
+                packet = self.attach_synthetic_gpx(deepcopy(self.packet), source)
+                result = self.audit(packet)
+                self.assertIn(
+                    "GPS_TRACK_MISSING_GPX_1_1_CREATOR_OR_VERSION",
+                    result["results"][0]["reasons"])
+                self.assertEqual(result["rejected_records"], 2)
+                self.assertFalse(result["driver_alerts_allowed"])
+
+    def test_gpx_explicit_failed_gnss_fix_cannot_corroborate_sign(self):
+        # A fabricated point can have exactly matching lat/lon/time while
+        # its own GPS metadata states that no usable location fix existed.
+        unusable = (
+            ("no fix", "<fix>none</fix>"),
+            ("zero satellites", "<sat>0</sat>"),
+            ("two satellites 2d", "<fix>2d</fix><sat>2</sat>"),
+            ("three satellites 3d", "<fix>3d</fix><sat>3</sat>"),
+            ("bad horizontal dilution", "<hdop>99.9</hdop>"),
+            ("zero HDOP", "<hdop>0</hdop>"),
+        )
+        for label, quality in unusable:
+            with self.subTest(label=label):
+                source = (
+                    '<gpx xmlns="http://www.topografix.com/GPX/1/1" '
+                    'version="1.1" creator="synthetic-test"><trk><trkseg>'
+                    '<trkpt lat="0" lon="0">'
+                    '<time>2026-11-14T01:00:00Z</time>' +
+                    quality + '</trkpt></trkseg></trk></gpx>'
+                ).encode()
+                packet = self.attach_synthetic_gpx(deepcopy(self.packet), source)
+                result = self.audit(packet)
+                self.assertIn(
+                    "GPS_TRACK_HAS_NO_USABLE_SIGN_FIX_TIME_POSITION_MATCH",
+                    result["results"][0]["reasons"])
+                self.assertEqual(result["rejected_records"], 2)
+                self.assertEqual(result["approved_physical_sign_coordinates"], 0)
+                self.assertEqual(result["approved_legal_speeds"], 0)
+                self.assertFalse(result["driver_alerts_allowed"])
+
+    def test_gpx_invalid_quality_values_or_duplicate_fields_rejected(self):
+        invalid = (
+            ("unknown fix", "<fix>simulated</fix>", "GPS_TRACK_INVALID_FIX"),
+            ("nonnumeric satellite", "<sat>four</sat>",
+             "GPS_TRACK_INVALID_SATELLITE_COUNT"),
+            ("negative satellite", "<sat>-1</sat>",
+             "GPS_TRACK_INVALID_SATELLITE_COUNT"),
+            ("nan hdop", "<hdop>NaN</hdop>", "GPS_TRACK_INVALID_HDOP"),
+            ("negative hdop", "<hdop>-1</hdop>", "GPS_TRACK_INVALID_HDOP"),
+            ("duplicate fix", "<fix>3d</fix><fix>3d</fix>",
+             "GPS_TRACK_DUPLICATE_QUALITY_FIELD"),
+        )
+        for label, quality, expected in invalid:
+            with self.subTest(label=label):
+                source = (
+                    '<gpx xmlns="http://www.topografix.com/GPX/1/1" '
+                    'version="1.1" creator="synthetic-test"><trk><trkseg>'
+                    '<trkpt lat="0" lon="0">'
+                    '<time>2026-11-14T01:00:00Z</time>' +
+                    quality + '</trkpt></trkseg></trk></gpx>'
+                ).encode()
+                packet = self.attach_synthetic_gpx(deepcopy(self.packet), source)
+                result = self.audit(packet)
+                self.assertIn(expected, result["results"][0]["reasons"])
+                self.assertEqual(result["rejected_records"], 2)
+                self.assertFalse(result["driver_alerts_allowed"])
+
+    def test_gpx_valid_3d_fix_remains_mechanical_only(self):
+        source = (
+            b'<gpx xmlns="http://www.topografix.com/GPX/1/1" '
+            b'version="1.1" creator="synthetic-test"><trk><trkseg>'
+            b'<trkpt lat="0" lon="0"><time>2026-11-14T01:00:00Z</time>'
+            b'<fix>3d</fix><sat>7</sat><hdop>1.2</hdop>'
+            b'</trkpt></trkseg></trk></gpx>'
+        )
+        report = self.audit(self.attach_synthetic_gpx(deepcopy(self.packet), source))
+        self.assertEqual(report["status"], "HUMAN_REVIEW_REQUIRED")
+        self.assertEqual(report["ready_for_independent_human_review"], 2)
+        self.assertEqual(report["approved_physical_sign_coordinates"], 0)
+        self.assertEqual(report["approved_legal_speeds"], 0)
+        self.assertFalse(report["driver_alerts_allowed"])
+
+    def test_gpx_mixed_failed_and_usable_fix_requires_usable_match(self):
+        source = (
+            b'<gpx xmlns="http://www.topografix.com/GPX/1/1" '
+            b'version="1.1" creator="synthetic-test"><trk><trkseg>'
+            b'<trkpt lat="0" lon="0"><time>2026-11-14T01:00:00Z</time>'
+            b'<fix>none</fix></trkpt>'
+            b'<trkpt lat="0" lon="0"><time>2026-11-14T01:00:01Z</time>'
+            b'<fix>3d</fix><sat>6</sat><hdop>1.0</hdop></trkpt>'
+            b'</trkseg></trk></gpx>'
+        )
+        report = self.audit(self.attach_synthetic_gpx(deepcopy(self.packet), source))
+        self.assertEqual(report["status"], "HUMAN_REVIEW_REQUIRED")
+        self.assertEqual(report["rejected_records"], 0)
         self.assertEqual(report["approved_physical_sign_coordinates"], 0)
         self.assertFalse(report["driver_alerts_allowed"])
 
