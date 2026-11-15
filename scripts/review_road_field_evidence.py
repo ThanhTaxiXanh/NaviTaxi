@@ -31,6 +31,17 @@ EXPECTED_ZIP = {
     "manifest.json", SIGN_FILE, SPEED_FILE, "REVIEW_INSTRUCTIONS.txt", "SHA256SUMS"
 }
 
+# Incoming survey paperwork cannot carry a user-supplied approval decision.
+# Production authorization is confined to the independently reviewed Kotlin
+# source-code SHA pins; even FALSE approval claims in input are out of scope.
+UNTRUSTED_AUTHORIZATION_KEYS = frozenset({
+    "driver_alert_approved", "driver_alerts_allowed", "traffic_sign_alerts_allowed",
+    "approved_legal_speeds", "approved_physical_sign_coordinates",
+    "production_database_authorized", "approval_pin_created",
+    "independently_verified", "legally_or_physically_verified",
+    "approved_speeds", "approved_signs", "approval_status", "trust_pin",
+})
+
 
 class EvidenceError(ValueError):
     pass
@@ -70,6 +81,18 @@ def https(url, official=False):
         return False  # OSM reference is not independent field/legal evidence
     return (not official or host.endswith(".gov.vn") or host == "vbpl.vn"
             or host == "chinhphu.vn" or host.endswith(".chinhphu.vn"))
+
+
+def reject_authorization_claims(value):
+    """Reject attempted promotion of a source/evidence document into approval."""
+    if isinstance(value, dict):
+        for key, child in value.items():
+            require(key not in UNTRUSTED_AUTHORIZATION_KEYS,
+                    "INPUT_ATTEMPTS_TO_AUTHORIZE_DRIVER_DATA")
+            reject_authorization_claims(child)
+    elif isinstance(value, list):
+        for child in value:
+            reject_authorization_claims(child)
 
 
 def date_at(value):
@@ -277,7 +300,15 @@ def independent_record(item, source, kind, photo_root):
         except (ValueError, TypeError, KeyError) as exc:
             raise EvidenceError("LEGAL_EFFECTIVE_DATE_REQUIRED") from exc
         require(effective <= observed.date(), "LAW_NOT_EFFECTIVE_AT_OBSERVATION")
-        require(date_at(legal.get("checked_at")) <= checked, "LEGAL_CHECK_AFTER_REVIEW")
+        if legal.get("effective_to") is not None:
+            try:
+                expires = date.fromisoformat(legal["effective_to"])
+            except (ValueError, TypeError) as exc:
+                raise EvidenceError("INVALID_LEGAL_EXPIRY_DATE") from exc
+            require(expires >= observed.date(), "LAW_EXPIRED_AT_OBSERVATION")
+        verified_law_at = date_at(legal.get("checked_at"))
+        require(observed <= verified_law_at <= checked,
+                "LEGAL_CHECK_MUST_FOLLOW_OBSERVATION_AND_PRECEDE_REVIEW")
         require(isinstance(item.get("sign_evidence_ids"), list)
                 and all(isinstance(s, str) and s for s in item["sign_evidence_ids"]),
                 "SIGN_RELEVANCE_LIST_REQUIRED")
@@ -297,6 +328,7 @@ def audit_evidence(queue_zip: Path, expected_queue_sha: str, evidence: Path,
     require(isinstance(packet, dict) and packet.get("format") == FORMAT
             and packet.get("source_review_manifest_sha256") == manifest_sha,
             "UNBOUND_EVIDENCE_PACKET")
+    reject_authorization_claims(packet)
     report = {
         "format": "navitaxi-evidence-mechanical-audit/v1",
         "queue_zip_sha256": expected_queue_sha,
@@ -318,8 +350,9 @@ def audit_evidence(queue_zip: Path, expected_queue_sha: str, evidence: Path,
     for kind, rows, key in (("sign", sign_rows, "sign_evidence"),
                              ("speed", speed_rows, "speed_evidence")):
         entries = packet.get(key)
-        require(isinstance(entries, list) and len(entries) <= MAX_ROWS,
-                "EVIDENCE_ARRAY_REQUIRED")
+        require(isinstance(entries, list) and
+                len(entries) <= min(MAX_ROWS, len(rows)),
+                "EVIDENCE_ARRAY_EXCEEDS_SOURCE_QUEUE")
         for item in entries:
             review_id = item.get("review_id") if isinstance(item, dict) else None
             reasons = []
@@ -352,6 +385,67 @@ def audit_evidence(queue_zip: Path, expected_queue_sha: str, evidence: Path,
             })
             report["ready_for_independent_human_review" if accepted
                    else "rejected_records"] += 1
+    # A later contradictory or duplicate record invalidates ALL potentially
+    # matching candidates, never merely the second row in input order.
+    # Use only provenance/identity for grouping: this does not establish field truth.
+    def quarantine(result, reason):
+        if reason not in result["reasons"]:
+            result["reasons"].append(reason)
+        if result["status"] != "REJECTED":
+            result["status"] = "REJECTED"
+            report["ready_for_independent_human_review"] -= 1
+            report["rejected_records"] += 1
+
+    by_id, by_photo = {}, {}
+    sign_pairs = []
+    speed_scope = {}
+    sign_results = [x for x in report["results"] if x["kind"] == "sign"]
+    speed_results = [x for x in report["results"] if x["kind"] == "speed"]
+    for item, result in zip(packet["sign_evidence"], sign_results):
+        if not isinstance(item, dict):
+            continue
+        sid = item.get("review_id")
+        if isinstance(sid, str):
+            by_id.setdefault(sid, []).append(result)
+        photo = item.get("photo")
+        if isinstance(photo, dict) and SHA.fullmatch(str(photo.get("sha256"))):
+            by_photo.setdefault(photo["sha256"], []).append(result)
+        lat, lon, code = item.get("latitude"), item.get("longitude"), item.get("sign_code")
+        if (type(lat) in (float, int) and type(lon) in (float, int) and
+                math.isfinite(lat) and math.isfinite(lon) and
+                -90 <= lat <= 90 and -180 <= lon <= 180 and
+                isinstance(code, str)):
+            sign_pairs.append((float(lat), float(lon), code, result))
+    for group in by_id.values():
+        if len(group) > 1:
+            for result in group:
+                quarantine(result, "DUPLICATE_SIGN_SOURCE_ID")
+    for group in by_photo.values():
+        if len(group) > 1:
+            for result in group:
+                quarantine(result, "REUSED_SIGN_PHOTO_SHA256")
+    # Actual source queue contains 811 sign candidates; small bounded
+    # all-pairs scan avoids missed 3m overlaps at grid-cell boundaries.
+    for i, (lat, lon, code, left) in enumerate(sign_pairs):
+        for other_lat, other_lon, other_code, right in sign_pairs[i + 1:]:
+            if code == other_code and math.hypot(
+                    (lat - other_lat) * 110540,
+                    (lon - other_lon) * 111320 *
+                    max(0.01, math.cos(math.radians((lat + other_lat) / 2)))) < 3:
+                quarantine(left, "POSSIBLE_DUPLICATE_PHYSICAL_SIGN")
+                quarantine(right, "POSSIBLE_DUPLICATE_PHYSICAL_SIGN")
+    for item, result in zip(packet["speed_evidence"], speed_results):
+        if not isinstance(item, dict):
+            continue
+        scope = (item.get("osm_way_id"), item.get("direction"),
+                 item.get("vehicle_class"))
+        if type(scope[0]) is int and all(isinstance(v, str) for v in scope[1:]):
+            speed_scope.setdefault(scope, []).append(result)
+    for group in speed_scope.values():
+        if len(group) > 1:
+            for result in group:
+                quarantine(result, "CONFLICTING_SPEED_SCOPE")
+
     # Speed paperwork must never cite an unreviewed, unrelated or differently
     # directed sign merely by writing its ID into a text array.
     sign_packets = {
@@ -380,13 +474,18 @@ def audit_evidence(queue_zip: Path, expected_queue_sha: str, evidence: Path,
                      or sign_packets[s].get("direction") != item["direction"]
                      for s in ids):
                 problem = "SIGN_EVIDENCE_MISSING_REJECTED_OR_WRONG_ROAD_DIRECTION"
+            elif any(sign_packets[s].get("road_geometry_sha256") !=
+                     item["road_geometry_sha256"] for s in ids):
+                problem = "SIGN_AND_SPEED_ROAD_GEOMETRY_DISAGREE"
+            elif any(date_at(sign_packets[s].get("observed_at")) >
+                     date_at(item["observed_at"]) for s in ids):
+                problem = "SIGN_SURVEY_POSTDATES_SPEED_OBSERVATION"
         if problem:
-            result["status"] = "REJECTED"
-            result["reasons"].append(problem)
-            report["ready_for_independent_human_review"] -= 1
-            report["rejected_records"] += 1
+            quarantine(result, problem)
     report["status"] = ("REJECTED" if report["rejected_records"]
-                        else "HUMAN_REVIEW_REQUIRED")
+                        else ("HUMAN_REVIEW_REQUIRED" if
+                              report["ready_for_independent_human_review"] > 0
+                              else "NO_EVIDENCE_TO_REVIEW"))
     return report
 
 
