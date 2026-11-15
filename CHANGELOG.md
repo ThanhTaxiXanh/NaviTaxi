@@ -165,3 +165,16 @@
   authenticated. Synthetic-only regressions: Python 114/114 PASS run 43670317025.
 - No real survey, site-specific legal speed, sign coordinate, release DB pin,
   APK road data or alert activation added.
+
+
+## PR #29 — independent vehicle/direction speed legality cases
+- Support up to 12 separately justified legal-speed review cases per
+  unchanged OSM source way (two directions × six vehicle classes).
+  `case_id` distinguishes each case, `review_id` retains raw-source
+  provenance. Legacy one-per-source packets remain compatible.
+- Quarantine all speed records with duplicate case IDs, repeated
+  (way, direction, vehicle) scope, ambiguous source reuse without
+  explicit case IDs or too many per-source scopes.
+- Added synthetic-only legal speed / sign-direction cases and portable
+  ZIP round-trip regression. No new paid service, app code, real legal
+  limits, GPS sign coordinates, production DB or Android release pin.
