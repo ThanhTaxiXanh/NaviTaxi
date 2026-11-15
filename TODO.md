@@ -86,3 +86,10 @@
 - Survey 810 original OSM node-point **candidates** with physical GPS survey, sign code, facing, date, road relation, photo evidence/hash, review and lawful provenance. A tagged OSM way has no physical sign point.
 - Reassess 654 unknown-type sign tags; do not interpret `traffic_sign=yes` as speed sign or infer physical location; obtain source geometry before matching raw speed-way IDs to road segments.
 - Do not set `RoadIntelligenceApprovedPins` or enable alerts before separate legal and field evidence review, source license review and device tests. Approved real speed/sign counts remain zero.
+
+
+## After field/legal evidence intake implementation (2026-11-15)
+- Run full synthetic Python/SQLite + Android CI on the evidence-intake PR; fix failures before considering merge.
+- Obtain original SHA256-pinned 1,170,686-byte review ZIP and private physical surveys/photos. Do not treat OSM nodes as measured sign positions.
+- Independently validate real sign WGS84/bearing, photo, direction and road geometry; independently validate actual vehicle/date-specific legal speed and posted sign relation.
+- Mechanical READY_FOR_HUMAN_REVIEW does not imply verified sign/speed. Separately review ODbL and publisher permissions, create only scrutinized SQLite/RTree data, code-review any future exact SHA pin and field-test actual driver warnings.
