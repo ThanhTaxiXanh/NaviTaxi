@@ -111,3 +111,16 @@
 - Require a human legal check and real sign-location/direction survey before proposing
   any domain-specific, separately approved SQLite release digest. Do not infer speeds
   from OSM maxspeed and do not turn on alerts before verified release and on-device tests.
+
+
+## Phase 11 PR #27 next acceptance / missing evidence
+- Ensure Python suite including adversarial extra-photo ZIP passes and
+  Android assembleDebug/unit/lint/APK audit passes on exact PR head.
+  Merge only after both success and verify post-merge main.
+- Keep private GPS/sign-photo evidence ZIPs outside any Git checkout,
+  Android APK or application data. Record outer archive SHA256 in a
+  separate independent channel and check original photo copyrights.
+- Obtain real independently surveyed WGS84 sign locations and direction,
+  timestamped legal speed clauses and vehicle/segment applicability.
+  **0** source records are approved; **811** OSM sign-tag objects and
+  **44,472** raw speed ways remain unverified reference candidates.

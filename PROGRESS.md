@@ -168,3 +168,17 @@
 - [ ] Verify exact final PR #26 Python and Android CI; merge only on green and confirm main CI.
 - [ ] Independently acquire/survey real traffic signs, legal km/h, road shape, and
       applicable governing law by date/direction/vehicle. Approved records: ZERO.
+
+
+## Phase 11 PR #27: field-sign photo privacy and chronology
+- [x] Reviewed main at b644689762c0eb3d5d1397867965f8bb6ccd8b21,
+      no open PR, Android CI 43668415558 SUCCESS.
+- [x] Archive output is forbidden anywhere in the Git workspace, and
+      verifier refuses surplus/unreferenced photographs even with re-signed
+      internal checksums. ZIP member sizes and manifest keys constrained.
+- [x] Future-dated physical sign observations and speed/legal review
+      beyond five-minute UTC clock drift fail the mechanical evidence audit.
+- [x] Added adversarial synthetic regressions; **no genuine road/sign
+      measurements or speed laws introduced**.
+- [ ] Verify PR #27 exact-head Python + Android CI, merge only green,
+      confirm post-merge `main` build and APK road-asset audit.

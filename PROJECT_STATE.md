@@ -211,3 +211,16 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
   original unverified review ZIP and genuine human-survey photos remain outside repository.
 - Production approved speed and sign coordinate counts both ZERO; Kotlin SHA pins EMPTY;
   driver alerts BLOCKED; Phase 4 IN PROGRESS, Phase 5 NOT STARTED. PR #26 CI pending.
+
+
+## Phase 11 PR #27 — private sign-photo minimization (2026-11-15)
+- Base main b644689762c0eb3d5d1397867965f8bb6ccd8b21 from merged PR #26; verified successful Android main CI 43668415558; no open PR at task start.
+- Tightened scripts/package_field_evidence.py: ZIP can never be written anywhere
+  under Git checkout, and verified photo members must match exactly those
+  referenced by sign evidence (even if SHA256SUMS are recomputed). Manifest
+  approval-key injection blocked by exact key list and size caps applied.
+- Tightened scripts/review_road_field_evidence.py to reject observations
+  purporting to occur more than five minutes into the future.
+- Original UNVERIFIED review ZIP and independent GPS/photo/legal source
+  evidence remain external, not in Git/APK. Verified sign coordinates ZERO,
+  legal speed records ZERO, Android approved DB SHA list EMPTY. CI pending.
