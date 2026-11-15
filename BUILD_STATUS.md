@@ -220,3 +220,14 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Python evidence reviewer, synthetic unittest fixture and documentation changed. No new dependencies, Kotlin source, SDK, APK road assets or production database.
 - **Do not claim this change accepted until exact final branch SHA Python/SQLite and Android assembleDebug/testDebugUnitTest/lintDebug/APK audit succeed.**
 - Genuine approved legal speed observations and physical sign GPS coordinates remain 0; Android trusted SHA pin allowlist empty; alerts BLOCKED.
+
+
+## 2026-11-15 — PR #32 GPX-quality gate verified and merged
+
+- Python/SQLite 130/130 PASS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43679448917.
+- Android PR-head :app:assembleDebug :app:testDebugUnitTest :app:lintDebug and APK road asset audit SUCCESS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43679448978.
+- Merge commit 4f009ac16735acae35c4f8d0bd1aa8c958a8ff2a; post-merge Android CI SUCCESS: https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43679593826.
+- Downloaded audited main APK: app-debug.apk 60,301,524 B SHA256 7e2d24316f90a92e8d23a9228a639b333b473a8929ab59f715a84234ee3ab487; ZIP CRC PASS. Outer CI debug artifact 33,473,019 B SHA256 ca21cbfb114bf268dce9b53bd755b7972e4a4c8322e9e630ffcde75c4b25d55b.
+- Main road-asset audit outer ZIP 7,897 B SHA256 f3bd457d7c19f371a29a40adaf698286c60eb4f5dfe719d803df5334df5ff3d9; inner ZIP 8,953 B SHA256 a2d76fee329512c7ee71cde096436e96de01ddbc28bc12f33a9ec3f746beb8b3, CRC PASS, 13/13 SHA256SUMS PASS.
+- Five experimental/synthetic map assets only; no real road speed/sign database, .pbf/.geojson/.csv or res/raw assets. Full paths and shapes in `docs/ROAD_INTELLIGENCE_PR32_VERIFIED_GPX_FIX_AUDIT.md`. This is not device field acceptance.
+- Real legal/survey approvals remain 0/0; Android SHA pins EMPTY; warnings BLOCKED.
