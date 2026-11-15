@@ -184,3 +184,10 @@
 - For candidate road LineStrings, require stored bounding coordinates to match actual geometry extrema within 1e-8 degrees; merely containing geometry is insufficient.
 - For physical-sign point and road RTree entries, replace 0.001-degree discrepancy acceptance with float32-ULP-aware comparison to canonical SQLite coordinates. Normal SQLite outward rounding remains supported.
 - Add four synthetic-only regression tests; no production approvals, legal speeds, surveyed sign coordinates, Android resources or dependencies added.
+
+
+## 2026-11-15 — GPX fix metadata cannot silently corroborate road sign positions
+
+- The optional GPX 1.1 evidence supplement now requires mandatory root producer/version fields, and validates optional per-point fix, satellite-count and HDOP metadata when present.
+- A declared `fix=none`, insufficient satellites or poor HDOP is unusable for matching a sign GPS observation even if timestamp and WGS84 coordinate match exactly.
+- Tests use synthetic-only GNSS packet fixtures, preserving valid GPS match and dependency on independent human review. No physical coordinates/speeds, APK assets, SQLite release, new dependency or Android approval pin.
