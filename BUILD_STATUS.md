@@ -197,3 +197,9 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
   post-merge main CI must pass before recording completion.
 - No real approved legal speed, no approved surveyed sign coordinate;
   driver speed alerts remain BLOCKED.
+
+
+## 2026-11-15 — Phase 11 spatial candidate audit branch (CI pending)
+- Baseline main 525d3a5a1d58a68005a5e6b7a1d13ec75187a889; earlier successful Python/SQLite run #43671707381, Android PR run #43671707388, and post-merge Android run #43671814457 were checked through GitHub jobs.
+- New work changes Python candidate audit and synthetic tests only. New PR-head Python/SQLite, Android assemble/JUnit/lint and APK resource scan are not yet verified; do NOT report success before GitHub Actions completes.
+- Android SHA trusted pins remain empty; no real speed/sign SQLite, surveyed GPS-sign coordinates, production alarm activation or new Android asset committed.
