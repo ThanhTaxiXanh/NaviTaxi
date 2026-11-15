@@ -292,3 +292,12 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - New isolated `phase-11/photo-exif-time-gps-consistency` branch adds pure-Python bounded TIFF/JPEG EXIF inspection of original private photo bytes. Timezone-aware DateTimeOriginal/OffsetTimeOriginal and reported camera GPS coordinates, **when present**, must not contradict the separately supplied physical sign WGS84/time claim.
 - Five additional synthetic-only test methods cover matched EXIF, inconsistent time, inconsistent EXIF GPS despite matching GPX, unknown timezone, and malformed/duplicate EXIF. Final branch CI, Android lint/build/APK scan and merge acceptance are PENDING.
 - EXIF is editable and does not prove an original image, true GPS fix, accuracy, reviewer, street position or law. Geofabrik speed/sign tags remain UNVERIFIED; 0 approved legal speed limits, 0 approved surveyed physical sign GPS coordinates, 0 Android SHA pins and driver alerts BLOCKED. Phase 4 IN PROGRESS; Phase 5 NOT STARTED.
+
+
+## 2026-11-15 — PR #34 photo EXIF validation merged and audited
+
+- PR #34 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/34 MERGED into main `d7032bb2f774499c1c95376b1cb63a6785231d61`.
+- Full Python/SQLite **135/135 PASS**, run https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43685525932; Android PR-head assemble/unit/lint/APK scan SUCCESS, run https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43685525912.
+- Post-merge main Android CI SUCCESS run https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43685630989. Direct post-merge ZIP/APK inspection: CRC PASS, SHA256SUMS 13/13 PASS, 5 synthetic geographic assets, no real road-speed or sign DB.
+- Verified APK internal paths, source code class/lines, file sizes, SHA-256, PMTiles binary structure and repeatable archive commands: `docs/ROAD_INTELLIGENCE_PR34_VERIFIED_EXIF_AUDIT.md`.
+- Real speed legal approval 0; physical roadside sign WGS84 approved 0; Android SHA pins empty; alarms BLOCKED, Phase 4 IN PROGRESS, Phase 5 NOT STARTED. EXIF consistency remains only mechanical.
