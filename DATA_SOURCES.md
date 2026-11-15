@@ -154,3 +154,11 @@ A data source's URL and license must be recorded before its content can be shipp
 - No new real speed or physical sign dataset acquired. Source reference remains the 2026-11-12 Geofabrik Vietnam PBF (332,558,874 bytes; SHA-256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed; ODbL-1.0 © OpenStreetMap contributors).
 - The independently SHA-pinned 2026-11-12 review ZIP remains external (SHA-256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c). OSM 811 sign-tag and 44,472 speed-tag way records are all UNVERIFIED.
 - Official GPX 1.1 schema: https://www.topografix.com/gpx/1/1/ . It specifies WGS84, mandatory root creator/version and optional fix/sat/hdop fields. Synthetic GPX fixtures test only mechanical self-consistency; no real survey bytes are imported, no source promoted to legal evidence.
+
+
+## 2026-11-15 — source JPEG EXIF technical format only
+
+- EXIF metadata conventions from CIPA standard https://cipa.jp/std/documents/e/DC-X010-2017.pdf; TIFF/Exif tags used: IFD pointer 0x8769, GPSInfo 0x8825, DateTimeOriginal 0x9003, OffsetTimeOriginal 0x9011 and GPS latitude/longitude ref and rationals. This is a parser reference, NOT a source of verified sign coordinates or applicable legal speed limits.
+- Synthetic private-memory JPEG/EXIF tests use invented coordinates and dates only. No genuine photograph, GPX, private coordinates or PBF added to Git/APK.
+- Geofabrik Vietnam PBF 2026-11-12 remains external 332,558,874 bytes SHA-256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed; ODbL-1.0 © OpenStreetMap contributors. Existing external unverified worklist ZIP SHA-256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c.
+- 44,472 OSM speed-tagged ways and 811 sign-tag objects remain UNVERIFIED, with approved legal speeds and surveyed sign coordinates both ZERO.
