@@ -1,0 +1,385 @@
+#!/usr/bin/env python3
+"""Audit independent field/legal EVIDENCE PACKETS; NEVER approve driver alerts.
+
+Inputs are a SHA256-pinned, unverified OSM review ZIP and separately collected
+observations. Passing means only mechanically complete for HUMAN review.
+Neither source tags nor this script can approve a production SQLite database.
+"""
+from __future__ import annotations
+
+import argparse
+import csv
+from datetime import date, datetime, timedelta, timezone
+import hashlib
+import io
+import json
+import math
+from pathlib import Path
+import re
+from urllib.parse import urlsplit
+import zipfile
+
+from build_road_review_queues import SIGN_COLUMNS, SPEED_COLUMNS, SIGN_FILE, SPEED_FILE
+
+FORMAT = "navitaxi-independent-road-evidence/v1"
+QUEUE_FORMAT = "navitaxi-road-intelligence-review-queues/v1"
+SHA = re.compile(r"[0-9a-f]{64}\Z")
+SIGN_CODE = re.compile(r"(?:[A-Z]{1,3})\.[0-9]{2,3}[a-z]?\Z")
+MAX_FILE = 80_000_000
+MAX_ROWS = 100_000
+EXPECTED_ZIP = {
+    "manifest.json", SIGN_FILE, SPEED_FILE, "REVIEW_INSTRUCTIONS.txt", "SHA256SUMS"
+}
+
+
+class EvidenceError(ValueError):
+    pass
+
+
+def digest(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def require(condition: bool, reason: str):
+    if not condition:
+        raise EvidenceError(reason)
+
+
+def read_json(data: bytes):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            require(key not in result, "DUPLICATE_JSON_KEY")
+            result[key] = value
+        return result
+    try:
+        return json.loads(data.decode("utf-8"), object_pairs_hook=unique,
+                          parse_constant=lambda _: require(False, "NONFINITE_JSON"))
+    except (UnicodeError, ValueError, TypeError) as exc:
+        raise EvidenceError("INVALID_JSON: " + str(exc)) from exc
+
+
+def https(url, official=False):
+    if not isinstance(url, str):
+        return False
+    p = urlsplit(url)
+    host = (p.hostname or "").lower()
+    if p.scheme != "https" or not host or p.username or p.password or p.fragment:
+        return False
+    if host in ("openstreetmap.org", "www.openstreetmap.org") or host.endswith(".openstreetmap.org"):
+        return False  # OSM reference is not independent field/legal evidence
+    return not official or host.endswith(".gov.vn") or host == "vbpl.vn"
+
+
+def date_at(value):
+    require(isinstance(value, str), "MISSING_DATE")
+    try:
+        result = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise EvidenceError("INVALID_TIMESTAMP") from exc
+    require(result.tzinfo is not None and result.utcoffset() is not None,
+            "TIMESTAMP_REQUIRES_TIMEZONE")
+    require(datetime(2020, 1, 1, tzinfo=timezone.utc) <= result.astimezone(timezone.utc)
+            <= datetime.now(timezone.utc) + timedelta(days=1), "TIMESTAMP_OUT_OF_RANGE")
+    return result
+
+
+def number(value, low, high):
+    require(type(value) in (int, float) and math.isfinite(value)
+            and low <= value <= high, "INVALID_NUMERIC_RANGE")
+    return float(value)
+
+
+def point(lat, lon):
+    number(lat, -90, 90)
+    number(lon, -180, 180)
+
+
+def line_geometry(raw):
+    require(isinstance(raw, dict) and raw.get("type") == "LineString",
+            "MISSING_INDEPENDENT_LINESTRING")
+    coords = raw.get("coordinates")
+    require(isinstance(coords, list) and 2 <= len(coords) <= 20000,
+            "INVALID_ROAD_GEOMETRY")
+    for p in coords:
+        require(isinstance(p, list) and len(p) == 2, "INVALID_ROAD_VERTEX")
+        point(p[1], p[0])
+    require(any(p != coords[0] for p in coords[1:]), "DEGENERATE_ROAD_GEOMETRY")
+    return coords
+
+
+def geometry_digest(raw):
+    return digest(json.dumps(raw, ensure_ascii=False, sort_keys=True,
+                             separators=(",", ":"), allow_nan=False).encode("utf-8"))
+
+
+def nearest_road_m(lat, lon, coords):
+    # Geometric plausibility only; does NOT validate the sign's legal direction.
+    cos_lat = max(0.01, math.cos(math.radians(lat)))
+    xy = [((p[0] - lon) * 111320 * cos_lat, (p[1] - lat) * 110540)
+          for p in coords]
+    smallest = float("inf")
+    for (ax, ay), (bx, by) in zip(xy, xy[1:]):
+        dx, dy = bx - ax, by - ay
+        t = max(0.0, min(1.0, -(ax * dx + ay * dy) / (dx * dx + dy * dy))) if (dx or dy) else 0
+        smallest = min(smallest, math.hypot(ax + t * dx, ay + t * dy))
+    return smallest
+
+
+def read_queue(archive_path: Path, expected_sha: str):
+    require(SHA.fullmatch(expected_sha) is not None, "INVALID_EXPECTED_ZIP_SHA256")
+    require(archive_path.is_file() and archive_path.stat().st_size <= MAX_FILE,
+            "MISSING_OR_OVERSIZED_REVIEW_ZIP")
+    require(digest(archive_path.read_bytes()) == expected_sha, "REVIEW_ZIP_SHA256_MISMATCH")
+    with zipfile.ZipFile(archive_path) as z:
+        require(set(z.namelist()) == EXPECTED_ZIP
+                and len(z.infolist()) == len(EXPECTED_ZIP), "UNEXPECTED_REVIEW_ZIP_MEMBERS")
+        for info in z.infolist():
+            require(info.file_size <= MAX_FILE and info.compress_type == zipfile.ZIP_DEFLATED,
+                    "UNSAFE_REVIEW_ZIP_MEMBER")
+        data = {name: z.read(name) for name in EXPECTED_ZIP}
+    manifest = read_json(data["manifest.json"])
+    require(isinstance(manifest, dict) and manifest.get("format") == QUEUE_FORMAT
+            and manifest.get("status") == "REVIEW_QUEUES_ONLY_NO_FIELD_OR_LEGAL_APPROVAL",
+            "NOT_AN_UNVERIFIED_REVIEW_QUEUE")
+    for key in ("independently_approved_speed_records",
+                "independently_surveyed_physical_signs", "survey_field_entries_present"):
+        require(manifest.get(key) == 0, "QUEUE_CLAIMS_APPROVAL")
+    require(manifest.get("driver_alerts_allowed") is False
+            and manifest.get("review_packets_are_not_production_databases") is True,
+            "QUEUE_CLAIMS_DRIVER_ALERTS")
+    checks = {}
+    for entry in data["SHA256SUMS"].decode("utf-8").splitlines():
+        parts = entry.split("  ", 1)
+        require(len(parts) == 2 and parts[1] in EXPECTED_ZIP - {"SHA256SUMS"}
+                and parts[1] not in checks, "INVALID_SHA256SUMS")
+        checks[parts[1]] = parts[0]
+    require(set(checks) == EXPECTED_ZIP - {"SHA256SUMS"}, "MISSING_SHA256SUMS")
+    for name, checksum in checks.items():
+        require(SHA.fullmatch(checksum) is not None and digest(data[name]) == checksum,
+                "REVIEW_MEMBER_CHECKSUM_MISMATCH")
+        if name in (SIGN_FILE, SPEED_FILE, "REVIEW_INSTRUCTIONS.txt"):
+            entry = manifest.get("files", {}).get(name, {})
+            require(entry.get("sha256") == checksum and
+                    entry.get("size_bytes") == len(data[name]),
+                    "REVIEW_MANIFEST_MISMATCH")
+
+    def rows(name, columns, count_key):
+        require(len(data[name]) <= MAX_FILE, "OVERSIZED_CSV")
+        stream = io.StringIO(data[name].decode("utf-8"), newline="")
+        reader = csv.DictReader(stream, strict=True)
+        require(tuple(reader.fieldnames or ()) == columns, "REVIEW_CSV_SCHEMA_MISMATCH")
+        result = {}
+        for row in reader:
+            require(len(result) < MAX_ROWS and None not in row, "INVALID_REVIEW_CSV_ROW")
+            review_id = row["review_id"]
+            require(review_id not in result, "DUPLICATE_REVIEW_ID")
+            require(row["review_status"] == "PENDING_INDEPENDENT_REVIEW"
+                    and row["independently_verified"] == "FALSE"
+                    and row["driver_alert_approved"] == "FALSE",
+                    "QUEUE_HAS_UNTRUSTED_APPROVAL_FLAGS")
+            require(all(not row[k] for k in columns if k.endswith("_BLANK")),
+                    "QUEUE_PREPOPULATED_SURVEY_FIELDS")
+            result[review_id] = row
+        require(len(result) == manifest.get("review_rows", {}).get(count_key),
+                "QUEUE_CSV_COUNT_MISMATCH")
+        return result
+
+    return manifest, digest(data["manifest.json"]), (
+        rows(SIGN_FILE, SIGN_COLUMNS, "signs"),
+        rows(SPEED_FILE, SPEED_COLUMNS, "speed_ways"),
+    )
+
+
+def survey_photo(photo: dict, root: Path):
+    require(isinstance(photo, dict), "PHOTO_REQUIRED")
+    rel = photo.get("path")
+    require(isinstance(rel, str) and rel and not Path(rel).is_absolute()
+            and ".." not in Path(rel).parts, "UNSAFE_PHOTO_PATH")
+    p = root / rel
+    require(p.resolve().is_relative_to(root.resolve()) and p.is_file()
+            and not p.is_symlink() and p.stat().st_size <= 30_000_000,
+            "MISSING_OR_UNSAFE_PHOTO")
+    raw = p.read_bytes()
+    mime = photo.get("mime_type")
+    require((mime == "image/jpeg" and raw.startswith(b"\xff\xd8")
+             or mime == "image/png" and raw.startswith(b"\x89PNG\r\n\x1a\n")),
+            "PHOTO_FORMAT_MISMATCH")
+    require(isinstance(photo.get("license"), str) and photo["license"].strip()
+            and photo["license"].lower() != "unknown", "MISSING_PHOTO_LICENSE")
+    require(SHA.fullmatch(str(photo.get("sha256"))) is not None
+            and digest(raw) == photo["sha256"], "PHOTO_SHA256_MISMATCH")
+
+
+def independent_record(item, source, kind, photo_root):
+    require(isinstance(item, dict), "INVALID_EVIDENCE_RECORD")
+    require(item.get("review_id") in source, "UNKNOWN_SOURCE_REVIEW_ID")
+    require(https(item.get("evidence_uri")), "INDEPENDENT_EVIDENCE_URI_REQUIRED")
+    collector = item.get("surveyor" if kind == "sign" else "inspector")
+    reviewer = item.get("reviewer")
+    require(isinstance(collector, str) and collector.strip()
+            and isinstance(reviewer, str) and reviewer.strip()
+            and collector.strip().casefold() != reviewer.strip().casefold(),
+            "REQUIRES_DIFFERENT_HUMAN_REVIEWER")
+    observed = date_at(item.get("observed_at"))
+    checked = date_at(item.get("reviewed_at"))
+    require(checked >= observed, "REVIEW_PREDATES_OBSERVATION")
+    geom = item.get("road_geometry")
+    coords = line_geometry(geom)
+    require(https(item.get("road_geometry_evidence_uri")),
+            "INDEPENDENT_GEOMETRY_SOURCE_REQUIRED")
+    require(item.get("road_geometry_sha256") == geometry_digest(geom),
+            "ROAD_GEOMETRY_HASH_MISMATCH")
+    require(item.get("direction") in ("forward", "backward"),
+            "EXPLICIT_TRAVEL_DIRECTION_REQUIRED")
+    if kind == "sign":
+        require(SIGN_CODE.fullmatch(str(item.get("sign_code"))) is not None,
+                "SPECIFIC_VIETNAM_SIGN_CODE_REQUIRED")
+        require(type(item.get("related_osm_way_id")) is int
+                and item["related_osm_way_id"] > 0, "RELATED_WAY_REQUIRED")
+        lat = number(item.get("latitude"), -90, 90)
+        lon = number(item.get("longitude"), -180, 180)
+        number(item.get("gps_accuracy_m"), 0.01, 25)
+        number(item.get("bearing_degrees"), 0, 359.999999)
+        require(nearest_road_m(lat, lon, coords) <= 100,
+                "SURVEY_POINT_NOT_NEAR_RELATED_ROAD")
+        survey_photo(item.get("photo"), photo_root)
+        require(item.get("road_direction_evidence_note")
+                and len(str(item["road_direction_evidence_note"]).strip()) >= 12,
+                "NO_DIRECTION_APPLICABILITY_EVIDENCE")
+    else:
+        require(type(item.get("speed_kmh")) is int
+                and 1 <= item["speed_kmh"] <= 250, "EXPLICIT_SPEED_KMH_REQUIRED")
+        require(type(item.get("osm_way_id")) is int and
+                str(item["osm_way_id"]) == source[item["review_id"]]["osm_way_id"],
+                "WAY_ID_MISMATCH")
+        require(isinstance(item.get("vehicle_class"), str)
+                and item["vehicle_class"] in ("motorcar", "bus", "hgv", "motorcycle",
+                                             "taxi", "special_vehicle"),
+                "VEHICLE_CLASS_REQUIRED")
+        context = item.get("road_context")
+        require(isinstance(context, dict) and
+                type(context.get("inside_built_up_area")) is bool and
+                context.get("posted_sign_status") in ("observed", "none_confirmed") and
+                context.get("carriageway_type") in ("divided", "undivided", "oneway"),
+                "ROAD_CONTEXT_NOT_INDEPENDENTLY_DETERMINED")
+        legal = item.get("legal")
+        require(isinstance(legal, dict) and https(legal.get("official_uri"), official=True)
+                and isinstance(legal.get("document_id"), str)
+                and legal["document_id"].strip()
+                and isinstance(legal.get("clause"), str) and legal["clause"].strip()
+                and isinstance(legal.get("applicability_note"), str)
+                and len(legal["applicability_note"].strip()) >= 20,
+                "INCOMPLETE_LEGAL_PROVENANCE")
+        try:
+            effective = date.fromisoformat(legal["effective_from"])
+        except (ValueError, TypeError, KeyError) as exc:
+            raise EvidenceError("LEGAL_EFFECTIVE_DATE_REQUIRED") from exc
+        require(effective <= observed.date(), "LAW_NOT_EFFECTIVE_AT_OBSERVATION")
+        require(date_at(legal.get("checked_at")) <= checked, "LEGAL_CHECK_AFTER_REVIEW")
+        require(isinstance(item.get("sign_evidence_ids"), list)
+                and all(isinstance(s, str) and s for s in item["sign_evidence_ids"]),
+                "SIGN_RELEVANCE_LIST_REQUIRED")
+        require(item.get("sign_applicability_note")
+                and len(str(item["sign_applicability_note"]).strip()) >= 12,
+                "SIGN_APPLICABILITY_EXPLANATION_REQUIRED")
+
+
+def audit_evidence(queue_zip: Path, expected_queue_sha: str, evidence: Path,
+                   photo_root: Path) -> dict:
+    manifest, manifest_sha, (sign_rows, speed_rows) = read_queue(
+        queue_zip, expected_queue_sha)
+    require(evidence.is_file() and evidence.stat().st_size <= MAX_FILE,
+            "INVALID_EVIDENCE_INPUT")
+    evidence_raw = evidence.read_bytes()
+    packet = read_json(evidence_raw)
+    require(isinstance(packet, dict) and packet.get("format") == FORMAT
+            and packet.get("source_review_manifest_sha256") == manifest_sha,
+            "UNBOUND_EVIDENCE_PACKET")
+    report = {
+        "format": "navitaxi-evidence-mechanical-audit/v1",
+        "queue_zip_sha256": expected_queue_sha,
+        "queue_manifest_sha256": manifest_sha,
+        "evidence_sha256": digest(evidence_raw),
+        "queue_records": manifest["review_rows"],
+        "results": [],
+        "ready_for_independent_human_review": 0,
+        "rejected_records": 0,
+        "approved_legal_speeds": 0,
+        "approved_physical_sign_coordinates": 0,
+        "driver_alerts_allowed": False,
+        "production_database_authorized": False,
+        "warning": "Complete paperwork is not proof of legal applicability or a surveyed sign.",
+    }
+    seen = set()
+    signs_seen = []
+    speeds_seen = set()
+    for kind, rows, key in (("sign", sign_rows, "sign_evidence"),
+                             ("speed", speed_rows, "speed_evidence")):
+        entries = packet.get(key)
+        require(isinstance(entries, list) and len(entries) <= MAX_ROWS,
+                "EVIDENCE_ARRAY_REQUIRED")
+        for item in entries:
+            review_id = item.get("review_id") if isinstance(item, dict) else None
+            reasons = []
+            try:
+                require(isinstance(review_id, str) and (kind, review_id) not in seen,
+                        "DUPLICATE_OR_MISSING_EVIDENCE_ID")
+                seen.add((kind, review_id))
+                independent_record(item, rows, kind, photo_root)
+                if kind == "sign":
+                    coord = (item["latitude"], item["longitude"], item["sign_code"])
+                    # Reject a repeated physical position/code, even if OSM IDs differ.
+                    require(not any(code == coord[2] and math.hypot(
+                        (lat - coord[0]) * 110540,
+                        (lon - coord[1]) * 111320 * math.cos(math.radians(lat))) < 3
+                        for lat, lon, code in signs_seen),
+                        "POSSIBLE_DUPLICATE_PHYSICAL_SIGN")
+                    signs_seen.append(coord)
+                else:
+                    k = (item["osm_way_id"], item["direction"], item["vehicle_class"])
+                    require(k not in speeds_seen, "CONFLICTING_SPEED_SCOPE")
+                    speeds_seen.add(k)
+            except (EvidenceError, KeyError, TypeError) as exc:
+                reasons.append(str(exc) or "INVALID_PACKET")
+            accepted = not reasons
+            report["results"].append({
+                "kind": kind, "review_id": review_id,
+                "status": "READY_FOR_HUMAN_REVIEW" if accepted else "REJECTED",
+                "reasons": reasons,
+                "legally_or_physically_verified": False,
+            })
+            report["ready_for_independent_human_review" if accepted
+                   else "rejected_records"] += 1
+    report["status"] = ("REJECTED" if report["rejected_records"]
+                        else "HUMAN_REVIEW_REQUIRED")
+    return report
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--review-zip", type=Path, required=True)
+    ap.add_argument("--expected-review-zip-sha256", required=True)
+    ap.add_argument("--evidence", type=Path, required=True)
+    ap.add_argument("--photo-root", type=Path, required=True)
+    ap.add_argument("--out", type=Path, required=True)
+    args = ap.parse_args()
+    out = args.out.resolve()
+    require(not any(x in str(out) for x in (
+        "/app/src/main/assets/", "/app/src/main/res/",
+        "/data/road_intelligence/")), "AUDIT_REPORT_CANNOT_BECOME_APP_DATA")
+    report = audit_evidence(args.review_zip, args.expected_review_zip_sha256,
+                            args.evidence, args.photo_root)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with out.open("x", encoding="utf-8") as f:
+        json.dump(report, f, indent=2, ensure_ascii=False, sort_keys=True)
+        f.write("\n")
+    print(json.dumps({k: report[k] for k in (
+        "status", "ready_for_independent_human_review", "rejected_records",
+        "approved_legal_speeds", "approved_physical_sign_coordinates",
+        "driver_alerts_allowed")}, indent=2))
+    raise SystemExit(2 if report["rejected_records"] else 0)
+
+
+if __name__ == "__main__":
+    main()
