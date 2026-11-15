@@ -225,3 +225,12 @@
 - [x] PR #30 merged into main b9dcd82d4ce20ab684c1946e6a3c10e13c74eb22; post-merge Android SUCCESS, run 43678522872.
 - [x] Retrieved post-merge APK + audit ZIP, validated CRC and 13/13 SHA256SUMS; only five synthetic map assets, no physical sign/speed DB; full report: `docs/ROAD_INTELLIGENCE_PR30_VERIFIED_SPATIAL_AUDIT.md`.
 - [ ] Field-collect genuine sign WGS84/photo/GPX and independent vehicle/direction/date legal review; no app alerts without separately approved SHA.
+
+
+## 2026-11-15 — GNSS-fix quality in original GPX field corroboration
+
+- [x] Rechecked main `663468b61eea989c2ea506045cbc2698261416fa`, PR list empty and post-PR #31 Android CI SUCCESS.
+- [x] Added GPX 1.1 root `version` and `creator` checks; reject malformed optional fix/satellite/HDOP fields; prevent explicit poor-quality GNSS samples from matching physical roadside sign claims.
+- [x] Added five synthetic-only regression methods with multiple malformed/positive subcases. Missing optional GPX quality remains unknown and does not attest surveying accuracy or a device.
+- [ ] Confirm complete Python/SQLite suite, Android assemble/test/lint, APK asset audit on final branch commit; merge only if all mandatory checks SUCCESS.
+- [ ] After merge, recheck main CI and exact APK asset inventory; maintain 0 legal speed/sign approvals.
