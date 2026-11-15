@@ -217,3 +217,11 @@
 - [ ] Verify new branch Python/SQLite and Android build/unit/lint/APK asset CI on exact final commit; merge only when required checks pass.
 - [ ] After merge verify main Android CI and audit APK artifacts, recording exact paths/sizes/hashes if available.
 - [ ] Obtain independent original field GPS/GPX, survey accuracy, sign photos, legal clauses, road direction and vehicle review; keep all approvals at zero.
+
+
+## Verified acceptance — PR #30 (2026-11-15)
+- [x] Complete Python/SQLite: 125/125 PASS, run 43678384469.
+- [x] Android PR-head compile, unit, lint, APK road scan: SUCCESS, run 43678384457.
+- [x] PR #30 merged into main b9dcd82d4ce20ab684c1946e6a3c10e13c74eb22; post-merge Android SUCCESS, run 43678522872.
+- [x] Retrieved post-merge APK + audit ZIP, validated CRC and 13/13 SHA256SUMS; only five synthetic map assets, no physical sign/speed DB; full report: `docs/ROAD_INTELLIGENCE_PR30_VERIFIED_SPATIAL_AUDIT.md`.
+- [ ] Field-collect genuine sign WGS84/photo/GPX and independent vehicle/direction/date legal review; no app alerts without separately approved SHA.
