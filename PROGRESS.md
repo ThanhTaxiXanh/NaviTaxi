@@ -185,3 +185,12 @@
 
 - [x] PR #27 code-head 5c780fa2: Python **105/105 PASS** (43669326250), Android build/unit/lint/APK inventory **PASS** (43669326276).
 - [ ] Verify final documentation-head CI, merge cleanly and check main post-merge Android run.
+
+
+## Phase 11 PR #28 — optional GPX GNSS/source-photo triangulation
+- [x] Confirmed main SHA 58a683fb and its successful post-merge Android CI 43669559896 before changes.
+- [x] Correlates actual supplied GPX 1.1 point/time to physically reported sign coordinate and observation; hashes/paths/symlink components/DTD/point counts bounded, no GNSS point invented.
+- [x] Private archived `tracks/` member contains original GPX bytes and is restricted to explicitly cited sign tracks, with source + photo replay and complete SHA256.
+- [x] Added synthetic-only GPS/GPX regressions; Python/SQLite **114/114 PASS** at run 43670317025, PR head 9c934fa7.
+- [ ] Confirm Android same-head build/JUnit/lint/APK scan, then final documentation-head full CI, merge green PR #28 and post-merge main CI.
+- [ ] Obtain actual independently collected sign coordinates/photos/GPX, road geometry and law applicability for speed by direction/date/vehicle; verified counts remain zero.

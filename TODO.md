@@ -124,3 +124,10 @@
   timestamped legal speed clauses and vehicle/segment applicability.
   **0** source records are approved; **811** OSM sign-tag objects and
   **44,472** raw speed ways remain unverified reference candidates.
+
+
+## PR #28 GPX corroboration and next independent field tasks
+- Verify final PR #28 Python/SQLite and Android compile/unit/lint/APK asset scan on exact head; squash merge only if both completed SUCCESS, verify post-merge main.
+- Actual field survey workflow: export original GPX 1.1 sensor points with timezone-aware timestamps; preserve unchanged source bytes/checksum and original photo; independently authenticate device, true sign code, location, bearing, direction and time.
+- Cross-check each claimed posted speed with applicable Vietnamese legal document/clauses and road segment/vehicle/time; never infer `speed_kmh` from OSM; no driver alert until independent road DB review and Android trusted digest release.
+- Reference backlog remains 811 OSM traffic sign-tag objects and 44,472 speed-tagged road ways; **zero** physical sign points or legal speeds approved.
