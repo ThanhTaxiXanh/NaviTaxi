@@ -60,3 +60,9 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 - The field survey and speed legal-review CSV queues preserve OSM original contributor tag values, objects and source provenance and are derived from `vietnam-261112.osm.pbf` (ODbL 1.0, © OpenStreetMap contributors). Retain attribution and comply with ODbL database sharing/derivative conditions when distributing review archives.
 - Python script and regression tests use only standard-library modules and existing audit script. No additional paid service, map tile host, proprietary dataset, API or phone GPS permissions are introduced.
 - Law research URL links to the official Government Gazette and creates NO automatic reproduction or relicensing of legal text. Legal applicability requires separate review.
+
+
+## Phase 11 field/legal evidence intake
+- Validator uses Python standard library only: no new dependencies, remote billing or external service.
+- Existing OSM review ZIP remains derived from OpenStreetMap contributors under ODbL 1.0; a newly collected photo requires its own lawful provenance/license before dissemination. Photo/source licensing strings in audit packets are NOT independent license approval.
+- No new real survey photos or derived map data redistributed in this PR. Future release requires ODbL/photographic permissions and independent human approval.
