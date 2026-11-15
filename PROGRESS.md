@@ -194,3 +194,17 @@
 - [x] Added synthetic-only GPS/GPX regressions; Python/SQLite **114/114 PASS** at run 43670317025, PR head 9c934fa7.
 - [ ] Confirm Android same-head build/JUnit/lint/APK scan, then final documentation-head full CI, merge green PR #28 and post-merge main CI.
 - [ ] Obtain actual independently collected sign coordinates/photos/GPX, road geometry and law applicability for speed by direction/date/vehicle; verified counts remain zero.
+
+
+## PR #29 — independent legal speed cases per travel direction and vehicle
+- [x] Verified main f67d7c9b and successful Android CI #43670592323.
+- [x] Added separate review `case_id` for repeated source OSM ways;
+      one-way source may have 12 independent direction/class scopes maximum.
+- [x] Added all-case conflict quarantine and retained real-photo/GPX
+      sign and current-law provenance checks for every speed case.
+- [x] Added synthetic direction/class/duplicate/bounds and private ZIP
+      offline re-audit tests. No real legal speed or sign GPS point added.
+- [ ] Verify final PR #29 Python/SQLite + Android JUnit/lint/APK audit;
+      merge on both green, then verify post-merge main CI.
+- [ ] Obtain actual independent field sign photos/GPS/GPX and applicable
+      legal speed clauses for each road direction/vehicle class.

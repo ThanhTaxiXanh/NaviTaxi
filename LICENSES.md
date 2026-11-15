@@ -107,3 +107,14 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 - OSM/Geofabrik raw tagging and review queues remain © OpenStreetMap
   contributors ODbL-1.0. No GPS traces, photographs, source PBF, real
   speed/kmh entries or observed sign positions are checked into Git/Android.
+
+
+## PR #29 case-scoped speed review — data and code rights
+- Python standard library only; no new paid services, SDK libraries or
+  Android APK dependencies. Review `case_id` is metadata, not speed law.
+- Existing OpenStreetMap source and derivative worklists remain ODbL 1.0,
+  © OpenStreetMap contributors; no source map attribution is removed.
+- Actual GNSS routes and sign photographs may contain private locations,
+  individuals or plates. Independent photographer consent, GPS ownership,
+  field accuracy and governing legal texts still require human checking
+  before any sharing, archiving or production authorization.

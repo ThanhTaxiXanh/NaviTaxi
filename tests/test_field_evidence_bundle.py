@@ -116,6 +116,29 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
         with self.assertRaisesRegex(EvidenceError, "ARCHIVE_REAUDIT_MISMATCH"):
             verify(forged, sha)
 
+    def test_multiple_vehicle_direction_speed_cases_survive_offline_reaudit(self):
+        packet = deepcopy(self.fixture.packet)
+        first = packet["speed_evidence"][0]
+        first["case_id"] = "synthetic:101:taxi:forward"
+        backward = deepcopy(first)
+        backward["case_id"] = "synthetic:101:taxi:backward"
+        backward["direction"] = "backward"
+        backward["road_context"]["posted_sign_status"] = "none_confirmed"
+        backward["sign_evidence_ids"] = []
+        packet["speed_evidence"].append(backward)
+        (self.root / "packet.json").write_bytes(fixture_module.jsonbytes(packet))
+        info = self.pack()
+        checked = verify(self.archive, info["sha256"])
+        self.assertFalse(checked["driver_alerts_allowed"])
+        self.assertEqual(checked["approved_legal_speeds"], 0)
+        with zipfile.ZipFile(self.archive) as z:
+            report = json.loads(z.read(REPORT_NAME))
+        self.assertEqual(report["ready_for_independent_human_review"], 3)
+        self.assertEqual(report["rejected_records"], 0)
+        self.assertEqual([x["case_id"] for x in report["results"][1:]],
+                         [first["case_id"], backward["case_id"]])
+        self.assertFalse(report["production_database_authorized"])
+
     def test_repeated_packing_is_byte_for_byte_deterministic(self):
         a = self.pack()
         self.archive = self.root / "second-bundle.zip"

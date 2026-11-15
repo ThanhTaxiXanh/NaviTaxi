@@ -234,3 +234,21 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - The private evidence ZIP can carry exact GPX bytes under `tracks/` with independently checkable SHA256SUMS, cross-linked to sign evidence and replayed from archive. Legacy no-GPX v1 packets/bundles remain supported; a **claimed but invalid** GPX fails closed.
 - Added synthetic-only GPS track, malformed XML, tampering, malicious DTD, unrelated GPX, photo parent symlink and report-replay regressions. Python suite **114/114 PASS** on PR #28 code/docs head `9c934fa7d4f30b8f9abbfa9d033490eab9c939c0` (run 43670317025). Android same-head CI must be verified before accepting.
 - Real independently surveyed physical roadside sign coordinates **0**; legally approved road speed values **0**; original unverified Vietnam OSM review ZIP and real field GPS/photos remain outside Git/Android; Kotlin approval SHA list EMPTY, driver alerts BLOCKED. Phase 4 IN PROGRESS, Phase 5 NOT STARTED.
+
+
+## PR #29 — direction/vehicle scope separation for speed evidence
+- Verified starting `main` SHA f67d7c9bc8a8dc55db7ab1ae980005d692321ce3,
+  no open PR, Android CI after PR #28 success (#43670592323).
+- Previously one speed review packet per raw OSM `review_id` prevented
+  independently assessed opposite directions and vehicle-specific legal speeds.
+  Now optional unique `case_id` separates up to 12 scopes per source OSM way
+  while keeping original source binding and all legal/sign/geometry checks.
+- All repeated `case_id` and way/direction/vehicle conflicts quarantined;
+  repeated source must use explicit case IDs, legacy single speed per source
+  remains backward-compatible. Synthetic-only tests and original ZIP
+  offline replay extended.
+- Reference-only backlog: 811 OSM sign-tag objects and 44,472 speed way
+  candidates, **unverified**. Approved site-specific legal speeds ZERO,
+  surveyed physical sign coordinates ZERO, Android SHA approval pins EMPTY,
+  driver alerts BLOCKED. Phase 4 IN PROGRESS; Phase 5 NOT STARTED.
+- CI on exact PR #29 head and post-merge main acceptance pending.

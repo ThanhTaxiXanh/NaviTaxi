@@ -195,3 +195,37 @@ unavailable. All approved speed and sign counts stay at ZERO.
   the audit never calculates sign coordinates from OSM tags or the GPX itself.
   It never infers an enforceable speed limit from `maxspeed`. All
   Android trusted speed/sign counts and driver alerts remain zero/false.
+
+
+## Vehicle/direction-specific legal-speed review cases (PR #29, 2026-11-15)
+An OSM source `review_id` identifies ONE reference way, not one enforceable
+speed for every travel direction or vehicle type. A single way may now carry
+up to **12 separate human speed-review cases**: 2 directions (`forward`,
+`backward`) × 6 supported classes (`motorcar`, `bus`, `hgv`,
+`motorcycle`, `taxi`, `special_vehicle`).
+
+When more than one speed case cites the same source `review_id`,
+**every** such entry MUST have a unique explicit `case_id` consisting of
+1–128 ASCII letters, digits, periods, underscores, colons, at signs or
+hyphens. Example synthetic-only IDs:
+`synthetic:way101:taxi:forward` and `synthetic:way101:taxi:backward`.
+A legacy packet with ONE case per source way remains supported: missing
+`case_id` is equivalent to its source `review_id` only in this case.
+
+Each separately assessed record must still supply an explicitly reviewed
+legal `speed_kmh`, distinct direction and class, actual road/observation
+evidence, official law document and clause/effective dates, inspector and
+independent reviewer, and relevant surveyed sign evidence. The reported
+`case_id` identifies the review, NEVER a production road database record.
+
+Duplicate or conflicting `case_id`, (OSM way, direction, vehicle class)
+scope, ambiguous repeated raw source with omitted case IDs, and >12
+cases per source are quarantined for **all implicated records**. The
+reviewer cannot choose the earlier row as implicitly trusted.
+Backward-travel speeds cannot cite a forward-directed sign as proof.
+`posted_sign_status=none_confirmed` is survey paperwork, NOT proof
+of an absent sign. No `maxspeed` from OSM is promoted to legal law.
+
+Source OSM candidate counts (811 sign objects, 44,472 tagged ways) remain
+UNVERIFIED. Mechanically ready means HUMAN REVIEW REQUIRED; no legal speed
+or physical roadside sign point is approved and alerts remain blocked.

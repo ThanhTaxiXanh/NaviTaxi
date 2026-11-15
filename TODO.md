@@ -131,3 +131,16 @@
 - Actual field survey workflow: export original GPX 1.1 sensor points with timezone-aware timestamps; preserve unchanged source bytes/checksum and original photo; independently authenticate device, true sign code, location, bearing, direction and time.
 - Cross-check each claimed posted speed with applicable Vietnamese legal document/clauses and road segment/vehicle/time; never infer `speed_kmh` from OSM; no driver alert until independent road DB review and Android trusted digest release.
 - Reference backlog remains 811 OSM traffic sign-tag objects and 44,472 speed-tagged road ways; **zero** physical sign points or legal speeds approved.
+
+
+## PR #29 — direction and vehicle-class legal speed review gates
+- Require Python/SQLite and Android build/JUnit/lint/APK audit SUCCESS at
+  the final PR head; squash merge only then, verify post-merge main CI.
+- For every direction and applicable taxi/vehicle class, obtain independently
+  observed geometry, posted-sign WGS84/bearing/photo/GPX if available,
+  legally governing clause/effective dates, and separate inspector/reviewer.
+  Preserve original OSM `review_id` and use distinct `case_id` where
+  the same way needs several independent legal reviews.
+- Never infer a speed from raw OSM `maxspeed` or treat an OSM sign node
+  as an actual surveyed coordinate. The 2026-11-12 review queue remains
+  unverified and outside Git. Android trusted SHA pins remain empty.

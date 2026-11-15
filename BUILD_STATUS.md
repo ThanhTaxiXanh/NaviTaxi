@@ -186,3 +186,14 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Real 2026-11-12 OSM reference: 811 unverified sign-tag objects, 44,472
   raw speed-tag ways; 0 GPS sign coordinates or legal km/h verified independently.
 - No Kotlin/Android app, assets, SQLite trusted pin or paid service added.
+
+
+## PR #29 — legal speed evidence per direction/vehicle
+- Verified base main f67d7c9bc8a8dc55db7ab1ae980005d692321ce3 and
+  post-merge Android CI #43670592323 SUCCESS at task start.
+- Python evidence audit and tests only; no Android source, speed database,
+  APK road assets or Kotlin database digest allowlist modifications.
+- Final PR-head Python/SQLite, Android build/JUnit/lint/APK audit and
+  post-merge main CI must pass before recording completion.
+- No real approved legal speed, no approved surveyed sign coordinate;
+  driver speed alerts remain BLOCKED.

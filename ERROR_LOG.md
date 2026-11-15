@@ -155,3 +155,16 @@
   assessments are not available for actual field evidence processing.
   CI code-head Python 114/114 PASS at run 43670317025; Android and final
   merge acceptance to be verified.
+
+
+## 2026-11-15 — OSM source way / legal-speed scope conflation, PR #29
+- Previous reviewer `seen` and source queue row-count limit permitted
+  at most one legal speed paper per OSM way `review_id`, incorrectly
+  blocking independent direction/vehicle legal assessments of that way.
+- Source review remains unique for signs, but speed source references
+  may repeat with independent explicit review case IDs and scope bounds.
+  Same-scope contradictions, case-ID reuse and missing explicit IDs
+  quarantine ALL implicated submissions; never trust earlier row order.
+- Still unresolved: no genuine surveyed physical signs, GPS/photo/GPX,
+  human-checked legal clause/vehicle applicability, or production-approved
+  SQLite. The new case ID is only a paperwork identifier, not verified law.
