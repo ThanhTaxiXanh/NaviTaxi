@@ -112,3 +112,9 @@
 - Current official speed research link: 74/2026/VBHN-TT-BXD (15 September 2026), **not** an auto-applied legal maxspeed table. Real sign/speed approvals still zero.
 
 - Review queue implementation PR #22 merged to main `39cf3185ee91239c21ec0f6d57246e79ed006bf6` after final-head Python (60/60, 43660068830) and Android build/lint (43660068771) PASS. Real-snapshot CSV survey and speed legal-review packet remains UNVERIFIED; no driver alerts enabled.
+
+
+## 0.4.6-dev — Phase 11 field/legal evidence intake gate (pending CI)
+- New scripts/review_road_field_evidence.py validates SHA256-pinned survey review ZIP and separately collected photo/GPS/road/legal evidence with fail-closed detailed record reasons; no OSM-derived legal speed or sign point.
+- Synthetic negative tests and docs/ROAD_INTELLIGENCE_EVIDENCE_INTAKE.md added; no new Android runtime code, APK data, third-party packages or allowlist pins.
+- Every mechanical result explicitly has zero approved records and disabled driver alerts. CI/merge not yet claimed.
