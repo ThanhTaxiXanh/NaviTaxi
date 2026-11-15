@@ -60,3 +60,25 @@ An attacker who controls both the external expected hash and ZIP can falsify the
     python3 -m unittest discover -s tests -v
 
 Automated tests create synthetic XML/OSM references, fake legal identities and a synthetic JPEG signature only. They cover deterministic ZIP checksums, required source pins, missing images, path traversal, photo-symlink refusal, nonempty review, tampered image bytes, external digest mismatch, and a forged report with recomputed SHA256SUMS. They never create real legal speeds or surveyed sign coordinates.
+
+
+## PR #27 — mandatory private-photo minimization and real survey timestamps
+- The source tree is an absolute privacy exclusion: NEVER set `--out` anywhere
+  under the repository (including `build/`, `docs/`, `tests/`, untracked
+  directories or Android resources); also NEVER within `--photo-root`.
+  A private archive should live outside Git in an access-controlled directory.
+- In `--verify`, the photo member set MUST equal the set of original
+  `sign_evidence[*].photo.path` names inside the archived JSON. A surplus
+  photo is rejected even when the attacker has recomputed `MANIFEST.json`,
+  `SHA256SUMS` and the outer ZIP SHA-256. This prevents a ZIP with unrelated
+  private photographs from being falsely passed as a complete sign survey.
+- Exact manifest and file-entry key sets are required; unexpected fields
+  claiming authority cannot be hidden in those records. The evidence JSON
+  is limited to 80 MB and each photograph to 30 MB before ZIP extraction.
+- Field survey and legal observation/review timestamps cannot be more than
+  five minutes ahead of the auditor's UTC clock (minimal device clock-skew
+  allowance, **not** evidence of real observation). This tolerance does
+  not authenticate GPS, EXIF, photo subject, sign placement, legal clause
+  or human independence.
+- All checks remain a HUMAN-REVIEW-ONLY screen, with zero legally approved
+  speed records, zero verified roadside sign coordinates and zero alerts.

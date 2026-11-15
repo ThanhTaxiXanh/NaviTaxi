@@ -121,3 +121,19 @@
   prove physical roadside sign, sign orientation, copyright, independent
   reviewer identity or actual law applicability. No approval authority added.
 - Private raw photo bytes must not enter GitHub CI, repository or APK.
+
+
+## 2026-11-15 field-photo provenance / ZIP packaging risks (PR #27)
+- PR #26 portable ZIP verifier checked declared files/hashes but permitted
+  additional photo files if an archive author recomputed checksums and
+  provided a matching outer digest. Surplus private photos could therefore
+  be included without any sign survey referencing them.
+- ZIP creation could target arbitrary untracked folders inside Git checkout,
+  exposing photos to accidental commits. New checks prohibit all Git-tree
+  output and require exact sign-photo references.
+- Field observation timestamps previously tolerated one day in the future;
+  tightened to a five-minute clock-skew window. Timestamp string and
+  photo content still require independent real-world validation.
+- Await PR #27 CI; never claim real sign/speed approval or enable alerts.
+
+- Synthetic adversity tests `test_extra_private_photo_rejected_even_if_checksums_are_resigned`, `test_archive_must_not_be_created_anywhere_in_git_workspace`, `test_future_physical_sign_and_speed_claims_are_rejected` PASS on PR #27 code-head CI; Python 105/105 PASS (43669326250), Android PASS (43669326276). No current unresolved implementation regression on this head; final docs-head and main CI still to be confirmed.

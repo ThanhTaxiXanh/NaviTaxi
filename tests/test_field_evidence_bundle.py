@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from package_field_evidence import (
     EVIDENCE_NAME, FORMAT, META_NAME, REPORT_NAME, SOURCE_NAME, STATUS,
-    SUMS_NAME, EvidenceError, package, verify,
+    SUMS_NAME, EvidenceError, canonical_json, digest, package, verify, zip_entry,
 )
 import test_road_field_evidence as fixture_module
 
@@ -136,7 +136,7 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
     def test_never_put_archive_inside_photo_root(self):
         self.archive = self.fixture.photo_root / "unapproved-evidence.zip"
         with self.assertRaisesRegex(
-                EvidenceError, "BUNDLE_MUST_NOT_ENTER_APP_OR_PHOTO_ROOT"):
+                EvidenceError, "BUNDLE_MUST_NOT_ENTER_REPO_OR_PHOTO_ROOT"):
             self.pack()
         self.assertFalse(self.archive.exists())
 
@@ -204,6 +204,64 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
         new_sha = hashlib.sha256(forged.read_bytes()).hexdigest()
         with self.assertRaisesRegex(EvidenceError, "ARCHIVE_REAUDIT_MISMATCH"):
             verify(forged, new_sha)
+
+    def test_archive_must_not_be_created_anywhere_in_git_workspace(self):
+        # Private GPS/photo evidence in build/, docs/ or any untracked tree
+        # can be accidentally committed even though Android has no DB pin.
+        for directory in ("build", "docs", "tests"):
+            with self.subTest(directory=directory):
+                self.archive = ROOT / directory / "private-field-evidence.zip"
+                with self.assertRaisesRegex(
+                        EvidenceError, "BUNDLE_MUST_NOT_ENTER_REPO_OR_PHOTO_ROOT"):
+                    self.pack()
+                self.assertFalse(self.archive.exists())
+
+    def _repack_with_correct_internal_checksums(self, extra=None, meta_extra=None):
+        """Adversarial archives: attacker can recompute every inner checksum."""
+        with zipfile.ZipFile(self.archive) as archive:
+            entries = {name: archive.read(name) for name in archive.namelist()}
+        if extra is not None:
+            entries.update(extra)
+        manifest = json.loads(entries[META_NAME])
+        manifest["entries"] = [
+            {"path": name, "sha256": digest(blob), "size_bytes": len(blob)}
+            for name, blob in sorted(entries.items())
+            if name not in (META_NAME, SUMS_NAME)
+        ]
+        manifest["photo_file_count"] = sum(
+            name.startswith("photos/") for name in entries
+        )
+        if meta_extra is not None:
+            manifest.update(meta_extra)
+        entries[META_NAME] = canonical_json(manifest)
+        entries[SUMS_NAME] = "".join(
+            digest(blob) + "  " + name + "\n"
+            for name, blob in sorted(entries.items()) if name != SUMS_NAME
+        ).encode("utf-8")
+        forged = self.root / "resigned-private-evidence.zip"
+        with zipfile.ZipFile(forged, "w") as destination:
+            for name, blob in sorted(entries.items()):
+                destination.writestr(zip_entry(name), blob)
+        return forged, digest(forged.read_bytes())
+
+    def test_extra_private_photo_rejected_even_if_checksums_are_resigned(self):
+        self.pack()
+        forged, checksum = self._repack_with_correct_internal_checksums(
+            extra={"photos/unreferenced-survey.jpg": b"\xff\xd8PRIVATE-NOT-IN-REVIEW"}
+        )
+        with self.assertRaisesRegex(
+                EvidenceError, "UNREFERENCED_OR_MISSING_SIGN_PHOTO"):
+            verify(forged, checksum)
+
+    def test_bundle_manifest_cannot_claim_new_authority_flags(self):
+        self.pack()
+        forged, checksum = self._repack_with_correct_internal_checksums(
+            meta_extra={"approved_new_speed_alerts": True}
+        )
+        with self.assertRaisesRegex(
+                EvidenceError, "BUNDLE_CANNOT_CLAIM_PRODUCTION_APPROVAL"):
+            verify(forged, checksum)
+
 
 
 if __name__ == "__main__":

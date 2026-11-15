@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import hashlib
 import json
 from pathlib import Path
@@ -364,6 +364,29 @@ class FieldEvidenceTests(unittest.TestCase):
         packet["speed_evidence"].append(deepcopy(packet["speed_evidence"][0]))
         with self.assertRaisesRegex(EvidenceError, "EVIDENCE_ARRAY_EXCEEDS_SOURCE_QUEUE"):
             self.audit(packet)
+
+    def test_future_physical_sign_and_speed_claims_are_rejected(self):
+        # A form cannot assert photographs, speed observations or legal
+        # review already occurred an hour into the future.
+        future = (datetime.now(timezone.utc) + timedelta(hours=2)).isoformat()
+        for kind, key in (("sign", "sign_evidence"), ("speed", "speed_evidence")):
+            with self.subTest(kind=kind):
+                packet = deepcopy(self.packet)
+                packet["sign_evidence"] = (
+                    packet["sign_evidence"] if kind == "sign" else [])
+                packet["speed_evidence"] = (
+                    packet["speed_evidence"] if kind == "speed" else [])
+                item = packet[key][0]
+                item["observed_at"] = future
+                item["reviewed_at"] = future
+                if kind == "speed":
+                    item["legal"]["checked_at"] = future
+                result = self.audit(packet)
+                self.assertEqual(result["rejected_records"], 1)
+                self.assertIn("TIMESTAMP_OUT_OF_RANGE",
+                              result["results"][0]["reasons"])
+                self.assertFalse(result["driver_alerts_allowed"])
+
 
 
 if __name__ == "__main__":

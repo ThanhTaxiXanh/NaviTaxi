@@ -93,3 +93,17 @@ A data source's URL and license must be recorded before its content can be shipp
 - ZIP structure documented at docs/ROAD_INTELLIGENCE_PRIVATE_EVIDENCE_BUNDLE.md.
   Per-member photo/packet/source SHA256, external whole-ZIP SHA and independent
   re-audit are tamper-evidence measures, not real-world truth or approval.
+
+
+## PR #27: referenced-photo-only evidence bundles
+- Existing UNVERIFIED Geofabrik Vietnam OSM PBF SHA256
+  ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed
+  (2026-11-12, ODbL-1.0 © OpenStreetMap contributors) remains external.
+- Original queue ZIP expected SHA256
+  26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c
+  is likewise outside Git/APK. No real source photos/GPS measurements
+  have been inserted into tests, scripts, assets, or any approval pin.
+- Portable ZIP inventory now must match photographic evidence IDs exactly:
+  every archived photo path comes from the independent packet's
+  sign_evidence[*].photo.path; unreferenced photo content fails review.
+  Valid-looking filenames/checksums do not establish genuine field surveying.

@@ -137,3 +137,16 @@
 - 15 synthetic-only tests added. Real review queue, original private photos
   and independent legal sign/speed decisions NOT included; no Android pins,
   APK assets, approved speed records or alerts added.
+
+
+## 0.4.9-dev — Phase 11 field-sign photo evidence minimization (PR #27, CI pending)
+- Only the photographs explicitly cited by `sign_evidence` may appear in a
+  portable private sign/speed evidence ZIP; extraneous images are refused even
+  if internal SHA256SUMS and the whole archive SHA are re-computed.
+- No output ZIP anywhere in Git checkout; strict top-level manifest keys and
+  input-size caps. Survey/legal timestamps cannot claim more than 5 minutes
+  into the future. Adversarial tests use synthetic GPS/photos only.
+- No actual physical sign points, enforceable speed values, production DB,
+  approved digest or Android driver alert added.
+
+- PR #27 code-head CI recorded: Python/SQLite 105/105 PASS (43669326250); Android assemble/unit/lint/APK audit PASS (43669326276). No real legal/physical approval or Android pin modifications.

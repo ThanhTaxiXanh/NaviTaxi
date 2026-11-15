@@ -84,3 +84,13 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
   legal author permission, independent provenance, explicit retention and
   controlled access; SHA256 and a supplied license string cannot grant rights.
   Neither GitHub CI nor the Android APK receives real photos or legal speeds.
+
+
+## PR #27 private physical-sign photo minimization
+- No new external code/data licenses or paid APIs. Python standard library
+  alone; no new Android dependencies, third-party map layers or telemetry.
+- Portable bundles cannot contain photographs not cited by a source field
+  sign observation, cannot be written into the repository and must remain
+  restricted private evidence. Still independently verify photographer
+  rights, personal-data consent and ODbL reuse requirements before any
+  release or transmission. SHA256 does not grant redistribution rights.
