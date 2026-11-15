@@ -248,8 +248,8 @@ def survey_photo(photo: dict, root: Path):
     require(isinstance(photo, dict), "PHOTO_REQUIRED")
     raw = private_evidence_bytes(root, photo.get("path"), 30_000_000, "PHOTO")
     mime = photo.get("mime_type")
-    require((mime == "image/jpeg" and raw.startswith(b"\\xff\\xd8")
-             or mime == "image/png" and raw.startswith(b"\\x89PNG\\r\\n\\x1a\\n")),
+    require((mime == "image/jpeg" and raw.startswith(b"\xff\xd8")
+             or mime == "image/png" and raw.startswith(b"\x89PNG\r\n\x1a\n")),
             "PHOTO_FORMAT_MISMATCH")
     require(isinstance(photo.get("license"), str) and photo["license"].strip()
             and photo["license"].lower() != "unknown", "MISSING_PHOTO_LICENSE")
