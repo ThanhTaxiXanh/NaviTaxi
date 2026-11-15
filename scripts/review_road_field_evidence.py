@@ -104,7 +104,7 @@ def date_at(value):
     require(result.tzinfo is not None and result.utcoffset() is not None,
             "TIMESTAMP_REQUIRES_TIMEZONE")
     require(datetime(2020, 1, 1, tzinfo=timezone.utc) <= result.astimezone(timezone.utc)
-            <= datetime.now(timezone.utc) + timedelta(days=1), "TIMESTAMP_OUT_OF_RANGE")
+            <= datetime.now(timezone.utc) + timedelta(minutes=5), "TIMESTAMP_OUT_OF_RANGE")
     return result
 
 
