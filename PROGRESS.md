@@ -128,3 +128,12 @@
 - [x] Real-source inventory is OUTSIDE the APK; 5 synthetic APK assets remain, no `road_intelligence.db`.
 - [x] PR #20 OSM source reference QA gate merged as 68b8f3ba8cea94e982397e9797d8da3b9f348a35; Python 51/51 PASS 43625497790 and Android assemble/unit/lint PASS 43625497719.
 - [ ] Independent legal/field approval, surveyed sign positions, 34-province production map catalog, real speed warnings and on-road tests remain BLOCKED.
+
+
+## Phase 4 independent sign survey / speed legal review backlog (PR #22)
+- [x] Inspected real 2026-11-12 Vietnam OSM 44,472 speed-tag ways and 811 sign-tag objects with original PBF/JSONL provenance and SHA256.
+- [x] Implemented source-hash-gated CSV review queues, no guessed sign points or speed_kmh, separate blank survey/legal/reviewer columns, ODbL attribution, ZIP + SHA256SUMS and formula-injection sanitization.
+- [x] Created independent real-source review archive 1,170,686 B (SHA256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c) with 811 sign candidates, 44,472 speed candidates, approvals FALSE.
+- [x] Added synthetic-only Python tests and CI artifact generation. Code-head Python/SQLite SUCCESS 43659839106; Android build/unit/lint SUCCESS 43659839088.
+- [ ] PR #22 final docs-head CI and merge.
+- [ ] Actual field survey sign points, independent legal-road-speed match, legally approved source DB: **BLOCKED** (zero verified records; no on-road driver alerts).

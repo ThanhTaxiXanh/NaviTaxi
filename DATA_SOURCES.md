@@ -58,3 +58,11 @@ A data source's URL and license must be recorded before its content can be shipp
 - Measured from actual PBF: 44,472 OSM ways with raw speed-related tags; 810 OSM sign-tagged nodes (all with syntactically valid OSM source coordinates), 1 tagged way, 0 sign relations. Exactly 68 speed ways include conditional tags; 276 advisory.
 - OSM coordinates are only mapping nodes, NOT field-surveyed positions of actual roadside signs; a sign-tagged way is not a physical sign point. OSM `maxspeed=50` etc are tag strings, NOT date/class/direction-specific legal road speed limits. Real independently verified driver speed/sign records remain **0**.
 - Detailed inventory, exact paths, artifacts and legal blockers: docs/VIETNAM_OSM_SPEED_SIGN_AUDIT_2026_11_12.md.
+
+
+## Independent sign/speed worklist evidence (2026-11-15)
+- Real snapshot source from prior PR: `vietnam-261112.osm.pbf` size 332,558,874 B SHA256 `ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed`, Geofabrik OSM ODbL 1.0. OSM tag inventory is reference-only.
+- New field review queues (PR #22): 811 sign objects = 810 original OSM nodes with **unverified** source coordinates and 1 sign-tagged way with NO physical point. Type triage 654 unknown, 156 specific raw tagged nodes, one way. Source speed-tag way list 44,472 (41,356 plain integers NOT legally verified, 2,924 lacking main maxspeed, 192 directional/conditional/advisory).
+- Verified physical sign points: 0. Verified legally enforceable site-specific speed records: 0. Survey dates/GPS accuracy/bearing, photographic evidence SHA, reviewer, vehicle class, direction and legal clauses are intentionally blank.
+- Official Government Gazette reference for HUMAN legal research: https://congbao.chinhphu.vn/van-ban/van-ban-hop-nhat-so-74-2026-vbhn-tt-bxd-470578/68818.htm (`74/2026/VBHN-TT-BXD`, dated 2026-09-15). It consolidates regulations on speed/safe distance, **not** a certified map of where any OSM speed tag applies. Original `38/2024/TT-BGTVT` effective 2025-01-01; verify later changes and context.
+- Real CSV files remain outside Android APK, not a source DB and not approved for navigation alerts.

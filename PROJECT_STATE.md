@@ -163,3 +163,13 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - New `scripts/audit_osm_reference_quality.py` checks manifest vs exact file lengths/SHA256, source receipt, raw tag semantics, uniqueness, WGS84 node coords, NULL sign-way physical coordinate, unverified status and input tampering. Never computes legally approved speeds or field-surveyed signs.
 - Actual OSM reference evidence remains: 44,472 speed-tagged ways, 810 sign-tagged nodes with original OSM point, 1 sign way; 0 independent legal speed validations, 0 physical sign surveys. Snapshot SHA256 `ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed`. Raw PBF is not shipped in APK.
 - Phase 4 IN PROGRESS: approved lawful speed/sign data, on-device field surveys and province map release catalog are still BLOCKED. Phase 5 NOT STARTED. No driver warnings permitted from OSM reference-only data.
+
+
+## Phase 4 OSM field survey and legal speed review queues — PR #22 (2026-11-15)
+- Branch `phase-4/field-survey-review-queues`, PR https://github.com/ThanhTaxiXanh/NaviTaxi/pull/22.
+- New `scripts/build_road_review_queues.py` consumes separately hash-audited OSM speed/sign JSONL; emits 811 physical-sign REVIEW candidates (810 OSM nodes and one way with no coordinate) and 44,472 legal-speed REVIEW way IDs, **not** speed limits or surveyed signs.
+- Original snapshot SHA: `ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed`. Review ZIP on this session's mounted real reference source: 1,170,686 bytes, SHA256 `26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c`; internal SHA256SUMS verified.
+- Sign triage: 654 unknown type, 156 specific raw tags requiring field survey, one way with no physical point. Speed way triage: 41,356 plain numeric raw tags (still not legal), 2,924 without main maxspeed, 192 conditional/directional/advisory tags.
+- Both CSVs leave all reviewer, position survey and legal-evidence columns blank; all statuses PENDING_INDEPENDENT_REVIEW, approvals FALSE. This does not create/import `road_intelligence.db`, or modify the empty Android source approval pin list.
+- Current legal research reference: official Government Gazette `74/2026/VBHN-TT-BXD` dated 2026-09-15, https://congbao.chinhphu.vn/van-ban/van-ban-hop-nhat-so-74-2026-vbhn-tt-bxd-470578/68818.htm ; NOT a per-road speed mapping or automatic rule.
+- Code-head CI after one test expectation correction: Python/SQLite 43659839106 SUCCESS; Android assemble/unit/lint/APK 43659839088 SUCCESS. Final PR docs-head acceptance/merge pending. Phase 4 IN PROGRESS; Phase 5 NOT STARTED; 0 real driver-approved speeds and field-signed signs.

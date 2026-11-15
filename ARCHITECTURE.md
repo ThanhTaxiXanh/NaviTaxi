@@ -73,3 +73,9 @@ OSM is ODbL: display attribution and ensure compatible redistribution obligation
 - Mandatory exact local source SHA256 before/after reading, HTTPS provenance URI, ODbL attribution, immutable JSONL/manifest/ZIP; output cannot be placed inside app/src/main/assets, res or canonical approved road DB.
 - All maxspeed tags remain verbatim reference strings (including conditional/mph); sign nodes only retain unverified original OSM coordinates, sign ways/relations have NULL physical positions. No OSM-derived alerts or assumed legal speed.
 - Release chain remains separate: actual source approval and field validation -> scripts/review_road_candidate.py -> independently code-reviewed RoadDatabaseApprovalGate pin per domain. This pipeline DOES NOT cross that trust boundary.
+
+
+## Phase 4 road legal and physical-sign evidence review boundary
+- `scripts/build_road_review_queues.py` consumes already SHA256/row/count-validated source-only OSM reference JSONL and optionally original acquisition receipt. It produces field-survey/sign-type and legal-speed review CSVs plus a manifest and checksummed ZIP, not an Android database.
+- A sign OSM node coordinate is labelled UNVERIFIED; sign way/relation has null position. No legal `speed_kmh` or point is inferred from raw tags. Reviewers must supply physical survey evidence, legal citation, vehicle/direction/date.
+- Output CSV uses formula-safe spreadsheet text and independently checked review queue hashes. No output into `app/src/main/assets`, `res` or `data/road_intelligence`; production `RoadDatabaseApprovalGate` list remains empty.

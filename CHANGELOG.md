@@ -102,3 +102,11 @@
 ## 0.4.5-dev accepted source-audit handoff
 - PR #20 merged as `68b8f3ba8cea94e982397e9797d8da3b9f348a35` after final-head 51/51 Python tests PASS 43625497790 and Android build/unit/lint + APK audit PASS 43625497719.
 - The published source evaluation contains original Geofabrik Vietnam 2026-11-12 PBF SHA and measured raw `maxspeed` / `traffic_sign` candidates. Strict quality analysis still permits **ZERO** legally verified speed or physically surveyed sign alerts.
+
+
+## 0.4.5-dev – field survey and legal speed review worklists (PR #22)
+- Added `scripts/build_road_review_queues.py` to generate manifest/SHA256SUMS-pinned OSM legal-speed and field-sign review CSV queues from already audited reference, without production approval.
+- Preserves original OSM type/ID/version, raw tag strings and unverified node coordinates; sign-tag way/relation never gains fabricated coordinates. All survey/legal/evidence inputs blank and no driver alerts.
+- Hardened CSV raw string cells against spreadsheet formula injection and blocked output into Android/verified road assets.
+- New synthetic-only regressions and CI review evidence; Python 43659839106 and Android 43659839088 PASS on code head after correcting one negative-test expectation.
+- Current official speed research link: 74/2026/VBHN-TT-BXD (15 September 2026), **not** an auto-applied legal maxspeed table. Real sign/speed approvals still zero.
