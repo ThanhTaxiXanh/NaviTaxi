@@ -26,8 +26,12 @@ FORMAT = "navitaxi-independent-road-evidence/v1"
 QUEUE_FORMAT = "navitaxi-road-intelligence-review-queues/v1"
 SHA = re.compile(r"[0-9a-f]{64}\Z")
 SIGN_CODE = re.compile(r"(?:[A-Z]{1,3})\.[0-9]{2,3}[a-z]?\Z")
+# A source OSM way may legitimately require separate human speed reviews for
+# forward/backward travel and each of the six supported vehicle classes.
+SPEED_CASE_ID = re.compile(r"[A-Za-z0-9._:@/-]{1,128}\Z")
 MAX_FILE = 80_000_000
 MAX_ROWS = 100_000
+MAX_SPEED_SCOPES_PER_WAY = 12  # 2 travel directions x 6 vehicle classes
 MAX_GPX_BYTES = 2_000_000
 MAX_GPX_POINTS = 10_000
 GPS_TIME_WINDOW_SECONDS = 15 * 60
@@ -421,22 +425,34 @@ def audit_evidence(queue_zip: Path, expected_queue_sha: str, evidence: Path,
         "production_database_authorized": False,
         "warning": "Complete paperwork is not proof of legal applicability or a surveyed sign.",
     }
-    seen = set()
+    seen_signs = set()
     signs_seen = []
     speeds_seen = set()
     for kind, rows, key in (("sign", sign_rows, "sign_evidence"),
                              ("speed", speed_rows, "speed_evidence")):
         entries = packet.get(key)
+        # Speed entries are a reviewed (way, direction, vehicle) scope, not
+        # one packet per raw OSM way. Do not multiply the sign-photo queue.
+        limit = len(rows) * (MAX_SPEED_SCOPES_PER_WAY if kind == "speed" else 1)
         require(isinstance(entries, list) and
-                len(entries) <= min(MAX_ROWS, len(rows)),
+                len(entries) <= min(MAX_ROWS, limit),
                 "EVIDENCE_ARRAY_EXCEEDS_SOURCE_QUEUE")
         for item in entries:
             review_id = item.get("review_id") if isinstance(item, dict) else None
+            case_id = (item.get("case_id", review_id) if
+                       kind == "speed" and isinstance(item, dict) else None)
             reasons = []
             try:
-                require(isinstance(review_id, str) and (kind, review_id) not in seen,
+                require(isinstance(review_id, str) and review_id,
                         "DUPLICATE_OR_MISSING_EVIDENCE_ID")
-                seen.add((kind, review_id))
+                if kind == "sign":
+                    require(review_id not in seen_signs,
+                            "DUPLICATE_OR_MISSING_EVIDENCE_ID")
+                    seen_signs.add(review_id)
+                else:
+                    require(isinstance(case_id, str) and
+                            SPEED_CASE_ID.fullmatch(case_id) is not None,
+                            "INVALID_SPEED_CASE_ID")
                 independent_record(item, rows, kind, photo_root)
                 if kind == "sign":
                     coord = (item["latitude"], item["longitude"], item["sign_code"])
@@ -454,12 +470,17 @@ def audit_evidence(queue_zip: Path, expected_queue_sha: str, evidence: Path,
             except (EvidenceError, KeyError, TypeError) as exc:
                 reasons.append(str(exc) or "INVALID_PACKET")
             accepted = not reasons
-            report["results"].append({
+            finding = {
                 "kind": kind, "review_id": review_id,
                 "status": "READY_FOR_HUMAN_REVIEW" if accepted else "REJECTED",
                 "reasons": reasons,
                 "legally_or_physically_verified": False,
-            })
+            }
+            if kind == "speed":
+                # A unique review case is NOT a unique OSM reference row.
+                # The audit is still non-authorizing and needs human review.
+                finding["case_id"] = case_id
+            report["results"].append(finding)
             report["ready_for_independent_human_review" if accepted
                    else "rejected_records"] += 1
     # A later contradictory or duplicate record invalidates ALL potentially
@@ -476,6 +497,8 @@ def audit_evidence(queue_zip: Path, expected_queue_sha: str, evidence: Path,
     by_id, by_photo = {}, {}
     sign_pairs = []
     speed_scope = {}
+    speed_cases = {}
+    speed_sources = {}
     sign_results = [x for x in report["results"] if x["kind"] == "sign"]
     speed_results = [x for x in report["results"] if x["kind"] == "speed"]
     for item, result in zip(packet["sign_evidence"], sign_results):
@@ -514,10 +537,30 @@ def audit_evidence(queue_zip: Path, expected_queue_sha: str, evidence: Path,
     for item, result in zip(packet["speed_evidence"], speed_results):
         if not isinstance(item, dict):
             continue
+        source_id = item.get("review_id")
+        if isinstance(source_id, str):
+            speed_sources.setdefault(source_id, []).append((item, result))
+        case_id = result.get("case_id")
+        if isinstance(case_id, str):
+            speed_cases.setdefault(case_id, []).append(result)
         scope = (item.get("osm_way_id"), item.get("direction"),
                  item.get("vehicle_class"))
         if type(scope[0]) is int and all(isinstance(v, str) for v in scope[1:]):
             speed_scope.setdefault(scope, []).append(result)
+    for group in speed_cases.values():
+        if len(group) > 1:
+            for result in group:
+                quarantine(result, "DUPLICATE_SPEED_CASE_ID")
+    for source_id, group in speed_sources.items():
+        if len(group) > MAX_SPEED_SCOPES_PER_WAY:
+            for _, result in group:
+                quarantine(result, "TOO_MANY_SPEED_SCOPES_PER_SOURCE_WAY")
+        if len(group) > 1 and any(
+                not isinstance(item.get("case_id"), str) for item, _ in group):
+            # Do not allow implicit legacy case IDs when a source OSM way
+            # is split into multiple independently reviewed legal scopes.
+            for _, result in group:
+                quarantine(result, "REPEATED_SPEED_SOURCE_REQUIRES_CASE_ID")
     for group in speed_scope.values():
         if len(group) > 1:
             for result in group:
