@@ -352,6 +352,39 @@ def audit_evidence(queue_zip: Path, expected_queue_sha: str, evidence: Path,
             })
             report["ready_for_independent_human_review" if accepted
                    else "rejected_records"] += 1
+    # Speed paperwork must never cite an unreviewed, unrelated or differently
+    # directed sign merely by writing its ID into a text array.
+    sign_packets = {
+        item.get("review_id"): item for item in packet["sign_evidence"]
+        if isinstance(item, dict) and isinstance(item.get("review_id"), str)
+    }
+    sign_ready = {
+        result["review_id"] for result in report["results"]
+        if result["kind"] == "sign" and result["status"] == "READY_FOR_HUMAN_REVIEW"
+    }
+    speed_results = [result for result in report["results"]
+                     if result["kind"] == "speed"]
+    for result, item in zip(speed_results, packet["speed_evidence"]):
+        if result["status"] != "READY_FOR_HUMAN_REVIEW":
+            continue
+        ids = item["sign_evidence_ids"]
+        posted = item["road_context"]["posted_sign_status"]
+        problem = None
+        if posted == "none_confirmed" and ids:
+            problem = "NO_POSTED_SIGN_BUT_SIGN_IDS_PRESENT"
+        elif posted == "observed":
+            if not ids or len(set(ids)) != len(ids):
+                problem = "OBSERVED_SIGN_IDS_REQUIRED_UNIQUE"
+            elif any(s not in sign_ready or s not in sign_packets
+                     or sign_packets[s].get("related_osm_way_id") != item["osm_way_id"]
+                     or sign_packets[s].get("direction") != item["direction"]
+                     for s in ids):
+                problem = "SIGN_EVIDENCE_MISSING_REJECTED_OR_WRONG_ROAD_DIRECTION"
+        if problem:
+            result["status"] = "REJECTED"
+            result["reasons"].append(problem)
+            report["ready_for_independent_human_review"] -= 1
+            report["rejected_records"] += 1
     report["status"] = ("REJECTED" if report["rejected_records"]
                         else "HUMAN_REVIEW_REQUIRED")
     return report
