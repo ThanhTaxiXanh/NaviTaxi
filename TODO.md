@@ -96,6 +96,6 @@
 
 
 ## After conflict quarantine PR #25
-- Confirm synthetic Python tests, APK audit and Android build on PR head, fix regressions, and merge only on green checks; verify post-merge main.
+- Code-head Python and Android gates passed on PR #25; verify final docs-head CI and merge only on green checks; confirm post-merge main.
 - Obtain legitimate field measurement/photographic evidence of sign position, orientation and actual applicability, plus legal vehicle/date/direction review. No OSM tag is approved by this tooling.
 - Keep 811 OSM sign objects, 44,472 OSM speed-way review entries in UNVERIFIED state, all real verified counts ZERO, release pins empty, Phase 4 IN PROGRESS and Phase 11 alerts BLOCKED.

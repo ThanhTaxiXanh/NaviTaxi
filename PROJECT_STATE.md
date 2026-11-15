@@ -195,4 +195,4 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Base main SHA 5c950d31147b672bc025ecbaf9b1c6b5222e7032; implementation branch phase-11/conflicting-field-evidence-quarantine.
 - Any repeated sign source ID, physical sign point/code or image SHA now quarantines all implicated entries and related speed reviews. Matching sign/road geometry and observation order required; legal date checks hardened.
 - Exact archived OSM reference queues remain unapproved: 811 sign candidates, 44,472 speed ways, zero verified real speeds/sign locations. RoadIntelligenceApprovedPins still empty and Android driver alerts blocked.
-- PR #25 Python/Android acceptance and post-merge main CI must be verified before claiming completion.
+- PR #25 code-head 2a7a537bb9a445e3b5eb52af68fbf68ea399f1ad: Python/SQLite 86/86 PASS run 43664352656 and Android build/unit/lint/APK scan PASS run 43664352607. Final documentation-head and post-merge main CI must still be checked.

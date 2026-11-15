@@ -123,4 +123,4 @@
 ## 0.4.7-dev — Phase 11 conflict quarantine (PR #25, pending CI)
 - Field evidence audit now quarantines BOTH sides of duplicate sign/source/photo/point and conflicting speed scope; speed reviews citing any rejected sign are also rejected.
 - Sign and speed must have the same independent geometry SHA, correct direction/way and chronological field survey. Law review checks cannot predate observation; optional legal expiry rejected if obsolete.
-- Reject untrusted driver/DB approval fields in input; no real GPS/speed data or Android trust pins added. New synthetic regressions; CI to be verified.
+- Reject untrusted driver/DB approval fields in input; no real GPS/speed data or Android trust pins added. New synthetic regressions; code-head Python 86/86 PASS (run 43664352656) and Android build/unit/lint/APK audit PASS (43664352607). Final documentation-head CI pending.

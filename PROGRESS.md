@@ -152,5 +152,6 @@
 - [x] Read real source intake and synthetic tests; confirmed base main 5c950d31 and Android main CI 43662265877 success.
 - [x] Implemented all-entry conflict quarantine for duplicate sign IDs, near-duplicate point/code, reused photo SHA; rejects dependent speed reviews and geometry/direction/time contradictions.
 - [x] Refused incoming database/driver approval claims and prematurely dated legal review; added synthetic negative regressions.
-- [ ] Verify PR #25 full Python/SQLite + Android CI; merge only on PASS and confirm main CI.
+- [x] Code-head 2a7a537b Python/SQLite 86/86 PASS (43664352656), Android build/JUnit/lint/APK scan PASS (43664352607).
+- [ ] Verify final documentation-head CI; merge only if both pass and confirm post-merge main CI.
 - [ ] Original real queue ZIP and independent survey photos remain external; zero field-verified physical sign coordinates and zero accepted site-specific legal speeds.

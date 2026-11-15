@@ -108,4 +108,4 @@
 ## 2026-11-15 PR #25 detected evidence-review ambiguity
 - Prior audit marked the first sign record READY_FOR_HUMAN_REVIEW even after a later record reused its photographic SHA or location. That first record could leave an erroneous sense of review readiness, even though runtime Android approvals remained empty.
 - Changed to quarantine ALL conflicting sign records and speed rows referencing them. Additional geometry and sign/law observation timing consistency rules added; mechanical checks still cannot authenticate real GPS/photos, field applicability, independent reviewer identity or legal authority.
-- CI status for PR #25 to be verified; no production driver warnings authorized.
+- PR #25 code-head Python/SQLite 86/86 PASS at 43664352656 and Android build/unit/lint/APK scan PASS at 43664352607; final documentation-head and main post-merge CI pending. No production driver warnings authorized.
