@@ -135,5 +135,5 @@
 - [x] Implemented source-hash-gated CSV review queues, no guessed sign points or speed_kmh, separate blank survey/legal/reviewer columns, ODbL attribution, ZIP + SHA256SUMS and formula-injection sanitization.
 - [x] Created independent real-source review archive 1,170,686 B (SHA256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c) with 811 sign candidates, 44,472 speed candidates, approvals FALSE.
 - [x] Added synthetic-only Python tests and CI artifact generation. Code-head Python/SQLite SUCCESS 43659839106; Android build/unit/lint SUCCESS 43659839088.
-- [ ] PR #22 final docs-head CI and merge.
+- [x] PR #22 final-head Python/SQLite 60/60 PASS (43660068830), Android compile/unit/lint PASS (43660068771); MERGED as 39cf3185ee91239c21ec0f6d57246e79ed006bf6.
 - [ ] Actual field survey sign points, independent legal-road-speed match, legally approved source DB: **BLOCKED** (zero verified records; no on-road driver alerts).

@@ -95,3 +95,5 @@
 - First PR head Python CI run 43659783325 failed **one test assertion** for existing output: the generator correctly raised `ReviewQueueError` because the ZIP archive existed, but test expected only `FileExistsError`. No output was overwritten.
 - Corrected test to accept either explicit fail-closed rejection; reran full Python tests SUCCESS 43659839106, Android build/unit/lint SUCCESS 43659839088 on commit `b220ea1121fb4ee4d070cd786ffaa1ce74418627`.
 - Remaining blockers are missing true field surveys, legal applicability/vehicle class and accurate road geometry, not compilation failure. No automatic real speed, point or driver alert was added.
+
+- PR #22 final-head CI acceptance confirmed: Python 60/60 tests SUCCESS 43660068830, Android assemble/unit/lint SUCCESS 43660068771, merged main 39cf3185ee91239c21ec0f6d57246e79ed006bf6. No unresolved code/build errors from this work.

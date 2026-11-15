@@ -88,3 +88,12 @@ enabled by these CSVs or this PR. No field survey was actually performed.
 Phase 4 remains IN PROGRESS (licensed real offline packages/field/OEM proof
 not accepted); Phase 5 NOT STARTED. Phase 11 Road Intelligence alert
 functionality remains BLOCKED until legal and physical sign verification.
+
+
+## Verified implementation and real-source packet handoff (2026-11-15)
+
+- Code PR #22 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/22 merged as `39cf3185ee91239c21ec0f6d57246e79ed006bf6`.
+- Final PR head `17acfac4e3c5c035abe2748b02351f2bf038ec1b`: Python/SQLite 60 tests PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43660068830 ; Android build/JUnit/lint + APK source scan PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43660068771 .
+- Generated from the exact mounted real OSM reference-only ZIP (not downloaded again): `NaviTaxi_Vietnam_2026-11-12_Field_Sign_Speed_Review_UNVERIFIED.zip`, 1,170,686 B, SHA-256 `26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c`.
+- 811 sign review rows (654 unknown type, 156 specific tags requiring survey, 1 sign way with no point); 44,472 speed review rows (41,356 numeric raw tags, 2,924 no main tag, 192 conditional/directional/advisory).
+- All survey evidence fields blank; no legal-speed approval, no independently surveyed physical sign coordinates, no smartphone/GPS survey, no Android alert activation or real offline map release.
