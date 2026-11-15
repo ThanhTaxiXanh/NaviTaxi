@@ -254,3 +254,12 @@
 - [ ] Check full Python/SQLite suite and Android build/JUnit/lint/APK asset CI on final PR head; repair any failures and merge **only if required checks succeed**.
 - [ ] Confirm post-merge main CI, re-audit APK resources and record exact internal file paths/sizes/SHA-256.
 - [ ] Obtain actual private original roadside sign photos/GPX and independent legal speed review by vehicle/direction/date; no approved records or driver alerts.
+
+
+## PR #34 verified original-JPEG EXIF audit closure — 2026-11-15
+
+- [x] Added original-photo EXIF GPS and timezone-aware capture-time checks, malformed/duplicate EXIF rejection, and dependent speed-paper quarantine; no real sign or legal-speed approvals.
+- [x] Python/SQLite 135/135 PASS run #43685525932 and Android PR-head build/JUnit/lint/APK audit SUCCESS run #43685525912.
+- [x] PR #34 merged as `d7032bb2f774499c1c95376b1cb63a6785231d61`; post-merge Android SUCCESS run #43685630989.
+- [x] Downloaded final GitHub APK/debug and road-audit ZIPs; checked CRC, exactly 5 synthetic assets, SHA-256 of each APK member, 13/13 SHA256SUMS. Exact audit: `docs/ROAD_INTELLIGENCE_PR34_VERIFIED_EXIF_AUDIT.md`.
+- [ ] Independent real physical sign photos/GPX, camera/receiver authenticity, WGS84 field accuracy, direction/bearing, original photo rights and legal speed by class/date/source remain missing. Release pins EMPTY; driver alerts BLOCKED.

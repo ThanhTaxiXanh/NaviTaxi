@@ -173,3 +173,11 @@
 - Follow up with original unedited field photos, GPS/GPX receiver history, independent device clock provenance, WGS84 accuracy, orientation and legal road-speed scope. Camera EXIF conflicts quarantine the claimed point and dependent posted-sign speed assessments; matches remain HUMAN REVIEW REQUIRED.
 - Add human inspection checklist for metadata stripping and PNG EXIF handling in a future evidence schema version; do not invent missing metadata or claims.
 - OSM 811 sign-tag and 44,472 speed-way candidates remain unverified. Android approved pins EMPTY, legal speed/sign points approved ZERO, alerts BLOCKED.
+
+
+## After accepted PR #34 / original photo EXIF consistency
+
+- Do NOT repeat the bounded JPEG EXIF time/GPS checks now merged and documented in PR #34. CI and exact APK acceptance are recorded in `docs/ROAD_INTELLIGENCE_PR34_VERIFIED_EXIF_AUDIT.md`.
+- Next independent physical field task: source original GNSS receiver tracks and photo capture proofs, check camera clock/timezone/EXIF, survey WGS84 precision and facing road geometry, obtain legal governing speed clauses by direction, vehicle class and effective date, then independent reviewer sign-off.
+- Explicit EXIF-less or timezone-less images are unknown, not automatically authentic; PNG EXIF is not yet parsed. Never create guessed camera metadata or coordinates. Keep private material out of GitHub/APK.
+- 811 OSM traffic sign-tag objects and 44,472 speed-tag ways remain reference-only UNVERIFIED, both approved counts 0, Android SHA gate EMPTY, driver alerts BLOCKED.
