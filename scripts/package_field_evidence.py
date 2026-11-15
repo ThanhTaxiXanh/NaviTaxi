@@ -25,6 +25,7 @@ STATUS = "MECHANICAL_EVIDENCE_ONLY_HUMAN_REVIEW_REQUIRED"
 MAX_TOTAL = 300_000_000
 MAX_ARCHIVE = 350_000_000
 MAX_PHOTOS = 1000
+MAX_PHOTO_BYTES = 30_000_000  # same hard cap as survey_photo()
 MAX_MANIFEST = 2_000_000
 CHUNK = 128 * 1024
 SOURCE_NAME = "source/unverified_osm_review_queue.zip"
@@ -172,6 +173,8 @@ def package(review_zip, expected_queue_sha, evidence, photo_root, output):
     }
     for name in sorted(photo_entries):
         specs[name] = _file_spec(photo_source(photo_root, name.removeprefix("photos/")))
+        require(specs[name]["size_bytes"] <= MAX_PHOTO_BYTES,
+                "OVERSIZED_EVIDENCE_PHOTO")
 
     entries = [
         {"path": name, "size_bytes": spec["size_bytes"], "sha256": spec["sha256"]}
@@ -248,6 +251,12 @@ def verify(archive, expected_archive_sha):
                     not (info.flag_bits & 0x1) and
                     (info.external_attr >> 16 & 0o170000) == 0o100000,
                     "UNSAFE_ARCHIVE_MEMBER")
+            if info.filename.startswith("photos/"):
+                require(info.file_size <= MAX_PHOTO_BYTES,
+                        "OVERSIZED_EVIDENCE_PHOTO")
+            if info.filename == EVIDENCE_NAME:
+                require(info.file_size <= MAX_FILE,
+                        "OVERSIZED_EVIDENCE_PACKET")
             total += info.file_size
         require(total <= MAX_TOTAL and z.getinfo(META_NAME).file_size <= MAX_MANIFEST,
                 "ARCHIVE_UNCOMPRESSED_SIZE_LIMIT")
