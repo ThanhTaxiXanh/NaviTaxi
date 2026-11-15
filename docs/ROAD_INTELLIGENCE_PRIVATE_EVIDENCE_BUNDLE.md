@@ -82,3 +82,24 @@ Automated tests create synthetic XML/OSM references, fake legal identities and a
   or human independence.
 - All checks remain a HUMAN-REVIEW-ONLY screen, with zero legally approved
   speed records, zero verified roadside sign coordinates and zero alerts.
+
+
+## Optional original GPX track archival (PR #28; 2026-11-15)
+- When a physical sign observation includes a `gps_track` object, the
+  deterministic private ZIP includes its actual unchanged bytes under
+  `tracks/<safe-relative-gpx-path>` and records the exact SHA256/size
+  in `MANIFEST.json` and `SHA256SUMS`. No GNSS data is downloaded,
+  generated or inferred from OSM. The ZIP includes an additional
+  `gps_track_file_count` only when tracks are present; old no-track
+  version-1 bundles remain structurally compatible.
+- `--verify` requires the set of GPX members to equal the set of track
+  references in `sign_evidence`, rejects unreferenced, duplicated,
+  symlinked or oversized files and any name collision with photos. It
+  then replays the same time/WGS84/digest correlation check with the
+  archived GPX and sign photos in a private temporary evidence root.
+  A tampered track fails even if the attacker recomputes ZIP checksums.
+- Additional private GPS trace files can reveal exact survey routes and
+  participants. Keep all bundles outside the repository and APK;
+  explicitly authorize collection, preservation, licensing and review.
+  **No new alert approval or legally enforceable speed/sign point** follows
+  from a syntactically matched GPX file. Human field/legal checking is mandatory.
