@@ -150,3 +150,10 @@
 - Validate four new synthetic SQLite checks on the exact PR head; run complete Python/SQLite, Android unit/lint/build and APK asset audit on CI before any merge. Fix failures on the branch.
 - Require post-merge main CI and artifact inspection before labeling this change DONE. Earlier PR #29 was merged and all three cited CI jobs succeeded.
 - Independent sign WGS84, bearing, original photo/GPX, road geometry and legal speed by class/direction/date remain missing; no release DB SHA pin, no alerts. Keep Geofabrik 811 sign-tag and 44,472 speed-way candidates UNVERIFIED.
+
+
+## Next GPX provenance gate (2026-11-15)
+
+- Test mechanical GNSS fix quality: GPX 1.1 root attributes `creator`/`version`, `fix=none`, `sat=0`, malformed/insufficient satellites, HDOP nonfinite/invalid, mixed good/bad GNSS samples. Keep missing optional values UNKNOWN, never independently verified.
+- Accept PR only after 100% final-head Python/SQLite and Android build/unit/lint/APK scan CI. Confirm post-merge main and APK inventory without converting OSM tags to legal records.
+- Keep all original survey tracks/photos outside Git, require human GPS-device authenticity, calibrated accuracy, road/bearing/direction inspection, lawful source, sign/date/vehicle-specific legal review. Speed/sign alerts BLOCKED and pins empty.
