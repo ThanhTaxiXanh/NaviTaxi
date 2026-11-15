@@ -446,11 +446,119 @@ class FieldEvidenceTests(unittest.TestCase):
         self.assertEqual(report["ready_for_independent_human_review"], 0)
         self.assertEqual(report["approved_legal_speeds"], 0)
 
-    def test_duplicate_speed_way_evidence_exceeds_synthetic_source_queue(self):
+    def test_duplicate_speed_scope_quarantines_both_source_cases(self):
         packet = deepcopy(self.packet)
-        packet["speed_evidence"].append(deepcopy(packet["speed_evidence"][0]))
-        with self.assertRaisesRegex(EvidenceError, "EVIDENCE_ARRAY_EXCEEDS_SOURCE_QUEUE"):
+        first = packet["speed_evidence"][0]
+        first["case_id"] = "osm:way:101:taxi:forward:case-a"
+        second = deepcopy(first)
+        second["case_id"] = "osm:way:101:taxi:forward:case-b"
+        second["speed_kmh"] = 50  # contradictory synthetic legal opinions
+        packet["speed_evidence"].append(second)
+        report = self.audit(packet)
+        self.assertEqual(report["rejected_records"], 2)
+        self.assertEqual(report["ready_for_independent_human_review"], 1)
+        self.assertEqual([row["case_id"] for row in report["results"][1:]],
+                         [first["case_id"], second["case_id"]])
+        self.assertTrue(all("CONFLICTING_SPEED_SCOPE" in row["reasons"]
+                            for row in report["results"][1:]))
+        self.assertEqual(report["approved_legal_speeds"], 0)
+        self.assertFalse(report["driver_alerts_allowed"])
+
+    def test_opposite_directions_on_same_way_require_distinct_cases(self):
+        packet = deepcopy(self.packet)
+        first = packet["speed_evidence"][0]
+        first["case_id"] = "synthetic-101-forward-taxi"
+        opposite = deepcopy(first)
+        opposite["case_id"] = "synthetic-101-backward-taxi"
+        opposite["direction"] = "backward"
+        # The observed forward-facing sign does not establish applicability
+        # for opposite-direction travel. No sign is claimed in this test.
+        opposite["road_context"]["posted_sign_status"] = "none_confirmed"
+        opposite["sign_evidence_ids"] = []
+        opposite["sign_applicability_note"] = (
+            "Synthetic independent opposite-direction sign absence check.")
+        packet["speed_evidence"].append(opposite)
+        report = self.audit(packet)
+        self.assertEqual(report["ready_for_independent_human_review"], 3)
+        self.assertEqual(report["rejected_records"], 0)
+        self.assertEqual(report["status"], "HUMAN_REVIEW_REQUIRED")
+        self.assertEqual(report["results"][1]["case_id"], first["case_id"])
+        self.assertEqual(report["results"][2]["case_id"], opposite["case_id"])
+        self.assertEqual(report["approved_legal_speeds"], 0)
+        self.assertEqual(report["approved_physical_sign_coordinates"], 0)
+        self.assertFalse(report["driver_alerts_allowed"])
+
+    def test_vehicle_specific_speed_papers_share_raw_way_not_legal_values(self):
+        packet = deepcopy(self.packet)
+        first = packet["speed_evidence"][0]
+        first["case_id"] = "synthetic-101-taxi"
+        other = deepcopy(first)
+        other["case_id"] = "synthetic-101-hgv"
+        other["vehicle_class"] = "hgv"
+        other["speed_kmh"] = 45  # deliberately invented legal-review value
+        other["legal"]["clause"] = "SYNTHETIC-HGV-DIFFERENT-CLAUSE"
+        packet["speed_evidence"].append(other)
+        report = self.audit(packet)
+        self.assertEqual(report["ready_for_independent_human_review"], 3)
+        self.assertEqual(report["rejected_records"], 0)
+        self.assertEqual([x["case_id"] for x in report["results"][1:]],
+                         [first["case_id"], other["case_id"]])
+        self.assertEqual(report["approved_legal_speeds"], 0)
+
+    def test_repeated_source_without_explicit_case_ids_quarantines_all(self):
+        packet = deepcopy(self.packet)
+        other = deepcopy(packet["speed_evidence"][0])
+        other["direction"] = "backward"
+        other["road_context"]["posted_sign_status"] = "none_confirmed"
+        other["sign_evidence_ids"] = []
+        packet["speed_evidence"].append(other)
+        report = self.audit(packet)
+        self.assertEqual(report["rejected_records"], 2)
+        self.assertTrue(all(
+            "REPEATED_SPEED_SOURCE_REQUIRES_CASE_ID" in row["reasons"]
+            for row in report["results"][1:]))
+
+    def test_duplicate_speed_case_id_across_classes_quarantines_all(self):
+        packet = deepcopy(self.packet)
+        first = packet["speed_evidence"][0]
+        first["case_id"] = "synthetic-one-id"
+        other = deepcopy(first)
+        other["vehicle_class"] = "motorcar"
+        packet["speed_evidence"].append(other)
+        report = self.audit(packet)
+        self.assertEqual(report["rejected_records"], 2)
+        self.assertTrue(all("DUPLICATE_SPEED_CASE_ID" in row["reasons"]
+                            for row in report["results"][1:]))
+        self.assertEqual(report["approved_legal_speeds"], 0)
+
+    def test_speed_case_id_cannot_contain_path_or_authorization_injection(self):
+        for invalid in ("../unreviewed", "has space", "bad\ncase",
+                        "é", "", None, 15, "x" * 129):
+            with self.subTest(invalid=invalid):
+                packet = deepcopy(self.packet)
+                packet["speed_evidence"][0]["case_id"] = invalid
+                report = self.audit(packet)
+                self.assertEqual(report["rejected_records"], 1)
+                self.assertIn("INVALID_SPEED_CASE_ID",
+                              report["results"][-1]["reasons"])
+                self.assertFalse(report["driver_alerts_allowed"])
+
+    def test_per_way_speed_scope_packet_size_is_bounded(self):
+        packet = deepcopy(self.packet)
+        first = packet["speed_evidence"][0]
+        packet["speed_evidence"] = []
+        for i in range(13):
+            case = deepcopy(first)
+            case["case_id"] = f"synthetic-speed-case-{i}"
+            case["vehicle_class"] = (
+                "taxi", "motorcar", "hgv", "bus", "motorcycle", "special_vehicle"
+            )[i % 6]
+            case["direction"] = "forward" if i < 6 else "backward"
+            packet["speed_evidence"].append(case)
+        with self.assertRaisesRegex(
+                EvidenceError, "EVIDENCE_ARRAY_EXCEEDS_SOURCE_QUEUE"):
             self.audit(packet)
+
 
     def test_future_physical_sign_and_speed_claims_are_rejected(self):
         # A form cannot assert photographs, speed observations or legal
