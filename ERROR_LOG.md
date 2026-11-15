@@ -174,3 +174,10 @@
 - Identified: `scripts/review_road_candidate.py` previously compared source points/boxes to RTree with tolerance `0.001` degree (roughly 111 m latitude), allowing a materially shifted sign index to pass the pre-release mechanical audit. Road geometry check also accepted padded bounds containing the line.
 - Remediation on isolated branch: check against SQLite float32 RTree outward rounding and exact source LineString extrema. Four test fixtures added, final CI pending. Candidate audit still never grants legal or physical verification.
 - Outstanding: real independent field sign coordinates, photo/GPX, legal vehicle/direction/date adjudication, licensed release DB and device testing.
+
+
+## 2026-11-15 — GPX failed satellite fixes previously passed positional plausibility
+
+- Root cause: `gps_track_alignment()` considered matching lat/lon/time sufficient even if the same GPX point explicitly claimed `fix=none`, `sat=0` or very poor HDOP; GPX namespace was checked without mandatory GPX 1.1 `creator`/`version`.
+- Corrective action: retain original SHA256 and GPX point time/position binding; enforce root metadata and optional quality data consistency, skip unusable GNSS samples, add synthetic negative/positive regression tests.
+- CI final-head verification remains pending. Even valid GPX is not independent proof of device identity, reliable GPS accuracy or actual roadside sign, and no law or alerts are approved.
