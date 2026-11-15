@@ -229,3 +229,40 @@ of an absent sign. No `maxspeed` from OSM is promoted to legal law.
 Source OSM candidate counts (811 sign objects, 44,472 tagged ways) remain
 UNVERIFIED. Mechanically ready means HUMAN REVIEW REQUIRED; no legal speed
 or physical roadside sign point is approved and alerts remain blocked.
+
+
+## GPX 1.1 fix-quality consistency hardening (2026-11-15; PR pending)
+
+An optional original-GPX track is still only **mechanical corroboration** of
+a separately claimed WGS84 roadside sign observation. This step never assigns
+or approves sign coordinates, speed limits or Android trust SHA pins.
+
+- The GPX root must use the GPX 1.1 namespace and the **required** root
+  attributes `version="1.1"` and a nonblank `creator`. A copied namespace
+  alone is not a conforming GPX 1.1 export. The creator text is user-editable
+  metadata, **not** an authenticated device signature.
+- Each GPX sample must retain a timezone-aware timestamp and valid WGS84
+  coordinates. If the optional `fix`, `sat` or `hdop` elements are
+  present, the auditor checks their representation and rejects malformed or
+  repeated elements. Supported `fix` values are `none`, `2d`, `3d`,
+  `dgps`, `pps`.
+- A sample explicitly reporting `fix=none` is **not** usable to corroborate
+  the sign position; nor are samples declaring fewer than 3 satellites
+  (4 for `3d`/`dgps`/`pps`), or an invalid horizontal dilution
+  (`hdop <= 0` or `hdop > 10`). `hdop` is dimensionless, **not a
+  positional-error measurement in metres**, and the 10 cutoff is a
+  conservative data-quality filter, not a legal or survey-accuracy standard.
+  Other unaffected samples from the same original track may corroborate.
+- When any of these optional fields are **absent**, this means quality is
+  unknown, not that the fix is valid, and it must be checked independently.
+  `gps_accuracy_m` in a JSON claim is not independently established by GPX
+  `hdop`, `sat`, a creator string, or any OSM object.
+- At least one usable GPX sample must still match the separately claimed
+  survey point within the pre-existing 15-minute / max(15 m, claimed
+  accuracy + 10 m) plausibility window. No temporal/spatial or quality
+  match produces anything beyond `READY_FOR_HUMAN_REVIEW`.
+- Original GPX and photos stay private; test fixtures contain entirely
+  synthetic coordinates, times, and legal identifiers. Android approval
+  pins stay empty, driving alerts BLOCKED.
+
+Official file-format reference: https://www.topografix.com/gpx/1/1/
