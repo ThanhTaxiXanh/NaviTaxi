@@ -19,13 +19,13 @@ from package_field_evidence import (
     EVIDENCE_NAME, FORMAT, META_NAME, REPORT_NAME, SOURCE_NAME, STATUS,
     SUMS_NAME, EvidenceError, package, verify,
 )
-from test_road_field_evidence import FieldEvidenceTests, jsonbytes
+import test_road_field_evidence as fixture_module
 
 
 class PrivateEvidenceBundleTests(unittest.TestCase):
     def setUp(self):
         # Reuse the exact synthetic queue/photo fixture without inheriting tests.
-        self.fixture = FieldEvidenceTests(
+        self.fixture = fixture_module.FieldEvidenceTests(
             "test_valid_synthetic_paperwork_still_authorizes_nothing")
         self.fixture.setUp()
         self.addCleanup(self.fixture.doCleanups)
@@ -47,7 +47,7 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
         checked = verify(self.archive, result["sha256"])
         self.assertEqual(checked["status"], STATUS)
         self.assertEqual(checked["photo_file_count"], 1)
-        self.assertEqual(checked["verified_archived_files"], 4)
+        self.assertEqual(checked["verified_archived_files"], 5)
         self.assertFalse(checked["driver_alerts_allowed"])
         with zipfile.ZipFile(self.archive) as z:
             self.assertEqual(set(z.namelist()), {
@@ -83,7 +83,7 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
     def test_rejected_packets_cannot_enter_bundle(self):
         packet = deepcopy(self.fixture.packet)
         packet["sign_evidence"][0]["gps_accuracy_m"] = 500
-        (self.root / "packet.json").write_bytes(jsonbytes(packet))
+        (self.root / "packet.json").write_bytes(fixture_module.jsonbytes(packet))
         with self.assertRaisesRegex(
                 EvidenceError, "BUNDLE_REQUIRES_NONEMPTY_MECHANICALLY_READY_EVIDENCE"):
             self.pack()
@@ -91,7 +91,7 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
     def test_empty_packet_cannot_be_misrepresented_as_ready(self):
         packet = deepcopy(self.fixture.packet)
         packet["sign_evidence"], packet["speed_evidence"] = [], []
-        (self.root / "packet.json").write_bytes(jsonbytes(packet))
+        (self.root / "packet.json").write_bytes(fixture_module.jsonbytes(packet))
         with self.assertRaisesRegex(
                 EvidenceError, "BUNDLE_REQUIRES_NONEMPTY_MECHANICALLY_READY_EVIDENCE"):
             self.pack()
@@ -99,7 +99,7 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
     def test_source_approval_claim_rejected(self):
         packet = deepcopy(self.fixture.packet)
         packet["driver_alerts_allowed"] = True
-        (self.root / "packet.json").write_bytes(jsonbytes(packet))
+        (self.root / "packet.json").write_bytes(fixture_module.jsonbytes(packet))
         with self.assertRaisesRegex(
                 EvidenceError, "INPUT_ATTEMPTS_TO_AUTHORIZE_DRIVER_DATA"):
             self.pack()
@@ -111,7 +111,7 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
             with self.subTest(path=bad):
                 packet = deepcopy(self.fixture.packet)
                 packet["sign_evidence"][0]["photo"]["path"] = bad
-                (self.root / "packet.json").write_bytes(jsonbytes(packet))
+                (self.root / "packet.json").write_bytes(fixture_module.jsonbytes(packet))
                 with self.assertRaises(EvidenceError):
                     self.pack()
                 self.assertFalse(self.archive.exists())
@@ -123,7 +123,7 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
         (self.fixture.photo_root / "link").symlink_to(actual, target_is_directory=True)
         packet = deepcopy(self.fixture.packet)
         packet["sign_evidence"][0]["photo"]["path"] = "link/test.jpg"
-        (self.root / "packet.json").write_bytes(jsonbytes(packet))
+        (self.root / "packet.json").write_bytes(fixture_module.jsonbytes(packet))
         with self.assertRaisesRegex(EvidenceError, "SYMLINK_IN_PHOTO_PATH"):
             self.pack()
 
