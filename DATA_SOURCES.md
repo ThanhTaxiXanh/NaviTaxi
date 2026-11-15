@@ -126,3 +126,18 @@ A data source's URL and license must be recorded before its content can be shipp
   still outside repo. 811 sign objects / 44,472 speed ways unverified;
   **0** physical roadside sign coordinates and **0** enforceable legal
   speed values independently approved.
+
+
+## PR #29 source OSM way vs. independent speed applicability
+- One UNVERIFIED OSM source `review_id` is a candidate way ID, NOT one
+  legal speed applying to all directions and vehicles. Distinct speed
+  `case_id` entries refer to that same source row, with separately
+  supplied class/direction/legal provenance; no `maxspeed` inference.
+- Original external 2026-11-12 Vietnam Geofabrik PBF 332,558,874 bytes,
+  SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed,
+  ODbL © OpenStreetMap contributors. Original private UNVERIFIED source
+  review ZIP checksum
+  26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c
+  remains outside Git/APK.
+- 811 sign-tag candidates and 44,472 tagged speed-way candidates are
+  still unverified. No physical sign GPS or legal-speed point approved.
