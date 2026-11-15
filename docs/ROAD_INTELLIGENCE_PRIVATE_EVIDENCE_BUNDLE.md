@@ -103,3 +103,19 @@ Automated tests create synthetic XML/OSM references, fake legal identities and a
   explicitly authorize collection, preservation, licensing and review.
   **No new alert approval or legally enforceable speed/sign point** follows
   from a syntactically matched GPX file. Human field/legal checking is mandatory.
+
+
+## Direction/vehicle speed-review case archiving (PR #29)
+A private evidence packet can now carry separately documented speed-law
+cases for forward/backward travel and six vehicle classes on the SAME
+unverified OSM source way. Each uses the original `review_id` plus a
+distinct explicit `case_id` when the source repeats. The private ZIP
+contains the unchanged JSON and canonical audit report with individual
+`case_id` values, so an independent human can distinguish assessments.
+
+The existing ZIP manifest, external SHA256 proof, photo and optional
+GPX track paths remain unchanged. Offline `--verify` replays every
+speed case and rejects duplicate case IDs, same-scope speed conflicts,
+invalid source reuse, absent direction-specific sign evidence and legal
+document inconsistencies. This changes review paperwork ONLY and never
+makes a speed/traffic sign available to the Android driver.
