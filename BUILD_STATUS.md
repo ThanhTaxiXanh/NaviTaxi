@@ -203,3 +203,12 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Baseline main 525d3a5a1d58a68005a5e6b7a1d13ec75187a889; earlier successful Python/SQLite run #43671707381, Android PR run #43671707388, and post-merge Android run #43671814457 were checked through GitHub jobs.
 - New work changes Python candidate audit and synthetic tests only. New PR-head Python/SQLite, Android assemble/JUnit/lint and APK resource scan are not yet verified; do NOT report success before GitHub Actions completes.
 - Android SHA trusted pins remain empty; no real speed/sign SQLite, surveyed GPS-sign coordinates, production alarm activation or new Android asset committed.
+
+
+## 2026-11-15 — PR #30 independently checked and merged
+- Python 125/125 PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43678384469.
+- Android PR CI (assembleDebug/testDebugUnitTest/lintDebug/APK road scan) SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43678384457.
+- Merge SHA b9dcd82d4ce20ab684c1946e6a3c10e13c74eb22; post-merge main Android CI SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43678522872.
+- Post-merge artifact `phase4-apk-road-asset-audit` ID 14146828917: outer ZIP 7894 bytes SHA256 0cff03145a5912d6e3033b961874713a2bae6730912fa0fcb190a1195ce2a736; nested audit ZIP 8952 bytes, 13/13 SHA256SUMS PASS, no real speed/sign assets.
+- Post-merge `app-debug.apk` 60301524 bytes SHA256 a8e9941348040292ee12ebe5a97e19f6f164a892009f0b78d38b3e61446bc4e4, verified ZIP CRC PASS. See `docs/ROAD_INTELLIGENCE_PR30_VERIFIED_SPATIAL_AUDIT.md` for exact APK paths, schema and archives.
+- Pending: independent legal and physical field approvals; all speed/sign SHA pins EMPTY, alerts BLOCKED.

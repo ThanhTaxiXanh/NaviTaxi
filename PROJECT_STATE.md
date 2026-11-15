@@ -259,3 +259,10 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Isolated work branch `phase-11/strict-road-candidate-spatial-integrity` improves pre-release SQLite candidate validation: exact LineString extrema and float32-aware RTree comparison replace permissive 0.001-degree coordinate drift.
 - Four additional synthetic SQLite regression cases target shifted sign positions, shifted road index, padded road bounds, and valid 32-bit RTree rounding. New branch CI is PENDING until independently checked; these are not field observations.
 - Approved legal speed limits: 0; approved physical sign positions: 0; Android approved SHA pins: empty; driver alarms BLOCKED. Phase 4 IN PROGRESS, Phase 5 NOT STARTED.
+
+
+## 2026-11-15 — verified merge acceptance for Phase 11 spatial integrity PR #30
+- PR #30 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/30 MERGED as main `b9dcd82d4ce20ab684c1946e6a3c10e13c74eb22`. This supersedes the earlier pending-CI entry.
+- Final PR head: Python 125/125 SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43678384469; Android build/unit/lint and road APK asset audit SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43678384457.
+- Post-merge main Android build and asset audit SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43678522872. Directly inspected downloaded ZIP and original APK; full paths, byte sizes, SHA-256 and 13/13 archive checksum PASS in `docs/ROAD_INTELLIGENCE_PR30_VERIFIED_SPATIAL_AUDIT.md`.
+- No production speed/sign DB or physical WGS84 sign measurements. Approved speeds 0, signs 0, Android pins empty, driver alerts BLOCKED; Phase 4 IN PROGRESS; Phase 5 NOT STARTED.
