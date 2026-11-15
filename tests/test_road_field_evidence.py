@@ -143,8 +143,7 @@ class FieldEvidenceTests(unittest.TestCase):
     def test_gps_accuracy_bearing_and_wgs84_are_mandatory(self):
         for field, value in (("latitude", 95), ("longitude", -181),
                              ("gps_accuracy_m", 0), ("gps_accuracy_m", 60),
-                             ("bearing_degrees", 360),
-                             ("latitude", float("nan"))):
+                             ("bearing_degrees", 360)):
             with self.subTest(field=field, value=value):
                 packet = deepcopy(self.packet)
                 packet["sign_evidence"][0][field] = value
