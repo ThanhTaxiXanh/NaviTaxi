@@ -71,3 +71,16 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 ## Phase 11 conflict-quarantine patch
 - Python standard-library-only change, no external libraries, API payments, added OSM material or private field-photo data. ODbL 1.0 responsibilities for existing OSM-derived review queues remain unchanged.
 - Matching evidence/photo SHA256 is a tamper-evidence check, not a copyright grant or physical-location proof. Independent image/geodata license permission and accurate legal interpretation remain prerequisites to release.
+
+
+## Phase 11 — private field-evidence ZIP
+- Python standard-library-only pack+verify; no paid APIs, new Android
+  dependencies, third-party imagery or road map data imported by this PR.
+- Existing Geofabrik/OSM reference rows are © OpenStreetMap contributors,
+  ODbL 1.0. The unverified source ZIP must retain source attribution and
+  derived database reuse obligations.
+- Actual field photos may contain faces, number plates or sensitive survey
+  locations and may be copyright-protected. Keep bundles private, require
+  legal author permission, independent provenance, explicit retention and
+  controlled access; SHA256 and a supplied license string cannot grant rights.
+  Neither GitHub CI nor the Android APK receives real photos or legal speeds.

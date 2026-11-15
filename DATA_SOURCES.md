@@ -78,3 +78,18 @@ A data source's URL and license must be recorded before its content can be shipp
 - Existing Geofabrik Vietnam dated source: vietnam-261112.osm.pbf (332,558,874 bytes), SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed, ODbL-1.0, reference-only. The original unverified review ZIP SHA256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c is NOT present in the repository/APK.
 - Enhanced evidence checker now detects repeated sign photo SHA, duplicate source IDs and same code/point, road geometry mismatches, incompatible field and law times; this is mechanical screening, not field/legal verification.
 - Unverified queue: 811 sign candidates, 44,472 speed-way candidates; verified legal speeds 0; approved physical sign coordinates 0; no Android road DB or driver warnings.
+
+
+## 2026-11-15 portable evidence bundle (PR #26)
+- Original real unverified review queue expected SHA256
+  26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c
+  (1,170,686 bytes) is NOT present in Git or APK. Operators supply it locally;
+  the new archive stores those *unchanged* reviewed-source bytes, never the
+  original 332,558,874-byte PBF.
+- Source PBF dated 2026-11-12 SHA256
+  ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed
+  © OpenStreetMap contributors ODbL-1.0. All 811 sign objects and 44,472
+  speed-tag ways are UNVERIFIED reference candidates; law/field-approved counts ZERO.
+- ZIP structure documented at docs/ROAD_INTELLIGENCE_PRIVATE_EVIDENCE_BUNDLE.md.
+  Per-member photo/packet/source SHA256, external whole-ZIP SHA and independent
+  re-audit are tamper-evidence measures, not real-world truth or approval.
