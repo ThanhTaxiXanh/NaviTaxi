@@ -203,7 +203,10 @@ class FieldEvidenceTests(unittest.TestCase):
         packet = deepcopy(self.packet)
         packet["sign_evidence"].append(deepcopy(packet["sign_evidence"][0]))
         result = self.audit(packet)
-        self.assertEqual(result["rejected_records"], 1)
+        # Both duplicate records AND the speed citing the sign are quarantined.
+        self.assertEqual(result["rejected_records"], 3)
+        self.assertEqual(result["ready_for_independent_human_review"], 0)
+        self.assertTrue(all(x["status"] == "REJECTED" for x in result["results"]))
         self.assertFalse(result["driver_alerts_allowed"])
 
     def test_duplicated_sign_position_and_code_are_flagged(self):
@@ -214,7 +217,9 @@ class FieldEvidenceTests(unittest.TestCase):
         result = self.audit(packet)
         self.assertIn("POSSIBLE_DUPLICATE_PHYSICAL_SIGN",
                       result["results"][1]["reasons"])
-        self.assertEqual(result["rejected_records"], 1)
+        self.assertIn("POSSIBLE_DUPLICATE_PHYSICAL_SIGN",
+                      result["results"][0]["reasons"])
+        self.assertEqual(result["rejected_records"], 3)
 
     def test_wrong_geometry_digest_rejected(self):
         packet = deepcopy(self.packet)
@@ -271,6 +276,94 @@ class FieldEvidenceTests(unittest.TestCase):
                       result["results"][-1]["reasons"])
         self.assertEqual(result["rejected_records"], 1)
 
+
+    def test_reused_photo_on_distant_signs_quarantines_all(self):
+        packet = deepcopy(self.packet)
+        other = deepcopy(packet["sign_evidence"][0])
+        other["review_id"] = "osm:node:12@1"
+        other["latitude"], other["longitude"] = 1.0, 1.0
+        other["road_geometry"] = {
+            "type": "LineString",
+            "coordinates": [[1.0, 1.0], [1.001, 1.0]]
+        }
+        other["road_geometry_sha256"] = geometry_digest(other["road_geometry"])
+        packet["sign_evidence"].append(other)
+        report = self.audit(packet)
+        self.assertEqual(report["rejected_records"], 3)
+        self.assertEqual(report["ready_for_independent_human_review"], 0)
+        for result in report["results"][:2]:
+            self.assertIn("REUSED_SIGN_PHOTO_SHA256", result["reasons"])
+        self.assertIn("SIGN_EVIDENCE_MISSING_REJECTED_OR_WRONG_ROAD_DIRECTION",
+                      report["results"][-1]["reasons"])
+
+    def test_mismatched_sign_and_speed_road_geometry_rejected(self):
+        packet = deepcopy(self.packet)
+        shape = {
+            "type": "LineString",
+            "coordinates": [[0.0, 0.0], [0.002, 0.001]]
+        }
+        packet["sign_evidence"][0]["road_geometry"] = shape
+        packet["sign_evidence"][0]["road_geometry_sha256"] = geometry_digest(shape)
+        report = self.audit(packet)
+        self.assertEqual(report["ready_for_independent_human_review"], 1)
+        self.assertEqual(report["rejected_records"], 1)
+        self.assertIn("SIGN_AND_SPEED_ROAD_GEOMETRY_DISAGREE",
+                      report["results"][-1]["reasons"])
+
+    def test_sign_survey_after_speed_observation_cannot_backfill(self):
+        packet = deepcopy(self.packet)
+        packet["sign_evidence"][0]["observed_at"] = "2026-11-14T09:00:00+07:00"
+        report = self.audit(packet)
+        self.assertIn("SIGN_SURVEY_POSTDATES_SPEED_OBSERVATION",
+                      report["results"][-1]["reasons"])
+        self.assertEqual(report["rejected_records"], 1)
+        self.assertFalse(report["driver_alerts_allowed"])
+
+    def test_law_cannot_be_checked_before_road_observation(self):
+        packet = deepcopy(self.packet)
+        packet["speed_evidence"][0]["legal"]["checked_at"] = (
+            "2026-11-14T07:00:00+07:00")
+        report = self.audit(packet)
+        self.assertIn("LEGAL_CHECK_MUST_FOLLOW_OBSERVATION_AND_PRECEDE_REVIEW",
+                      report["results"][-1]["reasons"])
+        self.assertEqual(report["rejected_records"], 1)
+
+    def test_expired_legal_rule_is_rejected(self):
+        packet = deepcopy(self.packet)
+        packet["speed_evidence"][0]["legal"]["effective_to"] = "2026-11-13"
+        report = self.audit(packet)
+        self.assertIn("LAW_EXPIRED_AT_OBSERVATION",
+                      report["results"][-1]["reasons"])
+
+    def test_untrusted_authorization_claims_rejected_at_every_level(self):
+        def inject_root(p):
+            p["driver_alerts_allowed"] = True
+        def inject_sign(p):
+            p["sign_evidence"][0]["independently_verified"] = True
+        def inject_speed(p):
+            p["speed_evidence"][0]["legal"]["production_database_authorized"] = True
+        for change in (inject_root, inject_sign, inject_speed):
+            with self.subTest(changer=change.__name__):
+                packet = deepcopy(self.packet)
+                change(packet)
+                with self.assertRaisesRegex(
+                        EvidenceError, "INPUT_ATTEMPTS_TO_AUTHORIZE_DRIVER_DATA"):
+                    self.audit(packet)
+
+    def test_empty_packet_reports_no_evidence_not_ready(self):
+        packet = deepcopy(self.packet)
+        packet["sign_evidence"] = []
+        packet["speed_evidence"] = []
+        report = self.audit(packet)
+        self.assertEqual(report["status"], "NO_EVIDENCE_TO_REVIEW")
+        self.assertEqual(report["ready_for_independent_human_review"], 0)
+        self.assertEqual(report["approved_legal_speeds"], 0)
+
+    def test_duplicate_speed_way_evidence_exceeds_synthetic_source_queue(self):
+        packet = deepcopy(self.packet)
+        packet["speed_evidence"].append(deepcopy(packet["speed_evidence"][0]))
+        with self.assertRaisesRegex(EvidenceError, "EVIDENCE_ARRAY_EXCEEDS_SOURCE_QUEUE"):
+            self.audit(packet)
 
 
 if __name__ == "__main__":

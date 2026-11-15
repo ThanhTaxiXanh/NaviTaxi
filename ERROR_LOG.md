@@ -103,3 +103,9 @@
 - New evidence intake checks structural completeness, byte hashes, GPS numeric plausibility and official-source URL shape; it cannot authenticate human identity, true photo location, direction of application or definitive current Vietnamese legal interpretation. A mechanically ready item MUST remain unapproved pending independent review.
 - Initial PR #24 Python CI caught unrecognized official Government Gazette host `congbao.chinhphu.vn`; URL allowlist corrected. After linking speed packets to physically evidenced signs, formerly isolated sign-negative tests needed to exclude dependent speed packets; regression expectations corrected. Final code-head 78/78 PASS 43661967753, Android PASS 43661967823; production data remains blocked.
 - Real 2026-11-12 review ZIP and actual physical survey photos are not in the repository or Android APK; no live evidence review has been run.
+
+
+## 2026-11-15 PR #25 detected evidence-review ambiguity
+- Prior audit marked the first sign record READY_FOR_HUMAN_REVIEW even after a later record reused its photographic SHA or location. That first record could leave an erroneous sense of review readiness, even though runtime Android approvals remained empty.
+- Changed to quarantine ALL conflicting sign records and speed rows referencing them. Additional geometry and sign/law observation timing consistency rules added; mechanical checks still cannot authenticate real GPS/photos, field applicability, independent reviewer identity or legal authority.
+- PR #25 code-head Python/SQLite 86/86 PASS at 43664352656 and Android build/unit/lint/APK scan PASS at 43664352607; final documentation-head and main post-merge CI pending. No production driver warnings authorized.

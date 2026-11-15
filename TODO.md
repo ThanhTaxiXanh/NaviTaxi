@@ -93,3 +93,9 @@
 - Obtain original SHA256-pinned 1,170,686-byte review ZIP and private physical surveys/photos. Do not treat OSM nodes as measured sign positions.
 - Independently validate real sign WGS84/bearing, photo, direction and road geometry; independently validate actual vehicle/date-specific legal speed and posted sign relation.
 - Mechanical READY_FOR_HUMAN_REVIEW does not imply verified sign/speed. Separately review ODbL and publisher permissions, create only scrutinized SQLite/RTree data, code-review any future exact SHA pin and field-test actual driver warnings.
+
+
+## After conflict quarantine PR #25
+- Code-head Python and Android gates passed on PR #25; verify final docs-head CI and merge only on green checks; confirm post-merge main.
+- Obtain legitimate field measurement/photographic evidence of sign position, orientation and actual applicability, plus legal vehicle/date/direction review. No OSM tag is approved by this tooling.
+- Keep 811 OSM sign objects, 44,472 OSM speed-way review entries in UNVERIFIED state, all real verified counts ZERO, release pins empty, Phase 4 IN PROGRESS and Phase 11 alerts BLOCKED.

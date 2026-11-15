@@ -121,3 +121,38 @@ untrusted authority pins are committed. The next safe steps are real field
 surveys under a lawful license, independent human legal review,
 source/geometry reconciliation, SQLite schema/RTree and checksum audit,
 a separately approved release pin and on-device driving tests.
+
+
+## Conflict quarantine hardening (2026-11-15; PR pending)
+
+The mechanical auditor now fail-closes on **all affected records** when
+multiple sign observations share the same OSM review ID, reuse the exact
+photo SHA-256, or claim the same sign code within three metres. Previously
+the first candidate could still appear ready after a later conflict.
+When a trusted-by-structure speed paper cites any quarantined sign, its
+mechanical status is also rejected. Duplicated speed scope
+(OSM way, direction, vehicle class) is quarantined, not resolved by
+file order. The output never asserts the truth of a GPS reading, photo,
+legal rule or reviewer identity.
+
+An observed speed-sign reference must use the same independently supplied
+road geometry digest as the sign evidence, the same OSM way/direction,
+and a sign survey observed **no later than** the speed observation.
+A sign first seen after a speed inspection cannot establish the earlier
+speed limit. The geometry digest is self-reported and remains subject
+to independent source verification.
+
+The legal checked_at timestamp must fall between observed_at and reviewed_at;
+an optional legal.effective_to ISO date, when supplied, must not predate
+the road observation. A legal URL and its timestamp alone do not
+authenticate the source's actual contents, repeal history, sign
+applicability or legal limit.
+
+Any input key that attempts to declare a driver/database approval
+(e.g. driver_alerts_allowed, independently_verified or
+production_database_authorized) is rejected even when nested.
+Empty packets yield NO_EVIDENCE_TO_REVIEW, not HUMAN_REVIEW_REQUIRED.
+
+The review ZIP, independent photos and current-law evidence are still
+external sources. CI uses synthetic data only; no real legal speed or
+sign coordinates are approved, and Android allowlist remains empty.
