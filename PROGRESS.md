@@ -155,3 +155,16 @@
 - [x] Code-head 2a7a537b Python/SQLite 86/86 PASS (43664352656), Android build/JUnit/lint/APK scan PASS (43664352607).
 - [ ] Verify final documentation-head CI; merge only if both pass and confirm post-merge main CI.
 - [ ] Original real queue ZIP and independent survey photos remain external; zero field-verified physical sign coordinates and zero accepted site-specific legal speeds.
+
+
+## Phase 11 private review-evidence archival (PR #26, 2026-11-15)
+- [x] Inspected actual main SHA 57dcfa3b and all field-sign/speed intake and packaging source.
+- [x] Added private original-photos + pinned-review-queue ZIP archive and offline
+      independent SHA verification with full audit replay; ZIP bytes deterministic.
+- [x] Added 15 synthetic-only regression tests covering ZIP repeatability, missing photos,
+      symlink/traversal/filename injection, tampering, forged audit and non-approval.
+- [x] Documented exact ZIP tree, archive SHA command, privacy/ODbL provenance,
+      human-review safeguards and zero driver alerts.
+- [ ] Verify exact final PR #26 Python and Android CI; merge only on green and confirm main CI.
+- [ ] Independently acquire/survey real traffic signs, legal km/h, road shape, and
+      applicable governing law by date/direction/vehicle. Approved records: ZERO.

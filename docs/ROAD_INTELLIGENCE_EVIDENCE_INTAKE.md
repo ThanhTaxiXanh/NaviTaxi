@@ -156,3 +156,15 @@ Empty packets yield NO_EVIDENCE_TO_REVIEW, not HUMAN_REVIEW_REQUIRED.
 The review ZIP, independent photos and current-law evidence are still
 external sources. CI uses synthetic data only; no real legal speed or
 sign coordinates are approved, and Android allowlist remains empty.
+
+
+## Portable evidence archive companion (2026-11-15; PR #26)
+The independent field/speed/sign evidence intake can be archived **privately**
+using scripts/package_field_evidence.py after **every submitted record** passes
+the mechanical HUMAN_REVIEW_REQUIRED gate. See
+docs/ROAD_INTELLIGENCE_PRIVATE_EVIDENCE_BUNDLE.md for exact ZIP tree, SHA256SUMS,
+private-photo handling, deterministic packaging, and offline independent ZIP
+SHA verification with audit replay. This archive is not a production SQLite
+candidate or Android release pin. Real independent field photographs,
+reliable legal applicability and verified physical sign coordinates remain
+unavailable. All approved speed and sign counts stay at ZERO.

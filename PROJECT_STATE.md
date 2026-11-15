@@ -196,3 +196,18 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Any repeated sign source ID, physical sign point/code or image SHA now quarantines all implicated entries and related speed reviews. Matching sign/road geometry and observation order required; legal date checks hardened.
 - Exact archived OSM reference queues remain unapproved: 811 sign candidates, 44,472 speed ways, zero verified real speeds/sign locations. RoadIntelligenceApprovedPins still empty and Android driver alerts blocked.
 - PR #25 code-head 2a7a537bb9a445e3b5eb52af68fbf68ea399f1ad: Python/SQLite 86/86 PASS run 43664352656 and Android build/unit/lint/APK scan PASS run 43664352607. Final documentation-head and post-merge main CI must still be checked.
+
+
+## Phase 11 — portable speed/sign field-evidence ZIP (PR #26, CI pending)
+- Verified initial main SHA 57dcfa3bdb1bbbf55a797a5b0f6b44f96edfc196, no open PR, Android main CI 43664591153 SUCCESS.
+- Added scripts/package_field_evidence.py with deterministic private ZIP output:
+  original pinned unverified source review ZIP, independent evidence packet, referenced
+  physical-sign JPEG/PNG bytes, replayable mechanical audit report, manifest and SHA256SUMS.
+- Offline verification requires an independently supplied outer SHA256, strictly checks
+  member names and bytes, and repeats complete field/legal evidence audit. Malformed,
+  rejected, empty, synthetic-claiming-approval or missing-photo packets cannot be packaged.
+- 2026-11-12 real OSM source SHA ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed
+  remains an UNVERIFIED reference (811 sign objects, 44,472 maxspeed-tag way candidates);
+  original unverified review ZIP and genuine human-survey photos remain outside repository.
+- Production approved speed and sign coordinate counts both ZERO; Kotlin SHA pins EMPTY;
+  driver alerts BLOCKED; Phase 4 IN PROGRESS, Phase 5 NOT STARTED. PR #26 CI pending.

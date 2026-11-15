@@ -99,3 +99,15 @@
 - Code-head Python and Android gates passed on PR #25; verify final docs-head CI and merge only on green checks; confirm post-merge main.
 - Obtain legitimate field measurement/photographic evidence of sign position, orientation and actual applicability, plus legal vehicle/date/direction review. No OSM tag is approved by this tooling.
 - Keep 811 OSM sign objects, 44,472 OSM speed-way review entries in UNVERIFIED state, all real verified counts ZERO, release pins empty, Phase 4 IN PROGRESS and Phase 11 alerts BLOCKED.
+
+
+## Phase 11 private field-sign/speed evidence archival
+- Verify CI on PR #26, fix any synthetic test failures, merge only if Python/SQLite
+  and Android assemble/unit/lint/APK road-asset audit green; check post-merge main run.
+- Private operators must independently obtain the expected unverified real queue ZIP
+  (SHA256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c)
+  and lawfully collect original GPS/photo/road/law evidence to create a local archive.
+  No such original private materials are in Git.
+- Require a human legal check and real sign-location/direction survey before proposing
+  any domain-specific, separately approved SQLite release digest. Do not infer speeds
+  from OSM maxspeed and do not turn on alerts before verified release and on-device tests.
