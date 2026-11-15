@@ -130,3 +130,10 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 - GPX 1.1 schema documentation is referenced for validation, not bundled as redistributable map data. Code uses the Python standard library, no paid API, new dependency or external service.
 - Synthetic GNSS tests use invented coordinates/timestamps. No original GPX, sign photo, GPS data, legal ruling or external survey media is stored in Git or APK.
 - Actual field GPS/photo rights, personal information, permissions and independent legal reviews remain prerequisites before any release approval. Raw OSM reference remains ODbL-1.0 © OpenStreetMap contributors.
+
+
+## 2026-11-15 — bounded EXIF metadata parser rights and privacy
+
+- Implementation uses Python stdlib only; no external image processor, commercial API, map SDK or new Android library. CIPA EXIF documentation is a technical reference and not bundled into the APK or private archival ZIP.
+- All EXIF photographs generated for CI are invented binary fixtures, not actual roadside sign images. Actual field photos may contain personal metadata, faces, plates and GPS privacy details and require legal rights/consent and separate private archival protection.
+- EXIF integrity matching does not grant image rights, road-law authority, or approval to redistribute OSM-derived worklists (ODbL-1.0 © OpenStreetMap contributors). Approved source count stays ZERO.
