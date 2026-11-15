@@ -234,6 +234,39 @@ class FieldEvidenceTests(unittest.TestCase):
         self.assertEqual(result["rejected_records"], 1)
         self.assertEqual(result["approved_legal_speeds"], 0)
 
+    def test_observed_speed_sign_must_exist_and_match_direction_and_way(self):
+        scenarios = (
+            ("unknown id", lambda p: p["speed_evidence"][0].update(
+                sign_evidence_ids=["osm:node:999999@1"])),
+            ("wrong road", lambda p: p["sign_evidence"][0].update(
+                related_osm_way_id=202)),
+            ("wrong direction", lambda p: p["sign_evidence"][0].update(
+                direction="backward")),
+            ("missing sign", lambda p: p.update(sign_evidence=[])),
+            ("rejected sign", lambda p: p["sign_evidence"][0]["photo"].update(
+                sha256="0" * 64)),
+        )
+        for label, change in scenarios:
+            with self.subTest(label=label):
+                packet = deepcopy(self.packet)
+                change(packet)
+                report = self.audit(packet)
+                speed_result = [x for x in report["results"]
+                                if x["kind"] == "speed"][0]
+                self.assertEqual(speed_result["status"], "REJECTED")
+                self.assertIn("SIGN_EVIDENCE_MISSING_REJECTED_OR_WRONG_ROAD_DIRECTION",
+                              speed_result["reasons"])
+                self.assertEqual(report["approved_legal_speeds"], 0)
+
+    def test_none_confirmed_sign_status_cannot_include_sign_ids(self):
+        packet = deepcopy(self.packet)
+        packet["speed_evidence"][0]["road_context"]["posted_sign_status"] = "none_confirmed"
+        result = self.audit(packet)
+        self.assertIn("NO_POSTED_SIGN_BUT_SIGN_IDS_PRESENT",
+                      result["results"][-1]["reasons"])
+        self.assertEqual(result["rejected_records"], 1)
+
+
 
 if __name__ == "__main__":
     unittest.main()
