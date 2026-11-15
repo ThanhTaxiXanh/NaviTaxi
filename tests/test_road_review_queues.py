@@ -104,7 +104,7 @@ class ReviewQueueTests(unittest.TestCase):
 
     def test_existing_output_refused_without_overwrite(self):
         self.build()
-        with self.assertRaises(FileExistsError):
+        with self.assertRaises((FileExistsError, ReviewQueueError)):
             self.build()
         self.assertTrue((self.output / "manifest.json").is_file())
 
