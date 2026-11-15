@@ -168,3 +168,9 @@
 - Still unresolved: no genuine surveyed physical signs, GPS/photo/GPX,
   human-checked legal clause/vehicle applicability, or production-approved
   SQLite. The new case ID is only a paperwork identifier, not verified law.
+
+
+## 2026-11-15 — permissive pre-release RTree precision and geometry extent
+- Identified: `scripts/review_road_candidate.py` previously compared source points/boxes to RTree with tolerance `0.001` degree (roughly 111 m latitude), allowing a materially shifted sign index to pass the pre-release mechanical audit. Road geometry check also accepted padded bounds containing the line.
+- Remediation on isolated branch: check against SQLite float32 RTree outward rounding and exact source LineString extrema. Four test fixtures added, final CI pending. Candidate audit still never grants legal or physical verification.
+- Outstanding: real independent field sign coordinates, photo/GPX, legal vehicle/direction/date adjudication, licensed release DB and device testing.
