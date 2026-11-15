@@ -147,3 +147,10 @@ A data source's URL and license must be recorded before its content can be shipp
 - Existing Vietnam Geofabrik 2026-11-12 PBF reference remains ODbL-1.0, 332,558,874 bytes, SHA-256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed.
 - Review queue ZIP (SHA-256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c) remains external and must not be recreated from guesses.
 - New RTree tests use invented coordinates and database rows only; they DO NOT establish sign positions or speeds. Unverified OSM queue: 811 sign-tag objects and 44,472 speed-tagged ways. Approved count: 0 for each domain.
+
+
+## 2026-11-15 — GPX corroboration format quality only
+
+- No new real speed or physical sign dataset acquired. Source reference remains the 2026-11-12 Geofabrik Vietnam PBF (332,558,874 bytes; SHA-256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed; ODbL-1.0 © OpenStreetMap contributors).
+- The independently SHA-pinned 2026-11-12 review ZIP remains external (SHA-256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c). OSM 811 sign-tag and 44,472 speed-tag way records are all UNVERIFIED.
+- Official GPX 1.1 schema: https://www.topografix.com/gpx/1/1/ . It specifies WGS84, mandatory root creator/version and optional fix/sat/hdop fields. Synthetic GPX fixtures test only mechanical self-consistency; no real survey bytes are imported, no source promoted to legal evidence.

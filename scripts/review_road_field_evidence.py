@@ -283,6 +283,12 @@ def gps_track_alignment(track: dict, root: Path, lat: float, lon: float,
     except ET.ParseError as exc:
         raise EvidenceError("INVALID_GPS_TRACK_XML") from exc
     require(document.tag == GPX_NS + "gpx", "GPS_TRACK_REQUIRES_GPX_1_1")
+    # Both attributes are mandatory in the official GPX 1.1 schema. A
+    # namespace alone does not make a fragment an original GPX 1.1 export.
+    require(document.attrib.get("version") == "1.1"
+            and isinstance(document.attrib.get("creator"), str)
+            and bool(document.attrib["creator"].strip()),
+            "GPS_TRACK_MISSING_GPX_1_1_CREATOR_OR_VERSION")
     points = document.iter()
     count = 0
     aligned = False
@@ -301,14 +307,47 @@ def gps_track_alignment(track: dict, root: Path, lat: float, lon: float,
         times = node.findall(GPX_NS + "time")
         require(len(times) == 1 and times[0].text, "GPS_TRACK_POINT_TIME_REQUIRED")
         sample_at = date_at(times[0].text.strip())
+        # GPX 1.1 quality fields are optional. Absence is UNKNOWN, not proof
+        # of a good fix. Explicitly failed/invalid fixes must NEVER be used to
+        # corroborate a claimed physical sign position, even if coordinates
+        # and timestamps appear to match.
+        quality = {}
+        for field in ("fix", "sat", "hdop"):
+            values = node.findall(GPX_NS + field)
+            require(len(values) <= 1, "GPS_TRACK_DUPLICATE_QUALITY_FIELD")
+            quality[field] = values[0].text.strip() if values and values[0].text else None
+            require(not values or quality[field], "GPS_TRACK_INVALID_QUALITY_FIELD")
+        fix = quality["fix"]
+        require(fix is None or fix in ("none", "2d", "3d", "dgps", "pps"),
+                "GPS_TRACK_INVALID_FIX")
+        satellites = None
+        if quality["sat"] is not None:
+            raw_sat = quality["sat"]
+            require(raw_sat.isascii() and raw_sat.isdecimal() and len(raw_sat) <= 4,
+                    "GPS_TRACK_INVALID_SATELLITE_COUNT")
+            satellites = int(raw_sat)
+        hdop = None
+        if quality["hdop"] is not None:
+            try:
+                hdop = float(quality["hdop"])
+            except ValueError as exc:
+                raise EvidenceError("GPS_TRACK_INVALID_HDOP") from exc
+            require(math.isfinite(hdop) and hdop >= 0, "GPS_TRACK_INVALID_HDOP")
+        # 2D requires at least three satellites; 3D/DGPS/PPS require four.
+        # Missing sat/HDOP fields do not prove fix quality: separate human
+        # checking of the original receiver log remains mandatory.
+        min_sat = 4 if fix in ("3d", "dgps", "pps") else 3
+        usable_fix = (fix != "none"
+                      and (satellites is None or satellites >= min_sat)
+                      and (hdop is None or 0 < hdop <= 10))
         distance = math.hypot(
             (sample_lat - lat) * 110540,
             (sample_lon - lon) * 111320 * max(
                 0.01, math.cos(math.radians((sample_lat + lat) / 2))))
-        if (distance <= max(15.0, accuracy_m + 10.0) and
+        if (usable_fix and distance <= max(15.0, accuracy_m + 10.0) and
                 abs((sample_at - observed).total_seconds()) <= GPS_TIME_WINDOW_SECONDS):
             aligned = True
-    require(count > 0 and aligned, "GPS_TRACK_HAS_NO_SIGN_TIME_POSITION_MATCH")
+    require(count > 0 and aligned, "GPS_TRACK_HAS_NO_USABLE_SIGN_FIX_TIME_POSITION_MATCH")
 
 
 

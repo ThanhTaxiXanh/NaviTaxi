@@ -212,3 +212,11 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Post-merge artifact `phase4-apk-road-asset-audit` ID 14146828917: outer ZIP 7894 bytes SHA256 0cff03145a5912d6e3033b961874713a2bae6730912fa0fcb190a1195ce2a736; nested audit ZIP 8952 bytes, 13/13 SHA256SUMS PASS, no real speed/sign assets.
 - Post-merge `app-debug.apk` 60301524 bytes SHA256 a8e9941348040292ee12ebe5a97e19f6f164a892009f0b78d38b3e61446bc4e4, verified ZIP CRC PASS. See `docs/ROAD_INTELLIGENCE_PR30_VERIFIED_SPATIAL_AUDIT.md` for exact APK paths, schema and archives.
 - Pending: independent legal and physical field approvals; all speed/sign SHA pins EMPTY, alerts BLOCKED.
+
+
+## 2026-11-15 — Phase 11 GPX source-quality branch (checks pending)
+
+- Baseline main `663468b61eea989c2ea506045cbc2698261416fa`, confirmed Android main push #43678871854 SUCCESS.
+- Python evidence reviewer, synthetic unittest fixture and documentation changed. No new dependencies, Kotlin source, SDK, APK road assets or production database.
+- **Do not claim this change accepted until exact final branch SHA Python/SQLite and Android assembleDebug/testDebugUnitTest/lintDebug/APK audit succeed.**
+- Genuine approved legal speed observations and physical sign GPS coordinates remain 0; Android trusted SHA pin allowlist empty; alerts BLOCKED.
