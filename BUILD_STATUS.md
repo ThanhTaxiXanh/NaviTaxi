@@ -143,5 +143,5 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 ## Phase 11 field/legal evidence intake branch — 2026-11-15
 - Base main SHA e2a1fdd6b25233a42b91ab4d58cbbd5b485058a0 and successful Android push run 43660382929.
 - Branch phase-11/field-evidence-intake-gate adds standard-library Python audit and synthetic regression tests. No Kotlin/Android APK data or dependency change.
-- PR CI and final test counts are pending verification; main's prior 60/60 Python test result belongs to PR #22, not this code.
+- Code-head 32a2d7d2: new full Python suite **78/78 PASS** https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43661967753 ; Android assembleDebug/unit/lint and APK road asset scan PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43661967823 . Final documentation-head CI still requires recheck.
 - Real legally verified speed segment count: 0; physically field-surveyed approved sign count: 0; original review ZIP remains external.

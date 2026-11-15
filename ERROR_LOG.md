@@ -101,4 +101,5 @@
 
 ## 2026-11-15 field/legal evidence audit open risks
 - New evidence intake checks structural completeness, byte hashes, GPS numeric plausibility and official-source URL shape; it cannot authenticate human identity, true photo location, direction of application or definitive current Vietnamese legal interpretation. A mechanically ready item MUST remain unapproved pending independent review.
-- Real 2026-11-12 review ZIP and actual physical survey photos are not in the repository or Android APK; no live evidence review has been run. CI acceptance for new code pending.
+- Initial PR #24 Python CI caught unrecognized official Government Gazette host `congbao.chinhphu.vn`; URL allowlist corrected. After linking speed packets to physically evidenced signs, formerly isolated sign-negative tests needed to exclude dependent speed packets; regression expectations corrected. Final code-head 78/78 PASS 43661967753, Android PASS 43661967823; production data remains blocked.
+- Real 2026-11-12 review ZIP and actual physical survey photos are not in the repository or Android APK; no live evidence review has been run.

@@ -143,5 +143,6 @@
 - [x] Reviewed main at e2a1fdd6, no open PRs, main Android CI 43660382929 SUCCESS before new branch.
 - [x] Added source-ZIP SHA256 and manifest/CSV/record identity review gate; independent measured GPS, sign code/orientation, source photo bytes/hash/license, road LineString/provenance, vehicle+direction, applicability and official legal citation completeness checks.
 - [x] Mechanical report distinguishes ready-for-human-review vs rejected, but always 0 approved signs/speeds, no DB release and no alerts.
-- [ ] Confirm Python and Android CI green for current PR before merging; complete live-photo and legal-field verification only with real independent evidence.
+- [x] Code head 32a2d7d2: Python/SQLite 78/78 PASS, Actions 43661967753; Android assembleDebug/JUnit/lint/APK forensic audit PASS, Actions 43661967823.
+- [ ] Verify final documentation-head CI and merge PR #24 only after checks. Live-photo and legal field verification still require real independent evidence.
 - [ ] Original 811 sign and 44,472 speed queue ZIP is external to Git, not an APK asset. Real source review requires explicitly available source ZIP and independent survey evidence.

@@ -117,4 +117,4 @@
 ## 0.4.6-dev — Phase 11 field/legal evidence intake gate (pending CI)
 - New scripts/review_road_field_evidence.py validates SHA256-pinned survey review ZIP and separately collected photo/GPS/road/legal evidence with fail-closed detailed record reasons; no OSM-derived legal speed or sign point.
 - Synthetic negative tests and docs/ROAD_INTELLIGENCE_EVIDENCE_INTAKE.md added; no new Android runtime code, APK data, third-party packages or allowlist pins.
-- Every mechanical result explicitly has zero approved records and disabled driver alerts. CI/merge not yet claimed.
+- Every mechanical result explicitly has zero approved records and disabled driver alerts. Code-head Python 78/78 PASS (43661967753), Android build/unit/lint/APK audit PASS (43661967823). Final doc-head CI and merge pending.
