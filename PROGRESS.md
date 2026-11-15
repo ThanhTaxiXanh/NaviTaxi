@@ -234,3 +234,13 @@
 - [x] Added five synthetic-only regression methods with multiple malformed/positive subcases. Missing optional GPX quality remains unknown and does not attest surveying accuracy or a device.
 - [ ] Confirm complete Python/SQLite suite, Android assemble/test/lint, APK asset audit on final branch commit; merge only if all mandatory checks SUCCESS.
 - [ ] After merge, recheck main CI and exact APK asset inventory; maintain 0 legal speed/sign approvals.
+
+
+## PR #32 verification closure — 2026-11-15
+
+- [x] GPX 1.1 creator/version and optional failed GNSS-fix/satellite/HDOP quality gates implemented, with original bytes/checksums preserved.
+- [x] Final Python/SQLite 130/130 PASS (run #43679448917).
+- [x] Final PR-head Android assembleDebug/testDebugUnitTest/lintDebug and APK road audit SUCCESS (run #43679448978).
+- [x] PR #32 merged SHA 4f009ac16735acae35c4f8d0bd1aa8c958a8ff2a and main Android CI SUCCESS (run #43679593826).
+- [x] Inspected actual CI debug APK, audit ZIP, nested SHA256SUMS 13/13 PASS; exact paths/bytes/checksums in `docs/ROAD_INTELLIGENCE_PR32_VERIFIED_GPX_FIX_AUDIT.md`.
+- [ ] Real WGS84 sign survey original GPX/photos, independent receiver evidence, verified road geometry/heading, taxi-class and direction/date-specific legal clauses remain absent. Approval 0; all driver alarms BLOCKED.

@@ -274,3 +274,13 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Isolated branch `phase-11/gpx-fix-quality-gate`: optional original GPX 1.1 sign evidence must carry root version/creator; explicit no-fix, inadequate satellites and gross HDOP quality cannot stand as a matched survey sample. A creator is only a self-reported producer identifier, never a signature.
 - Added synthetic-only adverse/positive checks in `tests/test_road_field_evidence.py`; branch Python and Android CI acceptance PENDING. No real track, sign image, legal limit, SQLite DB, map asset or trusted SHA pin added.
 - Approved legal speeds ZERO; approved physical sign GPS points ZERO; production Android speed/sign alerts BLOCKED. Phase 4 IN PROGRESS, Phase 5 NOT STARTED.
+
+
+## 2026-11-15 — verified GPX fix-quality PR #32 merge and artifact acceptance
+
+- PR #32 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/32 merged main SHA `4f009ac16735acae35c4f8d0bd1aa8c958a8ff2a`; this supersedes its earlier pending acceptance entry.
+- Full Python/SQLite 130/130 PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43679448917.
+- Android PR-head build/unit/lint and APK road audit SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43679448978.
+- Post-merge main Android build and road asset scan SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43679593826.
+- Downloaded both APK/debug and road-audit ZIP artifacts; CRC PASS, nested SHA256SUMS 13/13 PASS, only five synthetic APK map assets, no embedded real speed/sign DB. See `docs/ROAD_INTELLIGENCE_PR32_VERIFIED_GPX_FIX_AUDIT.md` for exact paths, byte counts, SHA256, code lines and reproduction commands.
+- Legal speed approval ZERO, physical sign GPS approval ZERO, Android database approval allowlist EMPTY, driver alerts BLOCKED; Phase 4 IN PROGRESS and Phase 5 NOT STARTED.

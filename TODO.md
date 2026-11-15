@@ -157,3 +157,11 @@
 - Test mechanical GNSS fix quality: GPX 1.1 root attributes `creator`/`version`, `fix=none`, `sat=0`, malformed/insufficient satellites, HDOP nonfinite/invalid, mixed good/bad GNSS samples. Keep missing optional values UNKNOWN, never independently verified.
 - Accept PR only after 100% final-head Python/SQLite and Android build/unit/lint/APK scan CI. Confirm post-merge main and APK inventory without converting OSM tags to legal records.
 - Keep all original survey tracks/photos outside Git, require human GPS-device authenticity, calibrated accuracy, road/bearing/direction inspection, lawful source, sign/date/vehicle-specific legal review. Speed/sign alerts BLOCKED and pins empty.
+
+
+## After PR #32 verified GPX fix gate
+
+- GPX creator/version and explicit failed GNSS-fix regression were accepted in merged PR #32; no need to repeat this exact work.
+- Obtain legitimate private original GPS/photo sign surveys with independent time, instrument accuracy, WGS84, side-of-road and facing orientation verification; evaluate GNSS metadata against raw device evidence.
+- Independently confirm applicable posted/regulatory speed by direction, specific taxi/vehicle class, effective time, governing instrument and road geometry before any SQLite release approval.
+- Keep original OSM 811 sign tags and 44,472 speed-tagged ways reference-only; Android signed-off DB allowlist remains EMPTY and alarms BLOCKED. Phase 4 IN PROGRESS; Phase 5 NOT STARTED.
