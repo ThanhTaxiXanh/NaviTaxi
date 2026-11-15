@@ -32,6 +32,13 @@ EVIDENCE_NAME = "evidence/independent_packet.json"
 REPORT_NAME = "audit/mechanical_review_report.json"
 META_NAME = "MANIFEST.json"
 SUMS_NAME = "SHA256SUMS"
+MANIFEST_KEYS = frozenset({
+    "format", "status", "source_queue_sha256",
+    "source_queue_manifest_sha256", "evidence_sha256",
+    "audit_report_sha256", "entries", "photo_file_count",
+    "approved_legal_speeds", "approved_physical_sign_coordinates",
+    "driver_alerts_allowed", "production_database_authorized", "warning",
+})
 
 
 def require(condition, reason):
@@ -80,14 +87,27 @@ def photo_source(root, name):
     return current
 
 
+def referenced_photos(packet):
+    """Exactly the photographic bytes that recorded roadside signs cite."""
+    require(isinstance(packet, dict) and
+            isinstance(packet.get("sign_evidence"), list),
+            "INVALID_SIGN_EVIDENCE_LIST")
+    names = set()
+    for sign in packet["sign_evidence"]:
+        require(isinstance(sign, dict) and isinstance(sign.get("photo"), dict),
+                "SIGN_PHOTO_REFERENCE_REQUIRED")
+        names.add("photos/" + safe_relative(sign["photo"].get("path")))
+    require(len(names) <= MAX_PHOTOS, "TOO_MANY_EVIDENCE_PHOTOS")
+    return names
+
+
 def output_path(out, queue, packet, photo_root):
     root = Path(__file__).resolve().parents[1]
     out = out.absolute()
     resolved = out.resolve()
-    for forbidden in (root / "app/src/main/assets",
-                      root / "app/src/main/res",
-                      root / "data/road_intelligence",
-                      photo_root):
+    # Private originals must NEVER be written anywhere inside the Git
+    # workspace, including build/, tests/, docs/ or an untracked folder.
+    for forbidden in (root, photo_root):
         require(not resolved.is_relative_to(forbidden.resolve()),
                 "BUNDLE_MUST_NOT_ENTER_APP_OR_PHOTO_ROOT")
     require(resolved not in (queue.resolve(), packet.resolve()),
@@ -143,22 +163,15 @@ def package(review_zip, expected_queue_sha, evidence, photo_root, output):
             and report["rejected_records"] == 0,
             "BUNDLE_REQUIRES_NONEMPTY_MECHANICALLY_READY_EVIDENCE")
     packet = read_json(evidence.read_bytes())
-    require(isinstance(packet, dict) and isinstance(packet.get("sign_evidence"), list),
-            "INVALID_EVIDENCE_PACKET")
+    photo_entries = referenced_photos(packet)
 
     specs = {
         SOURCE_NAME: _file_spec(review_zip),
         EVIDENCE_NAME: _file_spec(evidence),
         REPORT_NAME: _bytes_spec(canonical_json(report)),
     }
-    photo_entries = set()
-    for sign in packet["sign_evidence"]:
-        photo = sign["photo"]
-        name = safe_relative(photo["path"])
-        photo_entries.add(name)
-    require(len(photo_entries) <= MAX_PHOTOS, "TOO_MANY_EVIDENCE_PHOTOS")
     for name in sorted(photo_entries):
-        specs["photos/" + name] = _file_spec(photo_source(photo_root, name))
+        specs[name] = _file_spec(photo_source(photo_root, name.removeprefix("photos/")))
 
     entries = [
         {"path": name, "size_bytes": spec["size_bytes"], "sha256": spec["sha256"]}
@@ -239,7 +252,8 @@ def verify(archive, expected_archive_sha):
         require(total <= MAX_TOTAL and z.getinfo(META_NAME).file_size <= MAX_MANIFEST,
                 "ARCHIVE_UNCOMPRESSED_SIZE_LIMIT")
         manifest = read_json(z.read(META_NAME))
-        require(isinstance(manifest, dict) and manifest.get("format") == FORMAT
+        require(isinstance(manifest, dict) and set(manifest) == MANIFEST_KEYS
+                and manifest.get("format") == FORMAT
                 and manifest.get("status") == STATUS
                 and manifest.get("approved_legal_speeds") == 0
                 and manifest.get("approved_physical_sign_coordinates") == 0
@@ -251,8 +265,10 @@ def verify(archive, expected_archive_sha):
                 "INVALID_BUNDLE_FILE_MANIFEST")
         expected = {}
         for row in entries:
-            require(isinstance(row, dict) and isinstance(row.get("path"), str)
-                    and isinstance(row.get("size_bytes"), int)
+            require(isinstance(row, dict) and
+                    set(row) == {"path", "size_bytes", "sha256"}
+                    and isinstance(row.get("path"), str)
+                    and type(row.get("size_bytes")) is int and row["size_bytes"] >= 0
                     and SHA.fullmatch(str(row.get("sha256"))) is not None
                     and row["path"] not in expected,
                     "INVALID_BUNDLE_FILE_ENTRY")
@@ -261,6 +277,13 @@ def verify(archive, expected_archive_sha):
                 and all(n in (SOURCE_NAME, EVIDENCE_NAME, REPORT_NAME)
                         or n.startswith("photos/") for n in expected),
                 "UNEXPECTED_EVIDENCE_ARCHIVE_FILES")
+        # The bundle must not carry even a single image unrelated to a
+        # submitted sign. An otherwise valid SHA manifest is not consent to
+        # archive extra pictures of faces, plates or survey locations.
+        packet = read_json(z.read(EVIDENCE_NAME))
+        require({name for name in expected if name.startswith("photos/")}
+                == referenced_photos(packet),
+                "UNREFERENCED_OR_MISSING_SIGN_PHOTO")
         expected[META_NAME] = {"path": META_NAME,
                                "size_bytes": z.getinfo(META_NAME).file_size,
                                "sha256": digest(z.read(META_NAME))}
