@@ -144,3 +144,9 @@
 - Never infer a speed from raw OSM `maxspeed` or treat an OSM sign node
   as an actual surveyed coordinate. The 2026-11-12 review queue remains
   unverified and outside Git. Android trusted SHA pins remain empty.
+
+
+## Next PR — reject candidate spatial-index displacement
+- Validate four new synthetic SQLite checks on the exact PR head; run complete Python/SQLite, Android unit/lint/build and APK asset audit on CI before any merge. Fix failures on the branch.
+- Require post-merge main CI and artifact inspection before labeling this change DONE. Earlier PR #29 was merged and all three cited CI jobs succeeded.
+- Independent sign WGS84, bearing, original photo/GPX, road geometry and legal speed by class/direction/date remain missing; no release DB SHA pin, no alerts. Keep Geofabrik 811 sign-tag and 44,472 speed-way candidates UNVERIFIED.
