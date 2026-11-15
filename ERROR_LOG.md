@@ -181,3 +181,10 @@
 - Root cause: `gps_track_alignment()` considered matching lat/lon/time sufficient even if the same GPX point explicitly claimed `fix=none`, `sat=0` or very poor HDOP; GPX namespace was checked without mandatory GPX 1.1 `creator`/`version`.
 - Corrective action: retain original SHA256 and GPX point time/position binding; enforce root metadata and optional quality data consistency, skip unusable GNSS samples, add synthetic negative/positive regression tests.
 - CI final-head verification remains pending. Even valid GPX is not independent proof of device identity, reliable GPS accuracy or actual roadside sign, and no law or alerts are approved.
+
+
+## 2026-11-15 — original JPEG EXIF contradictions ignored in sign survey intake
+
+- Gap: previous `survey_photo()` only required JPEG/PNG magic, real file bytes, SHA-256 and license. A submitted JPEG could embed a camera capture timestamp/offset or GPS coordinates contradicting the same sign's claimed `observed_at` or WGS84 position and still appear mechanically ready.
+- Scope of fix: bounded TIFF/Exif parser handles JPEG APP1, duplicate/malformed tags, camera DateTimeOriginal + OffsetTimeOriginal, signed rational GPS latitude/longitude; contradictory metadata rejects sign and linked observed-sign legal speed case. Missing EXIF/timezone or PNG EXIF remains UNKNOWN, not accepted as authenticated.
+- No claims about photo authenticity, clock calibration, permissions or sign legal effects; independent field review and SQLite release approval still blocked pending real evidence. Branch CI pending.
