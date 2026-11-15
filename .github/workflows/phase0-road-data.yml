@@ -40,6 +40,12 @@ jobs:
           python scripts/audit_osm_reference_quality.py \
             --reference-dir build/osm-reference-fixture \
             --out build/osm-reference-quality-test.json
+      - name: Build synthetic-only sign survey and legal speed review worklists
+        run: |
+          python scripts/build_road_review_queues.py \
+            --reference-dir build/osm-reference-fixture \
+            --output-dir build/road-review-test-only \
+            --archive build/road-review-test-only.zip
       - name: Generate empty canonical SQLite for size and structure audit
         run: |
           python scripts/initialize_road_db.py --output build/road_intelligence.db
@@ -58,3 +64,5 @@ jobs:
             build/osm-reference-fixture/
             build/osm-reference-test-only.zip
             build/osm-reference-quality-test.json
+            build/road-review-test-only/
+            build/road-review-test-only.zip
