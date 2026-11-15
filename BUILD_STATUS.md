@@ -138,3 +138,10 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Android compile/unit/lint and APK road audit PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43659839088. No app Kotlin source/production DB changes.
 - Real externally inspected reference worklist generated in this session: `NaviTaxi_Vietnam_2026-11-12_Field_Sign_Speed_Review_UNVERIFIED.zip` 1,170,686 B sha256:26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c; 44,472 speed review CSV rows and 811 sign candidate CSV rows; all reviewer evidence BLANK and approvals FALSE.
 - Final PR #22 head 17acfac4e3c5c035abe2748b02351f2bf038ec1b: Python/SQLite 60/60 PASS 43660068830, Android compile/JUnit/lint/APK 43660068771 PASS. MERGED main 39cf3185ee91239c21ec0f6d57246e79ed006bf6. Phase 4 overall not production complete, Phase 5 not started.
+
+
+## Phase 11 field/legal evidence intake branch — 2026-11-15
+- Base main SHA e2a1fdd6b25233a42b91ab4d58cbbd5b485058a0 and successful Android push run 43660382929.
+- Branch phase-11/field-evidence-intake-gate adds standard-library Python audit and synthetic regression tests. No Kotlin/Android APK data or dependency change.
+- PR CI and final test counts are pending verification; main's prior 60/60 Python test result belongs to PR #22, not this code.
+- Real legally verified speed segment count: 0; physically field-surveyed approved sign count: 0; original review ZIP remains external.
