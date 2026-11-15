@@ -100,6 +100,93 @@ class FieldEvidenceTests(unittest.TestCase):
         return audit_evidence(self.queue, sha or self.queue_sha, packet_path,
                               self.photo_root)
 
+    def attach_synthetic_gpx(self, packet=None, data=None):
+        """Synthetic GPX never represents a real measured roadside sign."""
+        if packet is None:
+            packet = self.packet
+        if data is None:
+            data = (
+                b'<?xml version="1.0" encoding="UTF-8"?>'
+                b'<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1">'
+                b'<trk><trkseg><trkpt lat="0.0" lon="0.0">'
+                b'<time>2026-11-14T01:00:00Z</time>'
+                b'</trkpt></trkseg></trk></gpx>'
+            )
+        (self.photo_root / "synthetic-track.gpx").write_bytes(data)
+        packet["sign_evidence"][0]["gps_track"] = {
+            "path": "synthetic-track.gpx", "sha256": digest(data),
+            "mime_type": "application/gpx+xml", "license": "TEST-ONLY",
+            "source_uri": "https://survey.example.org/independent-gps/11"
+        }
+        return packet
+
+    def test_optional_original_gnss_file_matches_sign_coordinates_and_time(self):
+        packet = self.attach_synthetic_gpx(deepcopy(self.packet))
+        report = self.audit(packet)
+        self.assertEqual(report["status"], "HUMAN_REVIEW_REQUIRED")
+        self.assertEqual(report["ready_for_independent_human_review"], 2)
+        self.assertEqual(report["approved_physical_sign_coordinates"], 0)
+        self.assertFalse(report["driver_alerts_allowed"])
+
+    def test_gnss_track_invalid_point_or_time_is_rejected_not_approved(self):
+        changes = {
+            "far position": b'<trkpt lat="0.05" lon="0"><time>2026-11-14T01:00:00Z</time></trkpt>',
+            "wrong time": b'<trkpt lat="0" lon="0"><time>2026-11-14T04:00:00Z</time></trkpt>',
+            "no time": b'<trkpt lat="0" lon="0" />',
+            "invalid latitude": b'<trkpt lat="not-a-coordinate" lon="0"><time>2026-11-14T01:00:00Z</time></trkpt>',
+            "longitude out of range": b'<trkpt lat="0" lon="200"><time>2026-11-14T01:00:00Z</time></trkpt>',
+        }
+        for label, point in changes.items():
+            with self.subTest(label=label):
+                source = (b'<gpx xmlns="http://www.topografix.com/GPX/1/1">'
+                          b'<trk><trkseg>' + point +
+                          b'</trkseg></trk></gpx>')
+                packet = self.attach_synthetic_gpx(deepcopy(self.packet), source)
+                report = self.audit(packet)
+                self.assertEqual(report["results"][0]["status"], "REJECTED")
+                self.assertEqual(report["approved_physical_sign_coordinates"], 0)
+                self.assertFalse(report["driver_alerts_allowed"])
+
+    def test_gnss_track_actual_bytes_and_source_uri_required(self):
+        for change in ("wrong_sha", "missing_file", "osm_uri", "fake_mime"):
+            with self.subTest(change=change):
+                packet = self.attach_synthetic_gpx(deepcopy(self.packet))
+                gps = packet["sign_evidence"][0]["gps_track"]
+                if change == "wrong_sha":
+                    gps["sha256"] = "f" * 64
+                elif change == "missing_file":
+                    gps["path"] = "nonexistent.gpx"
+                elif change == "osm_uri":
+                    gps["source_uri"] = "https://www.openstreetmap.org/node/11"
+                else:
+                    gps["mime_type"] = "text/plain"
+                report = self.audit(packet)
+                self.assertEqual(report["results"][0]["status"], "REJECTED")
+                self.assertEqual(report["approved_physical_sign_coordinates"], 0)
+
+    def test_gnss_track_malicious_xml_doctype_refused(self):
+        fake = (
+            b'<!DOCTYPE gpx [<!ENTITY location SYSTEM "file:///etc/passwd">]>'
+            b'<gpx xmlns="http://www.topografix.com/GPX/1/1">'
+            b'<wpt lat="0" lon="0"><time>2026-11-14T01:00:00Z</time></wpt>'
+            b'</gpx>'
+        )
+        report = self.audit(self.attach_synthetic_gpx(deepcopy(self.packet), fake))
+        self.assertIn("GPS_TRACK_XML_DTD_NOT_ALLOWED",
+                      report["results"][0]["reasons"])
+
+    def test_symlinked_photo_parent_rejected_before_human_review(self):
+        actual = self.photo_root / "originals"
+        actual.mkdir()
+        (actual / "real.jpg").write_bytes(self.photo_bytes)
+        (self.photo_root / "shortcut").symlink_to(actual, target_is_directory=True)
+        packet = deepcopy(self.packet)
+        packet["sign_evidence"][0]["photo"]["path"] = "shortcut/real.jpg"
+        report = self.audit(packet)
+        self.assertIn("SYMLINKED_PRIVATE_EVIDENCE_PATH",
+                      report["results"][0]["reasons"])
+        self.assertEqual(report["approved_physical_sign_coordinates"], 0)
+
     def test_valid_synthetic_paperwork_still_authorizes_nothing(self):
         result = self.audit()
         self.assertEqual(result["status"], "HUMAN_REVIEW_REQUIRED")

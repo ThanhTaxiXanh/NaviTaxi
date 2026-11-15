@@ -174,3 +174,15 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
   physical GPS coordinates committed. Approved speeds/signs both zero.
 
 - PR #27 code-head 5c780fa2c21ccaa0d5d00a4eefdf25c1fb67c41b: **105/105 Python/SQLite PASS** (Actions run 43669326250) and **Android assembleDebug/unit/lint/APK asset audit PASS** (43669326276). Merge and main CI to confirm after docs-head commit.
+
+
+## Phase 11 PR #28 — optional GNSS GPX integrity
+- Base main 58a683fbac17d54532c12ec72c14cebeafefb1b5 and previous main
+  Android CI run 43669559896 SUCCESS.
+- PR head `9c934fa7d4f30b8f9abbfa9d033490eab9c939c0`: **114/114
+  Python/SQLite tests PASS** on Actions run 43670317025.
+  Final code/docs-head Python/Android build/JUnit/lint/APK audit and merge
+  acceptance are pending; never claim production completion prematurely.
+- Real 2026-11-12 OSM reference: 811 unverified sign-tag objects, 44,472
+  raw speed-tag ways; 0 GPS sign coordinates or legal km/h verified independently.
+- No Kotlin/Android app, assets, SQLite trusted pin or paid service added.

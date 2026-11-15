@@ -60,6 +60,62 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
             self.assertEqual(metadata["status"], STATUS)
             self.assertFalse(metadata["production_database_authorized"])
 
+    def test_optional_gnss_gpx_bytes_bundle_and_offline_reaudit(self):
+        self.fixture.attach_synthetic_gpx()
+        self.fixture.audit()
+        result = self.pack()
+        checked = verify(self.archive, result["sha256"])
+        self.assertEqual(result["gps_track_file_count"], 1)
+        self.assertEqual(checked["gps_track_file_count"], 1)
+        self.assertEqual(checked["verified_archived_files"], 6)
+        self.assertEqual(checked["approved_physical_sign_coordinates"], 0)
+        with zipfile.ZipFile(self.archive) as archive:
+            self.assertIn("tracks/synthetic-track.gpx", archive.namelist())
+            self.assertEqual(
+                archive.read("tracks/synthetic-track.gpx"),
+                (self.fixture.photo_root / "synthetic-track.gpx").read_bytes()
+            )
+            manifest = json.loads(archive.read(META_NAME))
+            self.assertEqual(manifest["gps_track_file_count"], 1)
+            self.assertFalse(manifest["production_database_authorized"])
+
+    def test_gps_gpx_sha_mismatch_cannot_be_archived(self):
+        packet = self.fixture.attach_synthetic_gpx(deepcopy(self.fixture.packet))
+        packet["sign_evidence"][0]["gps_track"]["sha256"] = "f" * 64
+        (self.root / "packet.json").write_bytes(fixture_module.jsonbytes(packet))
+        with self.assertRaisesRegex(
+                EvidenceError, "BUNDLE_REQUIRES_NONEMPTY_MECHANICALLY_READY_EVIDENCE"):
+            self.pack()
+        self.assertFalse(self.archive.exists())
+
+    def test_gps_gpx_unreferenced_extra_file_cannot_pass_recomputed_checksums(self):
+        self.fixture.attach_synthetic_gpx()
+        self.fixture.audit()
+        self.pack()
+        forged, sha = self._repack_with_correct_internal_checksums(
+            extra={"tracks/extra-unreferenced.gpx":
+                   b'<gpx xmlns="http://www.topografix.com/GPX/1/1"/>'}
+        )
+        with self.assertRaisesRegex(
+                EvidenceError, "UNREFERENCED_OR_MISSING_GPS_TRACK"):
+            verify(forged, sha)
+
+    def test_gpx_replaced_but_inner_hashes_recomputed_reaudit_fails(self):
+        self.fixture.attach_synthetic_gpx()
+        self.fixture.audit()
+        self.pack()
+        spoofed = (
+            b'<gpx xmlns="http://www.topografix.com/GPX/1/1">'
+            b'<wpt lat="0.09" lon="0.09">'
+            b'<time>2026-11-14T01:00:00Z</time>'
+            b'</wpt></gpx>'
+        )
+        forged, sha = self._repack_with_correct_internal_checksums(
+            extra={"tracks/synthetic-track.gpx": spoofed}
+        )
+        with self.assertRaisesRegex(EvidenceError, "ARCHIVE_REAUDIT_MISMATCH"):
+            verify(forged, sha)
+
     def test_repeated_packing_is_byte_for_byte_deterministic(self):
         a = self.pack()
         self.archive = self.root / "second-bundle.zip"
@@ -124,7 +180,8 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
         packet = deepcopy(self.fixture.packet)
         packet["sign_evidence"][0]["photo"]["path"] = "link/test.jpg"
         (self.root / "packet.json").write_bytes(fixture_module.jsonbytes(packet))
-        with self.assertRaisesRegex(EvidenceError, "SYMLINK_IN_PHOTO_PATH"):
+        with self.assertRaisesRegex(EvidenceError,
+                                    "BUNDLE_REQUIRES_NONEMPTY_MECHANICALLY_READY_EVIDENCE"):
             self.pack()
 
     def test_unchanged_existing_archive_is_never_overwritten(self):

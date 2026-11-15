@@ -11,13 +11,15 @@ import argparse
 import hashlib
 import io
 import json
+import shutil
 from pathlib import Path, PurePosixPath
 import sys
 import tempfile
 import zipfile
 
 from review_road_field_evidence import (
-    EvidenceError, MAX_FILE, SHA, audit_evidence, digest, read_json, read_queue,
+    EvidenceError, MAX_FILE, MAX_GPX_BYTES, SHA, audit_evidence, digest,
+    read_json, read_queue,
 )
 
 FORMAT = "navitaxi-private-field-evidence-bundle/v1"
@@ -25,6 +27,7 @@ STATUS = "MECHANICAL_EVIDENCE_ONLY_HUMAN_REVIEW_REQUIRED"
 MAX_TOTAL = 300_000_000
 MAX_ARCHIVE = 350_000_000
 MAX_PHOTOS = 1000
+MAX_TRACKS = 1000
 MAX_PHOTO_BYTES = 30_000_000  # same hard cap as survey_photo()
 MAX_MANIFEST = 2_000_000
 CHUNK = 128 * 1024
@@ -40,6 +43,7 @@ MANIFEST_KEYS = frozenset({
     "approved_legal_speeds", "approved_physical_sign_coordinates",
     "driver_alerts_allowed", "production_database_authorized", "warning",
 })
+TRACK_MANIFEST_KEY = "gps_track_file_count"
 
 
 def require(condition, reason):
@@ -99,6 +103,22 @@ def referenced_photos(packet):
                 "SIGN_PHOTO_REFERENCE_REQUIRED")
         names.add("photos/" + safe_relative(sign["photo"].get("path")))
     require(len(names) <= MAX_PHOTOS, "TOO_MANY_EVIDENCE_PHOTOS")
+    return names
+
+
+def referenced_tracks(packet):
+    """Optional original GNSS logs, never generated from OSM or sign coordinates."""
+    require(isinstance(packet, dict)
+            and isinstance(packet.get("sign_evidence"), list),
+            "INVALID_SIGN_EVIDENCE_LIST")
+    names = set()
+    for sign in packet["sign_evidence"]:
+        require(isinstance(sign, dict), "INVALID_SIGN_RECORD")
+        if "gps_track" in sign:
+            track = sign["gps_track"]
+            require(isinstance(track, dict), "INVALID_GPS_TRACK_REFERENCE")
+            names.add("tracks/" + safe_relative(track.get("path")))
+    require(len(names) <= MAX_TRACKS, "TOO_MANY_GPS_TRACKS")
     return names
 
 
@@ -165,6 +185,10 @@ def package(review_zip, expected_queue_sha, evidence, photo_root, output):
             "BUNDLE_REQUIRES_NONEMPTY_MECHANICALLY_READY_EVIDENCE")
     packet = read_json(evidence.read_bytes())
     photo_entries = referenced_photos(packet)
+    track_entries = referenced_tracks(packet)
+    require(not ({n.removeprefix("photos/") for n in photo_entries}
+                 & {n.removeprefix("tracks/") for n in track_entries}),
+            "GPS_TRACK_PHOTO_PATH_COLLISION")
 
     specs = {
         SOURCE_NAME: _file_spec(review_zip),
@@ -175,6 +199,10 @@ def package(review_zip, expected_queue_sha, evidence, photo_root, output):
         specs[name] = _file_spec(photo_source(photo_root, name.removeprefix("photos/")))
         require(specs[name]["size_bytes"] <= MAX_PHOTO_BYTES,
                 "OVERSIZED_EVIDENCE_PHOTO")
+    for name in sorted(track_entries):
+        specs[name] = _file_spec(photo_source(photo_root, name.removeprefix("tracks/")))
+        require(specs[name]["size_bytes"] <= MAX_GPX_BYTES,
+                "OVERSIZED_GPS_TRACK")
 
     entries = [
         {"path": name, "size_bytes": spec["size_bytes"], "sha256": spec["sha256"]}
@@ -198,6 +226,8 @@ def package(review_zip, expected_queue_sha, evidence, photo_root, output):
         "warning": ("PRIVATE observational materials, NOT validated road law, "
                     "field truth, release approval, or permission to drive by."),
     }
+    if track_entries:
+        manifest[TRACK_MANIFEST_KEY] = len(track_entries)
     specs[META_NAME] = _bytes_spec(canonical_json(manifest))
     require(specs[META_NAME]["size_bytes"] <= MAX_MANIFEST,
             "BUNDLE_MANIFEST_TOO_LARGE")
@@ -221,6 +251,7 @@ def package(review_zip, expected_queue_sha, evidence, photo_root, output):
     return {"archive": str(output), "size_bytes": size, "sha256": checksum,
             "source_queue_sha256": expected_queue_sha,
             "photo_file_count": len(photo_entries),
+            "gps_track_file_count": len(track_entries),
             "status": STATUS, "approved_legal_speeds": 0,
             "approved_physical_sign_coordinates": 0,
             "driver_alerts_allowed": False}
@@ -237,7 +268,8 @@ def verify(archive, expected_archive_sha):
     with zipfile.ZipFile(archive) as z:
         infos = z.infolist()
         names = [i.filename for i in infos]
-        require(len(infos) <= MAX_PHOTOS + 5 and len(set(names)) == len(names),
+        require(len(infos) <= MAX_PHOTOS + MAX_TRACKS + 5
+                and len(set(names)) == len(names),
                 "DUPLICATE_OR_TOO_MANY_ARCHIVE_MEMBERS")
         require(META_NAME in names and SUMS_NAME in names
                 and SOURCE_NAME in names and EVIDENCE_NAME in names
@@ -254,6 +286,9 @@ def verify(archive, expected_archive_sha):
             if info.filename.startswith("photos/"):
                 require(info.file_size <= MAX_PHOTO_BYTES,
                         "OVERSIZED_EVIDENCE_PHOTO")
+            if info.filename.startswith("tracks/"):
+                require(info.file_size <= MAX_GPX_BYTES,
+                        "OVERSIZED_GPS_TRACK")
             if info.filename == EVIDENCE_NAME:
                 require(info.file_size <= MAX_FILE,
                         "OVERSIZED_EVIDENCE_PACKET")
@@ -261,7 +296,8 @@ def verify(archive, expected_archive_sha):
         require(total <= MAX_TOTAL and z.getinfo(META_NAME).file_size <= MAX_MANIFEST,
                 "ARCHIVE_UNCOMPRESSED_SIZE_LIMIT")
         manifest = read_json(z.read(META_NAME))
-        require(isinstance(manifest, dict) and set(manifest) == MANIFEST_KEYS
+        require(isinstance(manifest, dict) and
+                set(manifest) in (MANIFEST_KEYS, MANIFEST_KEYS | {TRACK_MANIFEST_KEY})
                 and manifest.get("format") == FORMAT
                 and manifest.get("status") == STATUS
                 and manifest.get("approved_legal_speeds") == 0
@@ -284,7 +320,8 @@ def verify(archive, expected_archive_sha):
             expected[row["path"]] = row
         require(set(expected) == set(names) - {META_NAME, SUMS_NAME}
                 and all(n in (SOURCE_NAME, EVIDENCE_NAME, REPORT_NAME)
-                        or n.startswith("photos/") for n in expected),
+                        or n.startswith("photos/") or n.startswith("tracks/")
+                        for n in expected),
                 "UNEXPECTED_EVIDENCE_ARCHIVE_FILES")
         # The bundle must not carry even a single image unrelated to a
         # submitted sign. An otherwise valid SHA manifest is not consent to
@@ -293,6 +330,16 @@ def verify(archive, expected_archive_sha):
         require({name for name in expected if name.startswith("photos/")}
                 == referenced_photos(packet),
                 "UNREFERENCED_OR_MISSING_SIGN_PHOTO")
+        require({name for name in expected if name.startswith("tracks/")}
+                == referenced_tracks(packet),
+                "UNREFERENCED_OR_MISSING_GPS_TRACK")
+        require({n.removeprefix("photos/") for n in expected if n.startswith("photos/")}
+                .isdisjoint({n.removeprefix("tracks/") for n in expected
+                             if n.startswith("tracks/")}),
+                "GPS_TRACK_PHOTO_PATH_COLLISION")
+        require(manifest.get(TRACK_MANIFEST_KEY, 0) ==
+                sum(n.startswith("tracks/") for n in expected),
+                "GPS_TRACK_COUNT_MISMATCH")
         expected[META_NAME] = {"path": META_NAME,
                                "size_bytes": z.getinfo(META_NAME).file_size,
                                "sha256": digest(z.read(META_NAME))}
@@ -327,6 +374,16 @@ def verify(archive, expected_archive_sha):
             require(manifest.get("photo_file_count") ==
                     sum(n.startswith("photos/") for n in expected),
                     "BUNDLE_PHOTO_COUNT_MISMATCH")
+            # Reviewer reads raw photos and optional GPX from one local
+            # evidence root. The ZIP stores tracks separately to guarantee
+            # an exact, auditable member inventory without extra photos.
+            for name in expected:
+                if name.startswith("tracks/"):
+                    relative = name.removeprefix("tracks/")
+                    destination = root / "photos" / relative
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    require(not destination.exists(), "GPS_TRACK_PHOTO_PATH_COLLISION")
+                    shutil.copyfile(root / name, destination)
             raw_report = (root / REPORT_NAME).read_bytes()
             repeat = audit_evidence(root / SOURCE_NAME,
                                     manifest["source_queue_sha256"],
@@ -342,6 +399,7 @@ def verify(archive, expected_archive_sha):
                     "status": STATUS,
                     "verified_archived_files": len(expected),
                     "photo_file_count": manifest["photo_file_count"],
+                    "gps_track_file_count": manifest.get(TRACK_MANIFEST_KEY, 0),
                     "approved_legal_speeds": 0,
                     "approved_physical_sign_coordinates": 0,
                     "driver_alerts_allowed": False}

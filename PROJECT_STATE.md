@@ -226,3 +226,11 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
   legal speed records ZERO, Android approved DB SHA list EMPTY. CI pending.
 
 - **PR #27 code-head acceptance:** commit 5c780fa2c21ccaa0d5d00a4eefdf25c1fb67c41b, Python/SQLite **105/105 PASS** GitHub Actions 43669326250; Android assemble, unit, lint and APK road-asset audit **PASS** 43669326276. Final documentation-head CI, merge and post-merge main build must still be verified before release status changes.
+
+
+## Phase 11 / PR #28 GNSS physical-sign evidence supplement (2026-11-15)
+- Base `main` at task start `58a683fbac17d54532c12ec72c14cebeafefb1b5`; previous post-merge Android run 43669559896 SUCCESS, no preexisting open PR.
+- New **optional** original GPX 1.1 `gps_track` evidence attached to a *physical sign observation*; validator checks actual supplied GPX file SHA256, namespace, WGS84 track point, time and distance to measured sign location. It does **not** import OSM `traffic_sign` nodes as surveyed coordinates, or OSM `maxspeed` as law.
+- The private evidence ZIP can carry exact GPX bytes under `tracks/` with independently checkable SHA256SUMS, cross-linked to sign evidence and replayed from archive. Legacy no-GPX v1 packets/bundles remain supported; a **claimed but invalid** GPX fails closed.
+- Added synthetic-only GPS track, malformed XML, tampering, malicious DTD, unrelated GPX, photo parent symlink and report-replay regressions. Python suite **114/114 PASS** on PR #28 code/docs head `9c934fa7d4f30b8f9abbfa9d033490eab9c939c0` (run 43670317025). Android same-head CI must be verified before accepting.
+- Real independently surveyed physical roadside sign coordinates **0**; legally approved road speed values **0**; original unverified Vietnam OSM review ZIP and real field GPS/photos remain outside Git/Android; Kotlin approval SHA list EMPTY, driver alerts BLOCKED. Phase 4 IN PROGRESS, Phase 5 NOT STARTED.

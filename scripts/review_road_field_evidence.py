@@ -18,6 +18,7 @@ from pathlib import Path
 import re
 from urllib.parse import urlsplit
 import zipfile
+from xml.etree import ElementTree as ET
 
 from build_road_review_queues import SIGN_COLUMNS, SPEED_COLUMNS, SIGN_FILE, SPEED_FILE
 
@@ -27,6 +28,10 @@ SHA = re.compile(r"[0-9a-f]{64}\Z")
 SIGN_CODE = re.compile(r"(?:[A-Z]{1,3})\.[0-9]{2,3}[a-z]?\Z")
 MAX_FILE = 80_000_000
 MAX_ROWS = 100_000
+MAX_GPX_BYTES = 2_000_000
+MAX_GPX_POINTS = 10_000
+GPS_TIME_WINDOW_SECONDS = 15 * 60
+GPX_NS = "{http://www.topografix.com/GPX/1/1}"
 EXPECTED_ZIP = {
     "manifest.json", SIGN_FILE, SPEED_FILE, "REVIEW_INSTRUCTIONS.txt", "SHA256SUMS"
 }
@@ -215,16 +220,33 @@ def read_queue(archive_path: Path, expected_sha: str):
     )
 
 
+def private_evidence_bytes(root: Path, rel: str, max_bytes: int, category: str):
+    """Fail closed on linked paths, including symlinked ancestor components."""
+    require(isinstance(rel, str) and rel and len(rel) <= 250
+            and "\\" not in rel and ":" not in rel and
+            not any(ord(c) < 32 or ord(c) == 127 for c in rel),
+            "UNSAFE_" + category + "_PATH")
+    candidate = Path(rel)
+    require(not candidate.is_absolute() and
+            all(part not in ("", ".", "..") for part in rel.split("/")),
+            "UNSAFE_" + category + "_PATH")
+    current = root
+    require(root.is_dir() and not root.is_symlink(), "UNSAFE_PRIVATE_EVIDENCE_ROOT")
+    for part in rel.split("/"):
+        current = current / part
+        require(not current.is_symlink(), "SYMLINKED_PRIVATE_EVIDENCE_PATH")
+    require(current.resolve().is_relative_to(root.resolve())
+            and current.is_file() and 0 < current.stat().st_size <= max_bytes,
+            "MISSING_OR_OVERSIZED_" + category)
+    with current.open("rb") as fh:
+        raw = fh.read(max_bytes + 1)
+    require(0 < len(raw) <= max_bytes, "MISSING_OR_OVERSIZED_" + category)
+    return raw
+
+
 def survey_photo(photo: dict, root: Path):
     require(isinstance(photo, dict), "PHOTO_REQUIRED")
-    rel = photo.get("path")
-    require(isinstance(rel, str) and rel and not Path(rel).is_absolute()
-            and ".." not in Path(rel).parts, "UNSAFE_PHOTO_PATH")
-    p = root / rel
-    require(p.resolve().is_relative_to(root.resolve()) and p.is_file()
-            and not p.is_symlink() and p.stat().st_size <= 30_000_000,
-            "MISSING_OR_UNSAFE_PHOTO")
-    raw = p.read_bytes()
+    raw = private_evidence_bytes(root, photo.get("path"), 30_000_000, "PHOTO")
     mime = photo.get("mime_type")
     require((mime == "image/jpeg" and raw.startswith(b"\xff\xd8")
              or mime == "image/png" and raw.startswith(b"\x89PNG\r\n\x1a\n")),
@@ -233,6 +255,58 @@ def survey_photo(photo: dict, root: Path):
             and photo["license"].lower() != "unknown", "MISSING_PHOTO_LICENSE")
     require(SHA.fullmatch(str(photo.get("sha256"))) is not None
             and digest(raw) == photo["sha256"], "PHOTO_SHA256_MISMATCH")
+
+
+def gps_track_alignment(track: dict, root: Path, lat: float, lon: float,
+                        observed: datetime, accuracy_m: float):
+    """Correlate supplied GPX points/time with claimed sign GPS. NOT proof of truth.
+
+    Optional legacy-v1 supplement. Requires original GPX bytes, rather than
+    accepting an unbacked GPS claim or an external URL as coordinates.
+    """
+    require(isinstance(track, dict) and track.get("mime_type") == "application/gpx+xml"
+            and https(track.get("source_uri"))
+            and isinstance(track.get("license"), str) and track["license"].strip()
+            and track["license"].strip().lower() != "unknown",
+            "INCOMPLETE_GNSS_TRACE_PROVENANCE")
+    raw = private_evidence_bytes(root, track.get("path"), MAX_GPX_BYTES, "GPS_TRACK")
+    require(SHA.fullmatch(str(track.get("sha256"))) is not None
+            and digest(raw) == track["sha256"], "GPS_TRACK_SHA256_MISMATCH")
+    require(b"<!DOCTYPE" not in raw.upper() and b"<!ENTITY" not in raw.upper(),
+            "GPS_TRACK_XML_DTD_NOT_ALLOWED")
+    try:
+        document = ET.fromstring(raw)
+    except ET.ParseError as exc:
+        raise EvidenceError("INVALID_GPS_TRACK_XML") from exc
+    require(document.tag == GPX_NS + "gpx", "GPS_TRACK_REQUIRES_GPX_1_1")
+    points = document.iter()
+    count = 0
+    aligned = False
+    for node in points:
+        if node.tag not in (GPX_NS + "trkpt", GPX_NS + "wpt", GPX_NS + "rtept"):
+            continue
+        count += 1
+        require(count <= MAX_GPX_POINTS, "TOO_MANY_GPS_TRACK_POINTS")
+        try:
+            sample_lat = float(node.attrib["lat"])
+            sample_lon = float(node.attrib["lon"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise EvidenceError("GPS_TRACK_INVALID_WGS84_POINT") from exc
+        number(sample_lat, -90, 90)
+        number(sample_lon, -180, 180)
+        times = node.findall(GPX_NS + "time")
+        require(len(times) == 1 and times[0].text, "GPS_TRACK_POINT_TIME_REQUIRED")
+        sample_at = date_at(times[0].text.strip())
+        distance = math.hypot(
+            (sample_lat - lat) * 110540,
+            (sample_lon - lon) * 111320 * max(
+                0.01, math.cos(math.radians((sample_lat + lat) / 2))))
+        if (distance <= max(15.0, accuracy_m + 10.0) and
+                abs((sample_at - observed).total_seconds()) <= GPS_TIME_WINDOW_SECONDS):
+            aligned = True
+    require(count > 0 and aligned, "GPS_TRACK_HAS_NO_SIGN_TIME_POSITION_MATCH")
+
+
 
 
 def independent_record(item, source, kind, photo_root):
@@ -263,8 +337,11 @@ def independent_record(item, source, kind, photo_root):
                 and item["related_osm_way_id"] > 0, "RELATED_WAY_REQUIRED")
         lat = number(item.get("latitude"), -90, 90)
         lon = number(item.get("longitude"), -180, 180)
-        number(item.get("gps_accuracy_m"), 0.01, 25)
+        accuracy_m = number(item.get("gps_accuracy_m"), 0.01, 25)
         number(item.get("bearing_degrees"), 0, 359.999999)
+        if "gps_track" in item:
+            gps_track_alignment(item["gps_track"], photo_root, lat, lon,
+                                observed, accuracy_m)
         require(nearest_road_m(lat, lon, coords) <= 100,
                 "SURVEY_POINT_NOT_NEAR_RELATED_ROAD")
         survey_photo(item.get("photo"), photo_root)
