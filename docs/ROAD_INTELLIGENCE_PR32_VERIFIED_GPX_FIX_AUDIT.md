@@ -70,7 +70,7 @@ Five real APK **entry paths**, all synthetic/experimental map resources:
 
 APK scan: no `res/raw/` or `res/assets/` entries; no
 `*.db`, `*.sqlite`, `*.sqlite3`, `*.realm`, `*.geojson`,
-`*.pbf`, or `*.csv` entries. The five map-style/manifest JSONs
+`*.pbf`, or `*.csv` entries. The four map-style/manifest JSON files
 remain descriptive, not legal evidence; the tiny PMTiles v3 file
 contains only synthetic vector features. The APK has five DEX files and
 one unrelated `DebugProbesKt.bin`; DEX string inspection is not full
