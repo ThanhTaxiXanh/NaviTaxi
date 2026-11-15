@@ -178,3 +178,9 @@
 - Added synthetic-only legal speed / sign-direction cases and portable
   ZIP round-trip regression. No new paid service, app code, real legal
   limits, GPS sign coordinates, production DB or Android release pin.
+
+
+## 2026-11-15 — stricter road-candidate spatial audit (PR pending)
+- For candidate road LineStrings, require stored bounding coordinates to match actual geometry extrema within 1e-8 degrees; merely containing geometry is insufficient.
+- For physical-sign point and road RTree entries, replace 0.001-degree discrepancy acceptance with float32-ULP-aware comparison to canonical SQLite coordinates. Normal SQLite outward rounding remains supported.
+- Add four synthetic-only regression tests; no production approvals, legal speeds, surveyed sign coordinates, Android resources or dependencies added.
