@@ -109,3 +109,15 @@
 - Prior audit marked the first sign record READY_FOR_HUMAN_REVIEW even after a later record reused its photographic SHA or location. That first record could leave an erroneous sense of review readiness, even though runtime Android approvals remained empty.
 - Changed to quarantine ALL conflicting sign records and speed rows referencing them. Additional geometry and sign/law observation timing consistency rules added; mechanical checks still cannot authenticate real GPS/photos, field applicability, independent reviewer identity or legal authority.
 - PR #25 code-head Python/SQLite 86/86 PASS at 43664352656 and Android build/unit/lint/APK scan PASS at 43664352607; final documentation-head and main post-merge CI pending. No production driver warnings authorized.
+
+
+## 2026-11-15 PR #26 private evidence archive
+- First Python CI #43668160013: archive round-trip test expected 4 verified
+  files but verifier correctly counted 5 (source queue, packet, audit,
+  photograph and MANIFEST); also importing a TestCase class into a second
+  test module caused duplicate discovery. Corrected expected count 5 and
+  import through module alias; rerun before merging.
+- Threat model: a ZIP digest and self-reported GPS/photograph metadata cannot
+  prove physical roadside sign, sign orientation, copyright, independent
+  reviewer identity or actual law applicability. No approval authority added.
+- Private raw photo bytes must not enter GitHub CI, repository or APK.

@@ -124,3 +124,16 @@
 - Field evidence audit now quarantines BOTH sides of duplicate sign/source/photo/point and conflicting speed scope; speed reviews citing any rejected sign are also rejected.
 - Sign and speed must have the same independent geometry SHA, correct direction/way and chronological field survey. Law review checks cannot predate observation; optional legal expiry rejected if obsolete.
 - Reject untrusted driver/DB approval fields in input; no real GPS/speed data or Android trust pins added. New synthetic regressions; code-head Python 86/86 PASS (run 43664352656) and Android build/unit/lint/APK audit PASS (43664352607). Final documentation-head CI pending.
+
+
+## Phase 11 — private field sign/speed evidence archiving (PR #26, CI pending)
+- New scripts/package_field_evidence.py creates deterministic, SHA256-pinned
+  private archives holding unchanged OSM reference review ZIP, independent
+  GPS/photo/sign/speed/legal evidence JSON, original photo bytes, audit report,
+  manifest and SHA256SUMS, with strict caps/paths and exclusive file creation.
+- Separate offline verification requires expected whole-ZIP SHA and replays the
+  field/sign/speed mechanical auditor against *only archived bytes*, detecting
+  altered images or fabricated review results even with updated inner SHA sums.
+- 15 synthetic-only tests added. Real review queue, original private photos
+  and independent legal sign/speed decisions NOT included; no Android pins,
+  APK assets, approved speed records or alerts added.

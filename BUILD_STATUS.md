@@ -151,3 +151,14 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Base main SHA 5c950d31147b672bc025ecbaf9b1c6b5222e7032, verified Android push CI 43662265877 SUCCESS.
 - This branch changes Python evidence intake and synthetic-only tests, no Kotlin/APK runtime data or new dependencies. Code-head Python/SQLite 86/86 PASS at run 43664352656; Android assembleDebug/unit/lint and APK scan PASS at run 43664352607. Final documentation-head CI and post-merge main still require confirmation.
 - No real law-approved speed record, physical sign coordinate or production road DB; Android approved SHA pin list remains EMPTY.
+
+
+## PR #26 — private sign/speed field evidence ZIP
+- Base main 57dcfa3bdb1bbbf55a797a5b0f6b44f96edfc196 with post-merge Android
+  CI 43664591153 SUCCESS. Code and 15 synthetic-only archive tests are PR-only.
+- First Python suite run 43668160013 uncovered only an incorrect unit-test
+  expected file count (archive includes 3 core entries, one photo and MANIFEST);
+  the assertion and duplicate import/discovery were corrected in the PR.
+  Rerun exact final-head full Python/SQLite + Android CI before acceptance.
+- This patch never approves real laws, sign positions or speed limits. Android
+  RoadIntelligenceApprovedPins entries remain empty and driver alerts BLOCKED.
