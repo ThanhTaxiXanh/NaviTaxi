@@ -66,3 +66,9 @@ A data source's URL and license must be recorded before its content can be shipp
 - Verified physical sign points: 0. Verified legally enforceable site-specific speed records: 0. Survey dates/GPS accuracy/bearing, photographic evidence SHA, reviewer, vehicle class, direction and legal clauses are intentionally blank.
 - Official Government Gazette reference for HUMAN legal research: https://congbao.chinhphu.vn/van-ban/van-ban-hop-nhat-so-74-2026-vbhn-tt-bxd-470578/68818.htm (`74/2026/VBHN-TT-BXD`, dated 2026-09-15). It consolidates regulations on speed/safe distance, **not** a certified map of where any OSM speed tag applies. Original `38/2024/TT-BGTVT` effective 2025-01-01; verify later changes and context.
 - Real CSV files remain outside Android APK, not a source DB and not approved for navigation alerts.
+
+
+## 2026-11-15 evidence intake contract
+- New scripts/review_road_field_evidence.py consumes the existing 2026-11-12 real Vietnam UNVERIFIED review queue ZIP when separately provided with exact SHA256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c. It never downloads OSM tiles or calls paid APIs.
+- Independent survey evidence JSON and photo bytes are distinct external private inputs. No real survey JSON/photos added to Git. Mechanical test uses only synthetic fixtures. Real approved legal km/h records: 0; approved measured physical sign coordinates: 0.
+- Legal official references remain 74/2026/VBHN-TT-BXD and 38/2024/TT-BGTVT; no automatic speed inference from either or OSM.
