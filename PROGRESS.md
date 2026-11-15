@@ -244,3 +244,13 @@
 - [x] PR #32 merged SHA 4f009ac16735acae35c4f8d0bd1aa8c958a8ff2a and main Android CI SUCCESS (run #43679593826).
 - [x] Inspected actual CI debug APK, audit ZIP, nested SHA256SUMS 13/13 PASS; exact paths/bytes/checksums in `docs/ROAD_INTELLIGENCE_PR32_VERIFIED_GPX_FIX_AUDIT.md`.
 - [ ] Real WGS84 sign survey original GPX/photos, independent receiver evidence, verified road geometry/heading, taxi-class and direction/date-specific legal clauses remain absent. Approval 0; all driver alarms BLOCKED.
+
+
+## 2026-11-15 — EXIF original-photo inconsistency quarantine
+
+- [x] Rechecked main `cfae62309f645904151c6d9a23aa00962b7ad559`, PR count zero, last main Android CI SUCCESS.
+- [x] Added bounded JPEG APP1/TIFF/Exif DateTimeOriginal + timezone and GPS latitude/longitude cross-check against separately surveyed sign WGS84/accuracy/time. Missing metadata means UNKNOWN, not proof.
+- [x] Five synthetic-only tests for time and GPS contradiction, matched metadata, missing timezone, malformed/duplicate JPEG EXIF and linked-speed quarantine.
+- [ ] Check full Python/SQLite suite and Android build/JUnit/lint/APK asset CI on final PR head; repair any failures and merge **only if required checks succeed**.
+- [ ] Confirm post-merge main CI, re-audit APK resources and record exact internal file paths/sizes/SHA-256.
+- [ ] Obtain actual private original roadside sign photos/GPX and independent legal speed review by vehicle/direction/date; no approved records or driver alerts.

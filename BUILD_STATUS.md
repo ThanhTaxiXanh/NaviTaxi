@@ -231,3 +231,11 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Main road-asset audit outer ZIP 7,897 B SHA256 f3bd457d7c19f371a29a40adaf698286c60eb4f5dfe719d803df5334df5ff3d9; inner ZIP 8,953 B SHA256 a2d76fee329512c7ee71cde096436e96de01ddbc28bc12f33a9ec3f746beb8b3, CRC PASS, 13/13 SHA256SUMS PASS.
 - Five experimental/synthetic map assets only; no real road speed/sign database, .pbf/.geojson/.csv or res/raw assets. Full paths and shapes in `docs/ROAD_INTELLIGENCE_PR32_VERIFIED_GPX_FIX_AUDIT.md`. This is not device field acceptance.
 - Real legal/survey approvals remain 0/0; Android SHA pins EMPTY; warnings BLOCKED.
+
+
+## 2026-11-15 — Phase 11 original JPEG EXIF consistency branch (CI pending)
+
+- Baseline main `cfae62309f645904151c6d9a23aa00962b7ad559`, Android post-merge run #43680051200 SUCCESS before changes.
+- Python evidence photo validator, self-contained TIFF/Exif helper and synthetic regression tests only. No Android code/dependencies or production speed/sign databases added.
+- Python/SQLite full suite and Android `:app:assembleDebug :app:testDebugUnitTest :app:lintDebug` plus APK asset audit **NOT YET ACCEPTED** for this new branch until final-head GitHub Actions complete.
+- Android `RoadIntelligenceApprovedPins.entries` must remain empty; 0 legal speeds, 0 surveyed sign GPS points and alerts BLOCKED.

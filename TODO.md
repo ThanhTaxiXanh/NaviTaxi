@@ -165,3 +165,11 @@
 - Obtain legitimate private original GPS/photo sign surveys with independent time, instrument accuracy, WGS84, side-of-road and facing orientation verification; evaluate GNSS metadata against raw device evidence.
 - Independently confirm applicable posted/regulatory speed by direction, specific taxi/vehicle class, effective time, governing instrument and road geometry before any SQLite release approval.
 - Keep original OSM 811 sign tags and 44,472 speed-tagged ways reference-only; Android signed-off DB allowlist remains EMPTY and alarms BLOCKED. Phase 4 IN PROGRESS; Phase 5 NOT STARTED.
+
+
+## New original-sign-photo EXIF review gate (2026-11-15)
+
+- Require full final-head Python/SQLite and Android build/unit/lint/APK audit SUCCESS before merging photo-EXIF GPX/WGS84 consistency PR; reject signed-off data promotion from EXIF alone.
+- Follow up with original unedited field photos, GPS/GPX receiver history, independent device clock provenance, WGS84 accuracy, orientation and legal road-speed scope. Camera EXIF conflicts quarantine the claimed point and dependent posted-sign speed assessments; matches remain HUMAN REVIEW REQUIRED.
+- Add human inspection checklist for metadata stripping and PNG EXIF handling in a future evidence schema version; do not invent missing metadata or claims.
+- OSM 811 sign-tag and 44,472 speed-way candidates remain unverified. Android approved pins EMPTY, legal speed/sign points approved ZERO, alerts BLOCKED.

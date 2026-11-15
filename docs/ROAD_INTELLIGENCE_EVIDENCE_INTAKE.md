@@ -266,3 +266,41 @@ or approves sign coordinates, speed limits or Android trust SHA pins.
   pins stay empty, driving alerts BLOCKED.
 
 Official file-format reference: https://www.topografix.com/gpx/1/1/
+
+
+## Optional original-JPEG EXIF self-consistency (2026-11-15, new PR)
+
+For each independently reported physical roadside sign, the existing photo
+`sha256` is checked against **actual private original file bytes**. For
+`image/jpeg` only, the new bounded standard-library TIFF/EXIF reader checks
+the *available* original metadata before submitting the sign and any linked
+legal-speed paperwork for human review.
+
+- Read APP1 `Exif\0\0` and TIFF IFD pointers in little- or big-endian order;
+  reject duplicate APP1 EXIF blocks, truncated/out-of-range fields, invalid
+  signed GPS hemispheres or invalid GPS rationals. Limit IFD sizes and JPEG
+  segments to reduce untrusted-input risks. No GPS coordinates are generated.
+- If both `DateTimeOriginal` (0x9003) **and** its explicit timezone
+  `OffsetTimeOriginal` (0x9011) are present, compare the photo timestamp with
+  the sign's `observed_at` in absolute time. Reject differences above 15
+  minutes. An Exif camera clock, date or timezone **can be edited**; equality
+  is not proof of capture time or field independence.
+- If the EXIF GPS latitude/longitude references and rational values are
+  present, compare **that original embedded claim** to the independently
+  claimed WGS84 `latitude`/`longitude`. Reject disagreement exceeding
+  `max(15m, claimed gps_accuracy_m + 10m)`. Camera location EXIF is not
+  GPS accuracy certification, not a road-segment coordinate and not proof of
+  the sign's existence, direction or legal applicability.
+- EXIF absent, or DateTimeOriginal without OffsetTimeOriginal: UNKNOWN time
+  provenance, never assume UTC or Vietnam local timezone. PNG EXIF is not
+  parsed by this JPEG-only module and remains UNKNOWN; original PNG bytes and
+  checksum are still required. Receiver logs, photo provenance, camera clock
+  and sign orientation still need independent human examination.
+- A sign rejected for contradictory original-photo EXIF also disqualifies
+  any linked `posted_sign_status=observed` legal-speed paperwork. Production
+  approvals remain **ZERO**, release SHA pins EMPTY and driver alerts BLOCKED.
+
+The verifier uses no paid SDK and does not copy photos/GPX to Git/APK.
+Representative TIFF/Exif documentation:
+https://cipa.jp/std/documents/e/DC-X010-2017.pdf . Original reviewer
+identity and all metadata remain untrusted until independently inspected.
