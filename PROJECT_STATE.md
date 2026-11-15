@@ -224,3 +224,5 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Original UNVERIFIED review ZIP and independent GPS/photo/legal source
   evidence remain external, not in Git/APK. Verified sign coordinates ZERO,
   legal speed records ZERO, Android approved DB SHA list EMPTY. CI pending.
+
+- **PR #27 code-head acceptance:** commit 5c780fa2c21ccaa0d5d00a4eefdf25c1fb67c41b, Python/SQLite **105/105 PASS** GitHub Actions 43669326250; Android assemble, unit, lint and APK road-asset audit **PASS** 43669326276. Final documentation-head CI, merge and post-merge main build must still be verified before release status changes.

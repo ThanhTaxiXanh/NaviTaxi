@@ -172,3 +172,5 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
   tests and Android build/unit/lint and APK audit before merging PR #27.
 - No Android application code or asset alterations, no speed DB and no
   physical GPS coordinates committed. Approved speeds/signs both zero.
+
+- PR #27 code-head 5c780fa2c21ccaa0d5d00a4eefdf25c1fb67c41b: **105/105 Python/SQLite PASS** (Actions run 43669326250) and **Android assembleDebug/unit/lint/APK asset audit PASS** (43669326276). Merge and main CI to confirm after docs-head commit.

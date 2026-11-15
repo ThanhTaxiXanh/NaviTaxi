@@ -148,3 +148,5 @@
   into the future. Adversarial tests use synthetic GPS/photos only.
 - No actual physical sign points, enforceable speed values, production DB,
   approved digest or Android driver alert added.
+
+- PR #27 code-head CI recorded: Python/SQLite 105/105 PASS (43669326250); Android assemble/unit/lint/APK audit PASS (43669326276). No real legal/physical approval or Android pin modifications.

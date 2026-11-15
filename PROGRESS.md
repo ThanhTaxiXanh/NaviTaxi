@@ -182,3 +182,6 @@
       measurements or speed laws introduced**.
 - [ ] Verify PR #27 exact-head Python + Android CI, merge only green,
       confirm post-merge `main` build and APK road-asset audit.
+
+- [x] PR #27 code-head 5c780fa2: Python **105/105 PASS** (43669326250), Android build/unit/lint/APK inventory **PASS** (43669326276).
+- [ ] Verify final documentation-head CI, merge cleanly and check main post-merge Android run.
