@@ -110,3 +110,5 @@
 - Hardened CSV raw string cells against spreadsheet formula injection and blocked output into Android/verified road assets.
 - New synthetic-only regressions and CI review evidence; Python 43659839106 and Android 43659839088 PASS on code head after correcting one negative-test expectation.
 - Current official speed research link: 74/2026/VBHN-TT-BXD (15 September 2026), **not** an auto-applied legal maxspeed table. Real sign/speed approvals still zero.
+
+- Review queue implementation PR #22 merged to main `39cf3185ee91239c21ec0f6d57246e79ed006bf6` after final-head Python (60/60, 43660068830) and Android build/lint (43660068771) PASS. Real-snapshot CSV survey and speed legal-review packet remains UNVERIFIED; no driver alerts enabled.

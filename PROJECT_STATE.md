@@ -173,3 +173,13 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Both CSVs leave all reviewer, position survey and legal-evidence columns blank; all statuses PENDING_INDEPENDENT_REVIEW, approvals FALSE. This does not create/import `road_intelligence.db`, or modify the empty Android source approval pin list.
 - Current legal research reference: official Government Gazette `74/2026/VBHN-TT-BXD` dated 2026-09-15, https://congbao.chinhphu.vn/van-ban/van-ban-hop-nhat-so-74-2026-vbhn-tt-bxd-470578/68818.htm ; NOT a per-road speed mapping or automatic rule.
 - Code-head CI after one test expectation correction: Python/SQLite 43659839106 SUCCESS; Android assemble/unit/lint/APK 43659839088 SUCCESS. Final PR docs-head acceptance/merge pending. Phase 4 IN PROGRESS; Phase 5 NOT STARTED; 0 real driver-approved speeds and field-signed signs.
+
+
+## Verified field-sign and legal-speed worklist handoff — 2026-11-15
+- PR #22 https://github.com/ThanhTaxiXanh/NaviTaxi/pull/22 MERGED as main `39cf3185ee91239c21ec0f6d57246e79ed006bf6`.
+- Final PR head `17acfac4e3c5c035abe2748b02351f2bf038ec1b`: Python/SQLite/source review worklists 60/60 PASS run 43660068830; Android build/JUnit/lint/APK audit PASS run 43660068771.
+- Synthetic test evidence artifact ID `14140060222` from code-head run 43659839106 includes mock-only CSV queue/checksum ZIP; PR final-head run 43660068830 also accepted. No real PBF re-downloaded.
+- Real source review queue archive separately generated and verified: `NaviTaxi_Vietnam_2026-11-12_Field_Sign_Speed_Review_UNVERIFIED.zip` 1,170,686 B sha256 `26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c`. Source snapshot SHA `ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed`.
+- Sign object triage: 654 unknown code, 156 specific OSM tag needing physical field survey, 1 way without point. Speed way triage: 41,356 unverified plain numeric, 2,924 without primary maxspeed, 192 complex/directional/conditional. All 45,283 review rows have blank reviewer/evidence and approval FALSE.
+- Source legal research portal: 74/2026/VBHN-TT-BXD (official consolidated circular, 2026-09-15), not per-way legal speed proof. No field signs actually surveyed and 0 legal speed records approved.
+- Phase 4 remains IN PROGRESS/BLOCKED (licensed real PMTiles/catalog and field/OEM evidence). Phase 5 NOT STARTED. Phase 11 driver warnings not enabled.

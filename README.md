@@ -92,3 +92,5 @@ PR #19 acquired and SHA256-verified a real, fixed-date Geofabrik Vietnam OSM sna
 
 ### Road sign field-survey and legal speed review worklists (Phase 4)
 The project now has a source-hash-gated review-queue generator for independently audited Vietnam OSM data. From 44,472 speed-tagged OSM ways and 811 sign-tagged objects, it produces separate CSVs with original source identifiers, optional **UNVERIFIED** node coordinates and blank fields for genuine field survey and current legal analysis. Source: ODbL-1.0 © OpenStreetMap contributors. All approval/alert statuses FALSE; no Android DB or speed warning is enabled. See `docs/ROAD_INTELLIGENCE_FIELD_REVIEW_WORKLISTS.md` and PR #22.
+
+- PR #22 accepted and merged (39cf3185): 60/60 Python/SQLite tests PASS, Android debug build/unit/lint PASS. Review CSVs are source-audit tools only and do NOT grant legal speed/physical sign/driver alert approval.

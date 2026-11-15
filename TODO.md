@@ -81,7 +81,7 @@
 
 
 ## Next after OSM review worklist generation
-- Merge PR #22 only after final-head Python/SQLite and Android CI success; record final exact merge SHA and canonical review ZIP artifact.
+- PR #22 source-pinned survey/legal worklists ACCEPTED and MERGED as 39cf3185ee91239c21ec0f6d57246e79ed006bf6 (Python 43660068830, Android 43660068771 PASS).
 - Prioritize real-world legal verification for 44,472 speed-tag way **candidates**, checking current 74/2026/VBHN-TT-BXD and applicable amendments, road geometry, class, direction, vehicle, conditional applicability and actual posted signs. A numeric `maxspeed` tag is not site-specific law.
 - Survey 810 original OSM node-point **candidates** with physical GPS survey, sign code, facing, date, road relation, photo evidence/hash, review and lawful provenance. A tagged OSM way has no physical sign point.
 - Reassess 654 unknown-type sign tags; do not interpret `traffic_sign=yes` as speed sign or infer physical location; obtain source geometry before matching raw speed-way IDs to road segments.
