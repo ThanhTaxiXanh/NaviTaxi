@@ -5,6 +5,7 @@ from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 import hashlib
 import json
+import struct
 from pathlib import Path
 import sys
 import tempfile
@@ -23,6 +24,58 @@ def jsonbytes(value):
     return json.dumps(value, sort_keys=True, ensure_ascii=False).encode()
 
 
+
+def synthetic_exif_jpeg(capture="2026:11:14 08:00:00", offset="+07:00",
+                        lat=0, lon=0):
+    """Build a tiny JPEG APP1/Exif binary for tests, NOT a photographed sign.
+
+    All GPS coordinates are invented and must never be approved as field data.
+    """
+    def entry(tag, kind, n, value):
+        return struct.pack("<HHII", tag, kind, n, value)
+
+    tiff = bytearray(b"II\x2a\x00\x08\x00\x00\x00")
+    tiff.extend(b"\x00" * 30)  # IFD0: ExifIFD and GPSInfo pointers
+    exif_at = len(tiff)
+    exif_count = 2 if offset is not None else 1
+    tiff.extend(b"\x00" * (2 + 12 * exif_count + 4))
+    original = capture.encode("ascii") + b"\x00"
+    original_at = len(tiff)
+    tiff.extend(original)
+    if offset is not None:
+        utc_offset = offset.encode("ascii") + b"\x00"
+        offset_at = len(tiff)
+        tiff.extend(utc_offset)
+
+    gps_at = len(tiff)
+    tiff.extend(b"\x00" * (2 + 4 * 12 + 4))
+    gps_lat_at = len(tiff)
+    tiff.extend(struct.pack("<IIIIII", abs(lat), 1, 0, 1, 0, 1))
+    gps_lon_at = len(tiff)
+    tiff.extend(struct.pack("<IIIIII", abs(lon), 1, 0, 1, 0, 1))
+    struct.pack_into("<H", tiff, 8, 2)
+    tiff[10:22] = entry(0x8769, 4, 1, exif_at)
+    tiff[22:34] = entry(0x8825, 4, 1, gps_at)
+    struct.pack_into("<H", tiff, exif_at, exif_count)
+    tiff[exif_at + 2:exif_at + 14] = entry(
+        0x9003, 2, len(original), original_at)
+    if offset is not None:
+        tiff[exif_at + 14:exif_at + 26] = entry(
+            0x9011, 2, len(utc_offset), offset_at)
+    struct.pack_into("<H", tiff, gps_at, 4)
+    tiff[gps_at + 2:gps_at + 14] = (
+        struct.pack("<HHI", 1, 2, 2) +
+        (b"S\x00\x00\x00" if lat < 0 else b"N\x00\x00\x00"))
+    tiff[gps_at + 14:gps_at + 26] = entry(2, 5, 3, gps_lat_at)
+    tiff[gps_at + 26:gps_at + 38] = (
+        struct.pack("<HHI", 3, 2, 2) +
+        (b"W\x00\x00\x00" if lon < 0 else b"E\x00\x00\x00"))
+    tiff[gps_at + 38:gps_at + 50] = entry(4, 5, 3, gps_lon_at)
+    payload = b"Exif\x00\x00" + bytes(tiff)
+    return (b"\xff\xd8\xff\xe1" + (len(payload) + 2).to_bytes(2, "big") +
+            payload + b"\xff\xd9")
+
+
 class FieldEvidenceTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -38,7 +91,7 @@ class FieldEvidenceTests(unittest.TestCase):
         self.manifest_sha = read_queue(self.queue, self.queue_sha)[1]
         self.photo_root = self.root / "photos"
         self.photo_root.mkdir()
-        self.photo_bytes = b"\xff\xd8\xff\xe0NAVITAXI-SYNTHETIC-TEST-ONLY"
+        self.photo_bytes = b"\xff\xd8\xff\xd9"  # synthetic JPEG shell; no real sign/photo
         (self.photo_root / "test.jpg").write_bytes(self.photo_bytes)
         self.geometry = {"type": "LineString", "coordinates": [[0, 0], [0.001, 0]]}
         self.packet = {
@@ -359,6 +412,75 @@ class FieldEvidenceTests(unittest.TestCase):
                 packet["sign_evidence"][0]["photo"][key] = value
                 packet["speed_evidence"] = []
                 self.assertEqual(self.audit(packet)["rejected_records"], 1)
+
+    def _attach_photo_bytes(self, packet, raw):
+        (self.photo_root / "test.jpg").write_bytes(raw)
+        packet["sign_evidence"][0]["photo"]["sha256"] = digest(raw)
+        return packet
+
+    def test_photo_exif_valid_camera_time_and_gps_remain_unapproved(self):
+        packet = self._attach_photo_bytes(deepcopy(self.packet),
+                                          synthetic_exif_jpeg())
+        result = self.audit(packet)
+        self.assertEqual(result["status"], "HUMAN_REVIEW_REQUIRED")
+        self.assertEqual(result["ready_for_independent_human_review"], 2)
+        self.assertEqual(result["approved_legal_speeds"], 0)
+        self.assertEqual(result["approved_physical_sign_coordinates"], 0)
+        self.assertFalse(result["driver_alerts_allowed"])
+
+    def test_photo_exif_wrong_capture_time_quarantines_sign_and_speed(self):
+        packet = self._attach_photo_bytes(
+            deepcopy(self.packet),
+            synthetic_exif_jpeg(capture="2026:11:14 15:00:00"))
+        result = self.audit(packet)
+        self.assertEqual(result["rejected_records"], 2)
+        self.assertIn("PHOTO_EXIF_CAPTURE_TIME_MISMATCH",
+                      result["results"][0]["reasons"])
+        self.assertIn("SIGN_EVIDENCE_MISSING_REJECTED_OR_WRONG_ROAD_DIRECTION",
+                      result["results"][1]["reasons"])
+        self.assertEqual(result["approved_legal_speeds"], 0)
+
+    def test_photo_exif_wrong_wgs84_rejects_matching_claimed_gpx(self):
+        packet = self.attach_synthetic_gpx(deepcopy(self.packet))
+        packet = self._attach_photo_bytes(packet,
+                                          synthetic_exif_jpeg(lat=1, lon=1))
+        result = self.audit(packet)
+        self.assertEqual(result["rejected_records"], 2)
+        self.assertIn("PHOTO_EXIF_GPS_POSITION_MISMATCH",
+                      result["results"][0]["reasons"])
+        self.assertFalse(result["driver_alerts_allowed"])
+
+    def test_photo_exif_without_utc_offset_is_unknown_not_authenticated(self):
+        # Without an offset, EXIF DateTimeOriginal is LOCAL and cannot
+        # silently be interpreted in +07:00 or UTC. Spatial GPSTags still match.
+        packet = self._attach_photo_bytes(
+            deepcopy(self.packet),
+            synthetic_exif_jpeg(capture="2020:01:01 01:01:01", offset=None))
+        result = self.audit(packet)
+        self.assertEqual(result["status"], "HUMAN_REVIEW_REQUIRED")
+        self.assertEqual(result["approved_physical_sign_coordinates"], 0)
+        self.assertFalse(result["production_database_authorized"])
+
+    def test_photo_malformed_or_duplicate_exif_quarantines_all_dependents(self):
+        regular = synthetic_exif_jpeg()
+        start = regular.index(b"Exif\x00\x00") + 6
+        corrupt = bytearray(regular)
+        corrupt[start + 4:start + 8] = b"\xff\xff\xff\x7f"  # invalid IFD0 pointer
+        duplicate = regular[:2] + regular[2:-2] + regular[2:-2] + b"\xff\xd9"
+        for label, raw, expected in (
+            ("out of bounds TIFF", bytes(corrupt), "PHOTO_EXIF_BAD_IFD"),
+            ("two APP1 EXIFs", duplicate, "PHOTO_EXIF_AMBIGUOUS_MULTIPLE_SEGMENTS"),
+            ("truncated JPEG", b"\xff\xd8\xff\xe1\x00\xffabc",
+             "PHOTO_EXIF_TRUNCATED_JPEG"),
+        ):
+            with self.subTest(label=label):
+                packet = self._attach_photo_bytes(deepcopy(self.packet), raw)
+                result = self.audit(packet)
+                self.assertEqual(result["rejected_records"], 2)
+                self.assertIn(expected, result["results"][0]["reasons"])
+                self.assertEqual(result["approved_legal_speeds"], 0)
+                self.assertEqual(result["approved_physical_sign_coordinates"], 0)
+                self.assertFalse(result["driver_alerts_allowed"])
 
     def test_sign_must_be_close_to_independently_supplied_geometry(self):
         packet = deepcopy(self.packet)
