@@ -21,6 +21,7 @@ import zipfile
 from xml.etree import ElementTree as ET
 
 from build_road_review_queues import SIGN_COLUMNS, SPEED_COLUMNS, SIGN_FILE, SPEED_FILE
+from road_photo_exif import PhotoExifError, read_jpeg_photo_exif
 
 FORMAT = "navitaxi-independent-road-evidence/v1"
 QUEUE_FORMAT = "navitaxi-road-intelligence-review-queues/v1"
@@ -248,18 +249,40 @@ def private_evidence_bytes(root: Path, rel: str, max_bytes: int, category: str):
     return raw
 
 
-def survey_photo(photo: dict, root: Path):
+def survey_photo(photo: dict, root: Path, lat: float, lon: float,
+                 observed: datetime, accuracy_m: float):
+    """Correlate ORIGINAL photo bytes with claimed survey data where present.
+
+    Photo EXIF values are editable: agreement is not authenticating evidence,
+    while explicit timestamp/GPS contradictions must block mechanical review.
+    PNG EXIF and JPEG EXIF without timezone remain UNKNOWN.
+    """
     require(isinstance(photo, dict), "PHOTO_REQUIRED")
     raw = private_evidence_bytes(root, photo.get("path"), 30_000_000, "PHOTO")
     mime = photo.get("mime_type")
-    require((mime == "image/jpeg" and raw.startswith(b"\xff\xd8")
-             or mime == "image/png" and raw.startswith(b"\x89PNG\r\n\x1a\n")),
+    require((mime == "image/jpeg" and raw.startswith(b"\\xff\\xd8")
+             or mime == "image/png" and raw.startswith(b"\\x89PNG\\r\\n\\x1a\\n")),
             "PHOTO_FORMAT_MISMATCH")
     require(isinstance(photo.get("license"), str) and photo["license"].strip()
             and photo["license"].lower() != "unknown", "MISSING_PHOTO_LICENSE")
     require(SHA.fullmatch(str(photo.get("sha256"))) is not None
             and digest(raw) == photo["sha256"], "PHOTO_SHA256_MISMATCH")
-
+    if mime == "image/jpeg":
+        try:
+            capture_at, gps = read_jpeg_photo_exif(raw)
+        except PhotoExifError as exc:
+            raise EvidenceError(str(exc)) from exc
+        if capture_at is not None:
+            require(abs((capture_at - observed).total_seconds())
+                    <= GPS_TIME_WINDOW_SECONDS, "PHOTO_EXIF_CAPTURE_TIME_MISMATCH")
+        if gps is not None:
+            photo_lat, photo_lon = gps
+            distance = math.hypot(
+                (photo_lat - lat) * 110540,
+                (photo_lon - lon) * 111320 * max(
+                    0.01, math.cos(math.radians((photo_lat + lat) / 2))))
+            require(distance <= max(15.0, accuracy_m + 10.0),
+                    "PHOTO_EXIF_GPS_POSITION_MISMATCH")
 
 def gps_track_alignment(track: dict, root: Path, lat: float, lon: float,
                         observed: datetime, accuracy_m: float):
@@ -387,7 +410,7 @@ def independent_record(item, source, kind, photo_root):
                                 observed, accuracy_m)
         require(nearest_road_m(lat, lon, coords) <= 100,
                 "SURVEY_POINT_NOT_NEAR_RELATED_ROAD")
-        survey_photo(item.get("photo"), photo_root)
+        survey_photo(item.get("photo"), photo_root, lat, lon, observed, accuracy_m)
         require(item.get("road_direction_evidence_note")
                 and len(str(item["road_direction_evidence_note"]).strip()) >= 12,
                 "NO_DIRECTION_APPLICABILITY_EVIDENCE")
