@@ -28,7 +28,7 @@ SHA = re.compile(r"[0-9a-f]{64}\Z")
 SIGN_CODE = re.compile(r"(?:[A-Z]{1,3})\.[0-9]{2,3}[a-z]?\Z")
 # A source OSM way may legitimately require separate human speed reviews for
 # forward/backward travel and each of the six supported vehicle classes.
-SPEED_CASE_ID = re.compile(r"[A-Za-z0-9._:@/-]{1,128}\Z")
+SPEED_CASE_ID = re.compile(r"[A-Za-z0-9._:@-]{1,128}\Z")
 MAX_FILE = 80_000_000
 MAX_ROWS = 100_000
 MAX_SPEED_SCOPES_PER_WAY = 12  # 2 travel directions x 6 vehicle classes
