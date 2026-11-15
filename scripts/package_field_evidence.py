@@ -46,7 +46,8 @@ def canonical_json(obj):
 
 def safe_relative(name):
     require(isinstance(name, str) and name and len(name) <= 250
-            and "\x00" not in name and "\\" not in name
+            and not any(ord(c) < 32 or ord(c) == 127 for c in name)
+            and "\\" not in name
             and not name.startswith("/") and ":" not in name
             and "//" not in name and not name.endswith("/"),
             "UNSAFE_EVIDENCE_PHOTO_PATH")
@@ -57,13 +58,13 @@ def safe_relative(name):
     return name
 
 
-def file_hash(path):
+def file_hash(path, max_bytes=MAX_TOTAL):
     h = hashlib.sha256()
     count = 0
     with path.open("rb") as f:
         for chunk in iter(lambda: f.read(CHUNK), b""):
             count += len(chunk)
-            require(count <= MAX_TOTAL, "OVERSIZED_EVIDENCE_FILE")
+            require(count <= max_bytes, "OVERSIZED_EVIDENCE_FILE")
             h.update(chunk)
     return count, h.hexdigest()
 
@@ -196,7 +197,7 @@ def package(review_zip, expected_queue_sha, evidence, photo_root, output):
     except Exception:
         output.unlink(missing_ok=True)
         raise
-    size, checksum = file_hash(output)
+    size, checksum = file_hash(output, MAX_ARCHIVE)
     return {"archive": str(output), "size_bytes": size, "sha256": checksum,
             "source_queue_sha256": expected_queue_sha,
             "photo_file_count": len(photo_entries),
@@ -211,7 +212,7 @@ def verify(archive, expected_archive_sha):
     require(archive.is_file() and not archive.is_symlink()
             and archive.stat().st_size <= MAX_ARCHIVE,
             "MISSING_OR_OVERSIZED_EVIDENCE_ARCHIVE")
-    require(file_hash(archive)[1] == expected_archive_sha,
+    require(file_hash(archive, MAX_ARCHIVE)[1] == expected_archive_sha,
             "ARCHIVE_SHA256_MISMATCH")
     with zipfile.ZipFile(archive) as z:
         infos = z.infolist()
