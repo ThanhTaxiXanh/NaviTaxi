@@ -208,3 +208,12 @@
       merge on both green, then verify post-merge main CI.
 - [ ] Obtain actual independent field sign photos/GPS/GPX and applicable
       legal speed clauses for each road direction/vehicle class.
+
+
+## 2026-11-15 — RTree and GPS-sign coordinate candidate audit
+- [x] Read final main, PR #29 and its post-merge CI; confirmed 0 open PR at start.
+- [x] Hardened source LineString bounding-box comparison and RTree float32 indexing of sign WGS84 points and road bounds.
+- [x] Authored four synthetic adversarial cases (50m index displacement, artificially padded bounding box, normal float32 rounding). No real roadside observation or claimed legal speed generated.
+- [ ] Verify new branch Python/SQLite and Android build/unit/lint/APK asset CI on exact final commit; merge only when required checks pass.
+- [ ] After merge verify main Android CI and audit APK artifacts, recording exact paths/sizes/hashes if available.
+- [ ] Obtain independent original field GPS/GPX, survey accuracy, sign photos, legal clauses, road direction and vehicle review; keep all approvals at zero.
