@@ -97,3 +97,8 @@
 - Remaining blockers are missing true field surveys, legal applicability/vehicle class and accurate road geometry, not compilation failure. No automatic real speed, point or driver alert was added.
 
 - PR #22 final-head CI acceptance confirmed: Python 60/60 tests SUCCESS 43660068830, Android assemble/unit/lint SUCCESS 43660068771, merged main 39cf3185ee91239c21ec0f6d57246e79ed006bf6. No unresolved code/build errors from this work.
+
+
+## 2026-11-15 field/legal evidence audit open risks
+- New evidence intake checks structural completeness, byte hashes, GPS numeric plausibility and official-source URL shape; it cannot authenticate human identity, true photo location, direction of application or definitive current Vietnamese legal interpretation. A mechanically ready item MUST remain unapproved pending independent review.
+- Real 2026-11-12 review ZIP and actual physical survey photos are not in the repository or Android APK; no live evidence review has been run. CI acceptance for new code pending.
