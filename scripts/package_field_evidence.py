@@ -109,7 +109,7 @@ def output_path(out, queue, packet, photo_root):
     # workspace, including build/, tests/, docs/ or an untracked folder.
     for forbidden in (root, photo_root):
         require(not resolved.is_relative_to(forbidden.resolve()),
-                "BUNDLE_MUST_NOT_ENTER_APP_OR_PHOTO_ROOT")
+                "BUNDLE_MUST_NOT_ENTER_REPO_OR_PHOTO_ROOT")
     require(resolved not in (queue.resolve(), packet.resolve()),
             "BUNDLE_CANNOT_REPLACE_INPUT")
     require(not out.exists() and not out.is_symlink(), "BUNDLE_OUTPUT_ALREADY_EXISTS")
