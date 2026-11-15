@@ -284,3 +284,11 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Post-merge main Android build and road asset scan SUCCESS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43679593826.
 - Downloaded both APK/debug and road-audit ZIP artifacts; CRC PASS, nested SHA256SUMS 13/13 PASS, only five synthetic APK map assets, no embedded real speed/sign DB. See `docs/ROAD_INTELLIGENCE_PR32_VERIFIED_GPX_FIX_AUDIT.md` for exact paths, byte counts, SHA256, code lines and reproduction commands.
 - Legal speed approval ZERO, physical sign GPS approval ZERO, Android database approval allowlist EMPTY, driver alerts BLOCKED; Phase 4 IN PROGRESS and Phase 5 NOT STARTED.
+
+
+## 2026-11-15 — independent photo EXIF ↔ roadside sign WGS84/time gate (PR pending)
+
+- Starting main: `cfae62309f645904151c6d9a23aa00962b7ad559` (PR #33 merged; Android main push #43680051200 SUCCESS); no open PR when work began.
+- New isolated `phase-11/photo-exif-time-gps-consistency` branch adds pure-Python bounded TIFF/JPEG EXIF inspection of original private photo bytes. Timezone-aware DateTimeOriginal/OffsetTimeOriginal and reported camera GPS coordinates, **when present**, must not contradict the separately supplied physical sign WGS84/time claim.
+- Five additional synthetic-only test methods cover matched EXIF, inconsistent time, inconsistent EXIF GPS despite matching GPX, unknown timezone, and malformed/duplicate EXIF. Final branch CI, Android lint/build/APK scan and merge acceptance are PENDING.
+- EXIF is editable and does not prove an original image, true GPS fix, accuracy, reviewer, street position or law. Geofabrik speed/sign tags remain UNVERIFIED; 0 approved legal speed limits, 0 approved surveyed physical sign GPS coordinates, 0 Android SHA pins and driver alerts BLOCKED. Phase 4 IN PROGRESS; Phase 5 NOT STARTED.
