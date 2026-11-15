@@ -191,3 +191,10 @@
 - The optional GPX 1.1 evidence supplement now requires mandatory root producer/version fields, and validates optional per-point fix, satellite-count and HDOP metadata when present.
 - A declared `fix=none`, insufficient satellites or poor HDOP is unusable for matching a sign GPS observation even if timestamp and WGS84 coordinate match exactly.
 - Tests use synthetic-only GNSS packet fixtures, preserving valid GPS match and dependency on independent human review. No physical coordinates/speeds, APK assets, SQLite release, new dependency or Android approval pin.
+
+
+## 2026-11-15 — photo EXIF timestamp/WGS84 provenance hardening (PR pending)
+
+- New `scripts/road_photo_exif.py` bounded JPEG APP1/TIFF reader with no external dependencies, checking only declared original camera time with explicit UTC offset and GPS rational coordinate metadata.
+- `scripts/review_road_field_evidence.py` now compares those claims to the survey timestamp/location, quarantining contradictions and consequently invalidating speed claims citing rejected sign evidence.
+- Five synthetic-only test methods; no real photographs/GPX/road speeds, no DB approval digest, no new Android resources and no driver alerts. EXIF matches are never authoritative field observations.
