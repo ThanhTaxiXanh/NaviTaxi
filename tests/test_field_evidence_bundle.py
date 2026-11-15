@@ -107,7 +107,7 @@ class PrivateEvidenceBundleTests(unittest.TestCase):
 
     def test_absolute_and_parent_photo_paths_rejected(self):
         for bad in ("../escape.jpg", "/tmp/other.jpg", "parent\\test.jpg",
-                    "photos/../../fake.jpg", "C:/secret.jpg"):
+                    "photos/../../fake.jpg", "C:/secret.jpg", "bad\nname.jpg"):
             with self.subTest(path=bad):
                 packet = deepcopy(self.fixture.packet)
                 packet["sign_evidence"][0]["photo"]["path"] = bad
