@@ -146,3 +146,11 @@
 - [x] Code head 32a2d7d2: Python/SQLite 78/78 PASS, Actions 43661967753; Android assembleDebug/JUnit/lint/APK forensic audit PASS, Actions 43661967823.
 - [ ] Verify final documentation-head CI and merge PR #24 only after checks. Live-photo and legal field verification still require real independent evidence.
 - [ ] Original 811 sign and 44,472 speed queue ZIP is external to Git, not an APK asset. Real source review requires explicitly available source ZIP and independent survey evidence.
+
+
+## Phase 11 conflict quarantine (PR #25) — 2026-11-15
+- [x] Read real source intake and synthetic tests; confirmed base main 5c950d31 and Android main CI 43662265877 success.
+- [x] Implemented all-entry conflict quarantine for duplicate sign IDs, near-duplicate point/code, reused photo SHA; rejects dependent speed reviews and geometry/direction/time contradictions.
+- [x] Refused incoming database/driver approval claims and prematurely dated legal review; added synthetic negative regressions.
+- [ ] Verify PR #25 full Python/SQLite + Android CI; merge only on PASS and confirm main CI.
+- [ ] Original real queue ZIP and independent survey photos remain external; zero field-verified physical sign coordinates and zero accepted site-specific legal speeds.
