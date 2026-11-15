@@ -168,3 +168,30 @@ SHA verification with audit replay. This archive is not a production SQLite
 candidate or Android release pin. Real independent field photographs,
 reliable legal applicability and verified physical sign coordinates remain
 unavailable. All approved speed and sign counts stay at ZERO.
+
+
+## Optional independent GNSS / GPX cross-check (PR #28; 2026-11-15)
+- Each physical roadside sign observation MAY additionally include
+  `gps_track`: `{"path":"survey-session.gpx","sha256":"<64 lowercase hex>","mime_type":"application/gpx+xml","license":"private-original","source_uri":"https://<independent-survey-record>"}`.
+  This is an **optional corroboration** to legacy version-1 field evidence;
+  missing GPX never implies GNSS was authenticated or the field coordinate
+  was independently verified. A submitted malformed/missing GPS trace
+  is **REJECTED** rather than quietly ignored.
+- `--photo-root` is the restricted local evidence directory for the cited
+  photographic JPEG/PNG **and** optional original GPX source bytes. The
+  submitted hash must match those actual file bytes, not just a URL.
+  No symlinked parent component, absolute/parent traversal path, missing
+  file or renamed GPX may be accepted. GPX max size 2,000,000 bytes,
+  max 10,000 waypoint/route/track points, GPX 1.1 namespace only,
+  DOCTYPE/ENTITY rejected.
+- At least one WGS84 GPX point with an explicit timezone-aware `time`
+  must occur **within 15 minutes** of the sign `observed_at` timestamp
+  and **within max(15 m, gps_accuracy_m + 10 m)** of the measured
+  `latitude/longitude`. These are plausibility gates, not proof that a
+  device recorded those bytes or that the claimed roadside sign exists.
+  The field photo's provenance, GPX producer, clock, bearing and applicable
+  traffic direction need *separate human verification*.
+- A GPX may be included only when it is independently supplied and owned;
+  the audit never calculates sign coordinates from OSM tags or the GPX itself.
+  It never infers an enforceable speed limit from `maxspeed`. All
+  Android trusted speed/sign counts and driver alerts remain zero/false.
