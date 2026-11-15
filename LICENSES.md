@@ -123,3 +123,10 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 ## 2026-11-15 — candidate SQLite/RTree QA scope
 - Changes use only Python and SQLite standard-library mechanisms, with no new SDKs, commercial dependencies, third-party sign photographs, GPS surveys or external data distributions.
 - Synthetic spatial checks carry no real-world road-sign or legal-speed claims. Original Geofabrik/OSM reference and derivative worklists remain ODbL-1.0 © OpenStreetMap contributors; real surveys, imagery and legal-source redistribution remain subject to independent review.
+
+
+## 2026-11-15 — GPX quality parsing and field-source rights
+
+- GPX 1.1 schema documentation is referenced for validation, not bundled as redistributable map data. Code uses the Python standard library, no paid API, new dependency or external service.
+- Synthetic GNSS tests use invented coordinates/timestamps. No original GPX, sign photo, GPS data, legal ruling or external survey media is stored in Git or APK.
+- Actual field GPS/photo rights, personal information, permissions and independent legal reviews remain prerequisites before any release approval. Raw OSM reference remains ODbL-1.0 © OpenStreetMap contributors.
