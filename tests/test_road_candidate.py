@@ -97,6 +97,64 @@ class RoadCandidateAuditTest(unittest.TestCase):
         self.assertEqual(report["status"], "REJECTED")
         self.assertTrue(any("RTree" in issue or "spatial" in issue for issue in report["issues"]))
 
+    def test_sign_spatial_index_shifted_by_fifty_metres_is_rejected(self):
+        self.insert_test_only_records()
+        con = sqlite3.connect(self.db)
+        # The survey record is at (0, 0), but the index falsely plots it
+        # around 55m east. The previous 0.001-degree tolerance accepted this.
+        con.execute("UPDATE traffic_signs_rtree SET min_lon=?,max_lon=?",
+                    (0.0005, 0.0005))
+        con.commit()
+        con.close()
+        report = audit_candidate(self.db)
+        self.assertEqual(report["status"], "REJECTED")
+        self.assertTrue(any("Sign" in issue and "RTree" in issue
+                            for issue in report["issues"]))
+
+    def test_road_spatial_index_shifted_by_fifty_metres_is_rejected(self):
+        self.insert_test_only_records()
+        con = sqlite3.connect(self.db)
+        con.execute("UPDATE road_segments_rtree SET min_lon=0.0005")
+        con.commit()
+        con.close()
+        report = audit_candidate(self.db)
+        self.assertEqual(report["status"], "REJECTED")
+        self.assertTrue(any("Road" in issue and "RTree" in issue
+                            for issue in report["issues"]))
+
+    def test_padded_road_bbox_with_matching_rtree_is_rejected(self):
+        self.insert_test_only_records()
+        con = sqlite3.connect(self.db)
+        # Trigger keeps RTree consistent with the wrong, inflated DB bounds.
+        # Its LineString is still only from (0,0) to (1,1).
+        con.execute("UPDATE road_segments SET min_lon=-0.02,max_lon=1.02")
+        con.commit()
+        con.close()
+        report = audit_candidate(self.db)
+        self.assertEqual(report["status"], "REJECTED")
+        self.assertTrue(any("geometry" in issue for issue in report["issues"]))
+
+    def test_genuine_sqlite_float32_rtree_rounding_remains_valid(self):
+        self.insert_test_only_records()
+        con = sqlite3.connect(self.db)
+        line = ('{"type":"LineString","coordinates":'
+                '[[105.123456789,21.123456789],[105.12398765,21.12398765]]}')
+        con.execute(
+            "UPDATE road_segments SET geometry_geojson=?,min_lon=?,"
+            "max_lon=?,min_lat=?,max_lat=?",
+            (line, 105.123456789, 105.12398765, 21.123456789, 21.12398765),
+        )
+        con.execute("UPDATE traffic_signs SET latitude=?,longitude=?",
+                    (21.123456789, 105.123456789))
+        con.commit()
+        con.close()
+        report = audit_candidate(self.db)
+        self.assertEqual(report["status"],
+                         "CANDIDATE_REQUIRES_INDEPENDENT_FIELD_REVIEW")
+        self.assertEqual(report["issues"], [])
+        self.assertFalse(report["driver_speed_alerts_allowed"])
+        self.assertFalse(report["physical_sign_alerts_allowed"])
+
     def test_unhashed_wal_is_rejected_and_never_replayed(self):
         sidecar = Path(str(self.db) + "-wal")
         sidecar.write_bytes(b"malformed-unapproved-journal")

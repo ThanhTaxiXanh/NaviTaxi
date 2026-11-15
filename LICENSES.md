@@ -118,3 +118,8 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
   individuals or plates. Independent photographer consent, GPS ownership,
   field accuracy and governing legal texts still require human checking
   before any sharing, archiving or production authorization.
+
+
+## 2026-11-15 — candidate SQLite/RTree QA scope
+- Changes use only Python and SQLite standard-library mechanisms, with no new SDKs, commercial dependencies, third-party sign photographs, GPS surveys or external data distributions.
+- Synthetic spatial checks carry no real-world road-sign or legal-speed claims. Original Geofabrik/OSM reference and derivative worklists remain ODbL-1.0 © OpenStreetMap contributors; real surveys, imagery and legal-source redistribution remain subject to independent review.

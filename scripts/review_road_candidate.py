@@ -78,10 +78,33 @@ def _valid_geometry(value, bbox):
                 return False
             lons.append(lon)
             lats.append(lat)
-        return (min(lons) >= bbox[0] - 1e-8 and max(lons) <= bbox[1] + 1e-8
-                and min(lats) >= bbox[2] - 1e-8 and max(lats) <= bbox[3] + 1e-8)
+        # A padded or shifted box can make a road appear applicable far away.
+        # The source bounds must describe the supplied LineString, not merely
+        # contain it. The separate RTree is checked against these source bounds.
+        exact_bounds = (min(lons), max(lons), min(lats), max(lats))
+        return all(abs(float(actual) - float(claimed)) <= 1e-8
+                   for actual, claimed in zip(exact_bounds, bbox))
     except (TypeError, ValueError):
         return False
+
+
+def _rtree_box_matches(source_bounds, indexed_bounds):
+    """Check RTree's outward-rounded float32 coordinates, not a ~111m window.
+
+    SQLite RTree stores 32-bit floats and rounds min/max outward. Two float32
+    ULPs are a conservative tolerance for this conversion, whereas 0.001
+    degrees previously hid tens of metres of sign-index corruption.
+    """
+    for original, indexed in zip(source_bounds, indexed_bounds):
+        if (type(original) not in (int, float) or
+                type(indexed) not in (int, float) or
+                not math.isfinite(original) or not math.isfinite(indexed)):
+            return False
+        tolerance = (2.0 ** -148 if original == 0 else
+                     2.0 ** (max(-126, math.floor(math.log2(abs(original)))) - 22))
+        if abs(original - indexed) > tolerance:
+            return False
+    return True
 
 
 def audit_candidate(path: Path) -> dict:
@@ -170,8 +193,8 @@ def audit_candidate(path: Path) -> dict:
                         or not _date_present(verified)
                         or not _valid_geometry(geo, (minlon, maxlon, minlat, maxlat))):
                     issue(f"Road {segment_id!r}: geometry, source, speed or field evidence invalid")
-                if pk is None or any(abs(float(a)-float(b)) > 0.001
-                                     for a, b in zip((minlon, maxlon, minlat, maxlat), box)):
+                if pk is None or not _rtree_box_matches(
+                        (minlon, maxlon, minlat, maxlat), box):
                     issue(f"Road {segment_id!r}: RTree entry mismatched")
             sign_rows = connection.execute(
                 "SELECT s.sign_id,s.sign_code,s.latitude,s.longitude,s.direction,"
@@ -190,8 +213,7 @@ def audit_candidate(path: Path) -> dict:
                         or source_id not in source_ids or not _date_present(observed)
                         or not _date_present(verified)):
                     issue(f"Sign {sign_id!r}: coordinate, code, source or field evidence invalid")
-                if pk is None or any(abs(float(a)-float(b)) > 0.001
-                                     for a, b in zip((lon, lon, lat, lat), box)):
+                if pk is None or not _rtree_box_matches((lon, lon, lat, lat), box):
                     issue(f"Sign {sign_id!r}: RTree entry mismatched")
             for main_table, index_table in (
                     ("road_segments", "road_segments_rtree"),

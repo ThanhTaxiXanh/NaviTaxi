@@ -89,3 +89,21 @@ automatically trust source metadata from inside the unapproved SQLite itself.
 **No driving alerts are activated by this work.** This is a security and
 data-quality prerequisite for future Road Intelligence, not Phase 11
 completion, 34-province coverage or on-road validation.
+
+
+## Spatial precision check on candidate database (2026-11-15)
+
+The offline `scripts/review_road_candidate.py` audit now requires each road
+segment's stored min/max longitude/latitude to agree with the actual GeoJSON
+LineString vertex extrema within 1e-8 degrees. An expanded bounding box is
+not an acceptable road geometry claim. For both sign point RTree and road RTree
+entries, indexed coordinates must agree with their source SQLite values within
+the float32 outward rounding required by SQLite RTree (a conservative two-ULP
+bound at each coordinate). An arbitrary 0.001-degree tolerance would allow
+roughly 111 m of latitude displacement and is not acceptable for physical-sign
+mapping. Synthetic negative/positive cases verify the distinction.
+
+These checks are purely mechanical consistency checks; they do not validate
+instrument calibration, GPS fix, physical sign existence, traffic direction,
+vehicle/legal applicability or independent publisher approval. Sign/speed release
+SHA pins remain empty and alerts remain blocked.

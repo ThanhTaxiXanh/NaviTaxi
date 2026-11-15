@@ -141,3 +141,9 @@ A data source's URL and license must be recorded before its content can be shipp
   remains outside Git/APK.
 - 811 sign-tag candidates and 44,472 tagged speed-way candidates are
   still unverified. No physical sign GPS or legal-speed point approved.
+
+
+## 2026-11-15 — spatial-index audit; no new sourced observations
+- Existing Vietnam Geofabrik 2026-11-12 PBF reference remains ODbL-1.0, 332,558,874 bytes, SHA-256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed.
+- Review queue ZIP (SHA-256 26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c) remains external and must not be recreated from guesses.
+- New RTree tests use invented coordinates and database rows only; they DO NOT establish sign positions or speeds. Unverified OSM queue: 811 sign-tag objects and 44,472 speed-tagged ways. Approved count: 0 for each domain.

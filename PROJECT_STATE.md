@@ -252,3 +252,10 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
   surveyed physical sign coordinates ZERO, Android SHA approval pins EMPTY,
   driver alerts BLOCKED. Phase 4 IN PROGRESS; Phase 5 NOT STARTED.
 - CI on exact PR #29 head and post-merge main acceptance pending.
+
+
+## 2026-11-15 — candidate spatial precision hardening (next PR)
+- Baseline main `525d3a5a1d58a68005a5e6b7a1d13ec75187a889`: PR #29 merged; its Python and Android GitHub Actions and post-merge Android job confirmed success.
+- Isolated work branch `phase-11/strict-road-candidate-spatial-integrity` improves pre-release SQLite candidate validation: exact LineString extrema and float32-aware RTree comparison replace permissive 0.001-degree coordinate drift.
+- Four additional synthetic SQLite regression cases target shifted sign positions, shifted road index, padded road bounds, and valid 32-bit RTree rounding. New branch CI is PENDING until independently checked; these are not field observations.
+- Approved legal speed limits: 0; approved physical sign positions: 0; Android approved SHA pins: empty; driver alarms BLOCKED. Phase 4 IN PROGRESS, Phase 5 NOT STARTED.
