@@ -54,3 +54,9 @@ No map tiles may be scraped from publicly hosted tile servers as a free bulk-dow
 - Actual dated source acquired in GitHub CI #43624034669 under OpenStreetMap ODbL 1.0; © OpenStreetMap contributors. Fixed source SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed and publisher MD5 1f7716ad049551852fc281e969a000aa.
 - No 332MB PBF shipped in GitHub artifacts, Git repo, or Android app. Derived reference-tag ZIP in ephemeral artifact 14124844201 retains ODbL source metadata and attribution; downstream ODbL database share-alike obligations require separate review.
 - Real speed/sign tag data remains NOT legally or field-verified and does not authorize alerts.
+
+
+## OSM derived review packets / PR #22
+- The field survey and speed legal-review CSV queues preserve OSM original contributor tag values, objects and source provenance and are derived from `vietnam-261112.osm.pbf` (ODbL 1.0, © OpenStreetMap contributors). Retain attribution and comply with ODbL database sharing/derivative conditions when distributing review archives.
+- Python script and regression tests use only standard-library modules and existing audit script. No additional paid service, map tile host, proprietary dataset, API or phone GPS permissions are introduced.
+- Law research URL links to the official Government Gazette and creates NO automatic reproduction or relicensing of legal text. Legal applicability requires separate review.

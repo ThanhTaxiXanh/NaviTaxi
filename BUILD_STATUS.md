@@ -130,3 +130,11 @@ Acceptance policy: source creation != test pass; record GitHub Actions run, job 
 - Final code head `f0a64e5fb8b3de097e8aea5231f0ca05882ff4e4`: Python/SQLite and source-integrity quality tests **51/51 PASS**, https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43625497790.
 - Android assembleDebug/JUnit/lint plus APK road-asset audit PASS, https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43625497719.
 - PR #19: real PBF source workflow 43624034669 SUCCESS, source SHA256 ddb9155f112af521d0674e4f40b87173f92954e5b8a3f71445d3008b506ef9ed. Full 333MB source NOT in app. 0 actual signed-off legal speeds/physical sign surveys.
+
+
+## PR #22 Road Intelligence review-only field and legal queues
+- Branch `phase-4/field-survey-review-queues`; PR https://github.com/ThanhTaxiXanh/NaviTaxi/pull/22.
+- Code-head Python/SQLite with new negative tests PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43659839106. Phase0 artifact `phase0-road-data-evidence` ID 14140060222 (GitHub ZIP digest sha256:0bcdf9f7ebb316142cd7c2380fe8ab008f841c18e31aefcfc44e8d8f7283bfed) includes synthetic test-only CSV queue and SHA256SUMS ZIP.
+- Android compile/unit/lint and APK road audit PASS https://github.com/ThanhTaxiXanh/NaviTaxi/actions/runs/43659839088. No app Kotlin source/production DB changes.
+- Real externally inspected reference worklist generated in this session: `NaviTaxi_Vietnam_2026-11-12_Field_Sign_Speed_Review_UNVERIFIED.zip` 1,170,686 B sha256:26891bd61d10cb6228f30db5201af275254832b0705a5c553731df7f24c7df7c; 44,472 speed review CSV rows and 811 sign candidate CSV rows; all reviewer evidence BLANK and approvals FALSE.
+- Final docs-head PR CI still required. Phase 4 overall not production complete, Phase 5 not started.

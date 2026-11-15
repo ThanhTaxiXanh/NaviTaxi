@@ -78,3 +78,11 @@
 - Independently source applicable Vietnamese road law, vehicle type/direction, dated physical sign surveys and reliable WGS84/bearing evidence before populating production `RoadDatabaseApprovalGate` pins.
 - Review ODbL derivative data distribution and preserve upstream object provenance/attribution. Do not publish unverified source as a driver speed/sign overlay.
 - Phase 4 real licensed 34-province PMTiles map packages, scheduler OEM/background road tests remain blocked. Phase 5 NOT STARTED.
+
+
+## Next after OSM review worklist generation
+- Merge PR #22 only after final-head Python/SQLite and Android CI success; record final exact merge SHA and canonical review ZIP artifact.
+- Prioritize real-world legal verification for 44,472 speed-tag way **candidates**, checking current 74/2026/VBHN-TT-BXD and applicable amendments, road geometry, class, direction, vehicle, conditional applicability and actual posted signs. A numeric `maxspeed` tag is not site-specific law.
+- Survey 810 original OSM node-point **candidates** with physical GPS survey, sign code, facing, date, road relation, photo evidence/hash, review and lawful provenance. A tagged OSM way has no physical sign point.
+- Reassess 654 unknown-type sign tags; do not interpret `traffic_sign=yes` as speed sign or infer physical location; obtain source geometry before matching raw speed-way IDs to road segments.
+- Do not set `RoadIntelligenceApprovedPins` or enable alerts before separate legal and field evidence review, source license review and device tests. Approved real speed/sign counts remain zero.
