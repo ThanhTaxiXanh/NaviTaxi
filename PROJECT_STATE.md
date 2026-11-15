@@ -189,3 +189,10 @@ Read this file and [PROGRESS.md](PROGRESS.md) on every new session. Never mark A
 - Main starting commit e2a1fdd6b25233a42b91ab4d58cbbd5b485058a0. Current work branch `phase-11/field-evidence-intake-gate`.
 - Added scripts/review_road_field_evidence.py and synthetic-only tests to mechanically screen separately collected photo/GPS/sign/road/vehicle/law review packets against an exact SHA256-pinned review ZIP.
 - No new physical surveys, accepted legal-road-speed records, SQLite source DB or Android SHA pin. Driver alerts remain explicitly disabled and reported approved counts remain ZERO. PR #24 code-head 32a2d7d2 CI verified: Python/SQLite 78/78 PASS (43661967753), Android build/JUnit/lint/APK audit PASS (43661967823). Final documentation-head CI and merge must still be checked.
+
+
+## Phase 11 sign/speed evidence conflict quarantine (PR #25; CI pending)
+- Base main SHA 5c950d31147b672bc025ecbaf9b1c6b5222e7032; implementation branch phase-11/conflicting-field-evidence-quarantine.
+- Any repeated sign source ID, physical sign point/code or image SHA now quarantines all implicated entries and related speed reviews. Matching sign/road geometry and observation order required; legal date checks hardened.
+- Exact archived OSM reference queues remain unapproved: 811 sign candidates, 44,472 speed ways, zero verified real speeds/sign locations. RoadIntelligenceApprovedPins still empty and Android driver alerts blocked.
+- PR #25 Python/Android acceptance and post-merge main CI must be verified before claiming completion.
